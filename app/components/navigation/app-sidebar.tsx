@@ -1,7 +1,7 @@
 "use client"
 
 import type * as React from "react"
-import { Building2, FileText, BarChart3, Settings, Home } from "lucide-react"
+import { Building2 } from "lucide-react"
 
 import {
   Sidebar,
@@ -13,39 +13,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import { navigationItems } from "@/app/constants/navigation"
 import type { ViewType } from "@/app/types/navigation"
-
-const navigationItems = [
-  {
-    title: "Dashboard",
-    url: "#",
-    icon: Home,
-    id: "dashboard",
-    description: "Visão geral do sistema",
-  },
-  {
-    title: "Formulário Técnico",
-    url: "#",
-    icon: FileText,
-    id: "formulario",
-    description: "Preenchimento de dados",
-  },
-  {
-    title: "Relatórios",
-    url: "#",
-    icon: BarChart3,
-    id: "relatorios",
-    description: "Visualizar e imprimir",
-  },
-  {
-    title: "Configurações",
-    url: "#",
-    icon: Settings,
-    id: "configuracoes",
-    description: "Configurações do sistema",
-  },
-]
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   activeView: ViewType
@@ -53,13 +24,15 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
+  const { toggleSidebar } = useSidebar()
+
   return (
     <Sidebar collapsible="icon" {...props}>
-      {/* <SidebarHeader>
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={toggleSidebar}>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white">
                   <Building2 className="size-4" />
                 </div>
@@ -71,22 +44,23 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarHeader> */}
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="group-data-[collapsible=icon]:mt-14">
+          
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="mt-12">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     isActive={activeView === item.id}
                     tooltip={item.description}
-                    onClick={() => setActiveView(item.id as ViewType)}
+                    onClick={() => setActiveView(item.id)}
                   >
-                    <button className="flex items-center gap-2 w-full">
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
+                    <button className="flex items-center gap-3 w-full">
+                      <item.icon className="size-6 text-blue-700" />
+                      <span className="text-base text-blue-700">{item.title}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

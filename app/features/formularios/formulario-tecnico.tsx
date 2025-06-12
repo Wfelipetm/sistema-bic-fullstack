@@ -201,7 +201,7 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...prev[section as keyof typeof prev] as Record<string, any>,
         [field]: value,
       },
     }))
@@ -211,7 +211,7 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...prev[section as keyof typeof prev] as Record<string, any>,
         [field]: checked,
       },
     }))
@@ -221,9 +221,9 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...((prev[section as keyof typeof prev] as Record<string, any>) || {}),
         [subsection]: {
-          ...prev[section][subsection],
+          ...((prev[section as keyof typeof prev] as Record<string, any>)[subsection] || {}),
           [field]: checked,
         },
       },

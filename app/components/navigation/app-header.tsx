@@ -8,6 +8,7 @@ import { Building2, User, LogOut, Settings, Bell } from "lucide-react" // Search
 // import { Input } from "@/components/ui/input" // Removido pois não será mais usado aqui
 import type { ViewType } from "@/app/types/navigation"
 import { currentUser } from "@/app/constants/mock-data"
+import Image from "next/image"
 
 interface AppHeaderProps {
   activeView: ViewType
@@ -15,30 +16,33 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="flex h-16 items-center px-6">
-        {/* Logo e Título */}
-        <div
-          className="flex items-center gap-3"
-          style={{ marginLeft: "auto", marginRight: "1180px" }} // ajuste o valor de marginRight como quiser
-        >
-          {/* <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
-            <Building2 className="size-5" />
-          </div> */}
-          {/* <div>
-            <h1 className="text-xl font-bold text-gray-900">BIC Sistema</h1>
-            <p className="text-xs text-gray-500">Boletim de Informações Cadastrais</p>
-          </div> */}
+      <div className="flex h-24 items-center px-6 justify-between relative w-full">
+        {/* Logo à esquerda */}
+        <div className="flex items-center gap-3">
+          {/* ...seu logo aqui... */}
         </div>
 
-        {/* Perfil do usuário */}
-        <div className="flex items-center gap-3">
+        {/* Imagem centralizada */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Image
+            src="/images/regua-logo-itaguai_light3.png"
+            alt="Logo Prefeitura de Itaguaí"
+            width={400}
+            height={50}
+            priority
+            className="mix-blend-multiply"
+          />
+        </div>
+
+        {/* Avatar colado à direita */}
+        <div className="flex items-center gap-3 absolute right-6 top-1/2 -translate-y-1/2">
           <div className="hidden md:flex flex-col text-right">
             <span className="text-sm font-medium text-gray-900">{currentUser.name}</span>
             <span className="text-xs text-gray-500">{currentUser.role}</span>
           </div>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -47,7 +51,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <AvatarFallback className="bg-blue-600 text-white">
                     {currentUser.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")
                       .substring(0, 2)}
                   </AvatarFallback>
@@ -61,7 +65,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <AvatarFallback className="bg-blue-600 text-white">
                     {currentUser.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")
                       .substring(0, 2)}
                   </AvatarFallback>
@@ -82,7 +86,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <span>Configurações</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer">
-                  <Bell className="mr-2 h-4 w-4" />
+                  <Bell className="mr-2 h-4 w-4" /> {/* Mantido no dropdown, mas removido do header principal */}
                   <span>Notificações</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer text-red-600 mt-2 border-t pt-2">
