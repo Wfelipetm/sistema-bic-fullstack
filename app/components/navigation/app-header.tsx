@@ -3,9 +3,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Building2, User, LogOut, Settings, Bell, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
+// import { Badge } from "@/components/ui/badge" // Removido pois não será mais usado aqui
+import { Building2, User, LogOut, Settings, Bell } from "lucide-react" // Search removido
+// import { Input } from "@/components/ui/input" // Removido pois não será mais usado aqui
 import type { ViewType } from "@/app/types/navigation"
 import { currentUser } from "@/app/constants/mock-data"
 
@@ -15,65 +15,21 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
-  const getPageTitle = () => {
-    switch (activeView) {
-      case "dashboard":
-        return "Dashboard"
-      case "formulario":
-        return "Formulário Técnico"
-      case "relatorios":
-        return "Relatórios"
-      case "configuracoes":
-        return "Configurações"
-      default:
-        return "Dashboard"
-    }
-  }
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center px-6">
         {/* Logo e Título */}
-        <div className="flex items-center gap-3">
-          <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
+        <div
+          className="flex items-center gap-3"
+          style={{ marginLeft: "auto", marginRight: "1180px" }} // ajuste o valor de marginRight como quiser
+        >
+          {/* <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
             <Building2 className="size-5" />
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             <h1 className="text-xl font-bold text-gray-900">BIC Sistema</h1>
             <p className="text-xs text-gray-500">Boletim de Informações Cadastrais</p>
-          </div>
-        </div>
-
-        {/* Página Atual */}
-        <div className="hidden md:flex items-center gap-2 ml-8">
-          <span className="text-gray-400">/</span>
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-            {getPageTitle()}
-          </Badge>
-        </div>
-
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Busca */}
-        <div className="hidden lg:flex items-center gap-4 mr-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Buscar formulários, relatórios..."
-              className="pl-10 w-80 bg-gray-50 border-gray-200 focus:bg-white"
-            />
-          </div>
-        </div>
-
-        {/* Notificações */}
-        <div className="flex items-center gap-3 mr-4">
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5 text-gray-600" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-              3
-            </span>
-          </Button>
+          </div> */}
         </div>
 
         {/* Perfil do usuário */}
@@ -113,7 +69,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                 <div className="flex flex-col space-y-1">
                   <p className="font-medium text-sm">{currentUser.name}</p>
                   <p className="text-xs text-muted-foreground">{currentUser.email}</p>
-                  <p className="text-xs text-muted-foreground">CREA: {currentUser.crea}</p>
+                  {currentUser.crea && <p className="text-xs text-muted-foreground">CREA: {currentUser.crea}</p>}
                 </div>
               </div>
               <div className="p-1">

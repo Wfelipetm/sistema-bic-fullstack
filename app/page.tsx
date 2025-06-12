@@ -27,8 +27,10 @@ export default function BICApp() {
   }
 
   return (
-    <AppLayout activeView={activeView} setActiveView={setActiveView}>
-      {renderContent()}
-    </AppLayout>
+    <div className="min-h-screen bg-blue-900">
+      <AppLayout activeView={activeView} setActiveView={setActiveView}>
+        {renderContent()}
+      </AppLayout>
+    </div>
   )
 }

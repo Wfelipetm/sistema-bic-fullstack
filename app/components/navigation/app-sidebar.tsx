@@ -1,7 +1,7 @@
 "use client"
 
 import type * as React from "react"
-import { Building2 } from "lucide-react"
+import { Building2, FileText, BarChart3, Settings, Home } from "lucide-react"
 
 import {
   Sidebar,
@@ -14,8 +14,38 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { navigationItems } from "@/app/constants/navigation"
 import type { ViewType } from "@/app/types/navigation"
+
+const navigationItems = [
+  {
+    title: "Dashboard",
+    url: "#",
+    icon: Home,
+    id: "dashboard",
+    description: "Visão geral do sistema",
+  },
+  {
+    title: "Formulário Técnico",
+    url: "#",
+    icon: FileText,
+    id: "formulario",
+    description: "Preenchimento de dados",
+  },
+  {
+    title: "Relatórios",
+    url: "#",
+    icon: BarChart3,
+    id: "relatorios",
+    description: "Visualizar e imprimir",
+  },
+  {
+    title: "Configurações",
+    url: "#",
+    icon: Settings,
+    id: "configuracoes",
+    description: "Configurações do sistema",
+  },
+]
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   activeView: ViewType
@@ -25,7 +55,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      {/* <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
@@ -41,10 +71,9 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarHeader>
+      </SidebarHeader> */}
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navegação Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
@@ -53,7 +82,7 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
                     asChild
                     isActive={activeView === item.id}
                     tooltip={item.description}
-                    onClick={() => setActiveView(item.id)}
+                    onClick={() => setActiveView(item.id as ViewType)}
                   >
                     <button className="flex items-center gap-2 w-full">
                       <item.icon className="size-4" />

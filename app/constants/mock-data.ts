@@ -1,5 +1,5 @@
-import type { UserProfile } from "@/types/user"
-import type { Relatorio } from "@/types/relatorio"
+import type { UserProfile } from "../types/user"
+import type { Relatorio } from "../types/relatorio"
 
 export const currentUser: UserProfile = {
   id: "1",

@@ -26,36 +26,18 @@ const AppLayout = ({ children, activeView, setActiveView }: AppLayoutProps) => {
   const breadcrumb = getBreadcrumbInfo(activeView)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header fixo no topo */}
+    <div className="min-h-screen bg-gray-50 relative">
+      {/* Header */}
       <AppHeader activeView={activeView} setActiveView={setActiveView} />
 
-      {/* Sidebar e conteúdo */}
-      <div className="flex">
-        <SidebarProvider>
+      {/* Sidebar absoluto e com z-index alto */}
+      <SidebarProvider>
+        <div className="absolute top-0 left-0 z-50 h-full">
           <AppSidebar activeView={activeView} setActiveView={setActiveView} />
+        </div>
+        <div className="flex">
           <SidebarInset>
-            {/* Sub-header com breadcrumbs e trigger do sidebar */}
-            <div className="flex h-12 shrink-0 items-center gap-2 border-b bg-white px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#" className="text-blue-600">
-                      Início
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="font-medium">{breadcrumb.title}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-
-            {/* Conteúdo principal */}
-            <div className="flex flex-1 flex-col gap-4 p-6">
+            <div className="flex flex-1 flex-col gap-4 p-6 ml-[260px]">
               <div className="mb-2">
                 <h1 className="text-2xl font-bold text-gray-900">{breadcrumb.title}</h1>
                 <p className="text-sm text-gray-600">{breadcrumb.subtitle}</p>
@@ -63,8 +45,8 @@ const AppLayout = ({ children, activeView, setActiveView }: AppLayoutProps) => {
               {children}
             </div>
           </SidebarInset>
-        </SidebarProvider>
-      </div>
+        </div>
+      </SidebarProvider>
     </div>
   )
 }
