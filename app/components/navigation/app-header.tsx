@@ -20,9 +20,15 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-24 items-center px-6 justify-between relative w-full">
-        {/* Logo à esquerda */}
+        {/* Logo BIC com ícone e texto à esquerda */}
         <div className="flex items-center gap-3">
-          {/* ...seu logo aqui... */}
+          <div className="flex flex-col items-start">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-8 h-8 text-blue-700" />
+              <span className="font-bold text-lg text-blue-700">BIC</span>
+            </div>
+            <span className="text-xs text-blue-700 mt-1">Boletim de Informação Cadastral</span>
+          </div>
         </div>
 
         {/* Imagem centralizada */}
@@ -39,13 +45,6 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
 
         {/* Avatar colado à direita */}
         <div className="flex items-center gap-3 absolute right-6 top-1/2 -translate-y-1/2">
-          {/* Logo BIC com ícone e texto */}
-          <div className="hidden md:flex flex-col items-end">
-            <div className="flex items-center gap-2">
-              <Building2 className="w-8 h-8 text-blue-700" />
-              <span className="font-bold text-lg text-blue-700">BIC</span>
-            </div>
-          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
