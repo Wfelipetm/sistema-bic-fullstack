@@ -22,7 +22,7 @@ const data = {
       url: "#",
       icon: Home,
       id: "dashboard",
-      description: "Visão geral do sisxxxtema",
+      description: "Visão geral do sistema",
     },
     {
       title: "Formulário Técnico",

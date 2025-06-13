@@ -1,5 +1,5 @@
 import { FileText, BarChart3, Settings, Home } from "lucide-react"
-import type { NavigationItem, ViewType, BreadcrumbInfo } from "../types/navigation"
+import type { NavigationItem, ViewType, BreadcrumbInfo } from "@/types/navigation"
 
 export const navigationItems: NavigationItem[] = [
   {
@@ -23,19 +23,26 @@ export const navigationItems: NavigationItem[] = [
     id: "relatorios",
     description: "Visualizar e imprimir",
   },
-
+  {
+    title: "Configurações",
+    url: "#",
+    icon: Settings,
+    id: "configuracoes",
+    description: "Configurações do sistema",
+  },
 ]
 
 export const getBreadcrumbInfo = (view: ViewType): BreadcrumbInfo => {
   switch (view) {
     case "dashboard":
-      return { title: "", subtitle: "" }
+      return { title: "Dashboard", subtitle: "Visão geral do sistema" }
     case "formulario":
-      return { title: "", subtitle: "" }
+      return { title: "Formulário Técnico", subtitle: "Preenchimento de dados técnicos" }
     case "relatorios":
-      return { title: "", subtitle: "" }
-
+      return { title: "Relatórios", subtitle: "Geração e visualização de relatórios" }
+    case "configuracoes":
+      return { title: "Configurações", subtitle: "Configurações do sistema" }
     default:
-      return { title: "", subtitle: "" }
+      return { title: "Dashboard", subtitle: "Visão geral do sistema" }
   }
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "../../../components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FileText, MapPin, Layers, Save, Building, Home, Ruler } from "lucide-react"
 import { FormularioSection } from "./components/formulario-section"
@@ -201,7 +201,7 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev] as Record<string, any>,
+        ...prev[section as keyof typeof prev],
         [field]: value,
       },
     }))
@@ -211,7 +211,7 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev] as Record<string, any>,
+        ...prev[section as keyof typeof prev],
         [field]: checked,
       },
     }))
@@ -221,9 +221,9 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...((prev[section as keyof typeof prev] as Record<string, any>) || {}),
+        ...prev[section as keyof typeof prev],
         [subsection]: {
-          ...((prev[section as keyof typeof prev] as Record<string, any>)[subsection] || {}),
+          ...prev[section][subsection],
           [field]: checked,
         },
       },

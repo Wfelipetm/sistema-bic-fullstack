@@ -27,15 +27,32 @@ const AppLayout = ({ children, activeView, setActiveView }: AppLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* <AppHeader activeView={activeView} setActiveView={setActiveView} /> */}
+      {/* Header fixo no topo */}
+      <AppHeader activeView={activeView} setActiveView={setActiveView} />
+
       {/* Sidebar e conteúdo */}
       <div className="flex">
         <SidebarProvider>
           <AppSidebar activeView={activeView} setActiveView={setActiveView} />
           <SidebarInset>
-            <AppHeader activeView={activeView} setActiveView={setActiveView} />
             {/* Sub-header com breadcrumbs e trigger do sidebar */}
-           
+            <div className="flex h-12 shrink-0 items-center gap-2 border-b bg-white px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbLink href="#" className="text-blue-600">
+                      Início
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="font-medium">{breadcrumb.title}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
 
             {/* Conteúdo principal */}
             <div className="flex flex-1 flex-col gap-4 p-6">
