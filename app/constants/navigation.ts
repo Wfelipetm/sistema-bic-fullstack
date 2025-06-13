@@ -23,26 +23,19 @@ export const navigationItems: NavigationItem[] = [
     id: "relatorios",
     description: "Visualizar e imprimir",
   },
-  {
-    title: "Configurações",
-    url: "#",
-    icon: Settings,
-    id: "configuracoes",
-    description: "Configurações do sistema",
-  },
+
 ]
 
 export const getBreadcrumbInfo = (view: ViewType): BreadcrumbInfo => {
   switch (view) {
     case "dashboard":
-      return { title: "Dashboard", subtitle: "Visão geral do sistema" }
+      return { title: "", subtitle: "" }
     case "formulario":
-      return { title: "Formulário Técnico", subtitle: "Preenchimento de dados técnicos" }
+      return { title: "", subtitle: "" }
     case "relatorios":
-      return { title: "Relatórios", subtitle: "Geração e visualização de relatórios" }
-    case "configuracoes":
-      return { title: "Configurações", subtitle: "Configurações do sistema" }
+      return { title: "", subtitle: "" }
+
     default:
-      return { title: "Dashboard", subtitle: "Visão geral do sistema" }
+      return { title: "", subtitle: "" }
   }
 }

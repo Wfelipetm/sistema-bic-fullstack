@@ -39,9 +39,12 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
 
         {/* Avatar colado à direita */}
         <div className="flex items-center gap-3 absolute right-6 top-1/2 -translate-y-1/2">
-          <div className="hidden md:flex flex-col text-right">
-            <span className="text-sm font-medium text-gray-900">{currentUser.name}</span>
-            <span className="text-xs text-gray-500">{currentUser.role}</span>
+          {/* Logo BIC com ícone e texto */}
+          <div className="hidden md:flex flex-col items-end">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-8 h-8 text-blue-700" />
+              <span className="font-bold text-lg text-blue-700">BIC</span>
+            </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
