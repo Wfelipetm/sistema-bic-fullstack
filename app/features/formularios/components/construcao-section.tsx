@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface ConstrucaoSectionProps {
   formData: FormularioData
@@ -7,6 +9,192 @@ interface ConstrucaoSectionProps {
 }
 
 export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: ConstrucaoSectionProps) {
+  // Estados para opções dinâmicas da API
+  const [tipoOptions, setTipoOptions] = useState([
+    { id: "casa", label: "1- Casa" },
+    { id: "apartamento", label: "2- Apartamento" },
+    { id: "sala", label: "3- Sala" },
+    { id: "loja", label: "4- Loja" },
+    { id: "galpao", label: "5- Galpão" },
+    { id: "templo", label: "6- Templo" },
+  ])
+  const [usoOptions, setUsoOptions] = useState([
+    { id: "residencial", label: "1- Residencial" },
+    { id: "comercial", label: "2- Comercial" },
+    { id: "servico", label: "3- Serviço" },
+    { id: "industrial", label: "4- Industrial" },
+    { id: "religioso", label: "5- Religioso" },
+  ])
+  const [tipoConstrucaoOptions, setTipoConstrucaoOptions] = useState([
+    { id: "madeira", label: "1- Madeira" },
+    { id: "alvenaria", label: "2- Alvenaria" },
+    { id: "metalica", label: "3- Metálica" },
+    { id: "concreto", label: "4- Concreto" },
+    { id: "misto", label: "5- Misto" },
+  ])
+  const [esquadriasOptions, setEsquadriasOptions] = useState([
+    { id: "rustica", label: "1- Rústica" },
+    { id: "madeira", label: "2- Madeira" },
+    { id: "ferro", label: "3- Ferro" },
+    { id: "aluminio", label: "4- Alumínio" },
+    { id: "especial", label: "5- Especial" },
+    { id: "blindex", label: "6- Blindex" },
+  ])
+  const [pisoOptions, setPisoOptions] = useState([
+    { id: "tijolo", label: "1- Tijolo" },
+    { id: "cimento", label: "2- Cimento" },
+    { id: "tabua", label: "3- Tábua" },
+    { id: "taco", label: "4- Taco" },
+    { id: "ceramica", label: "5- Cerâmica" },
+    { id: "especial", label: "6- Especial" },
+    { id: "porcelanato", label: "7- Porcelanato" },
+  ])
+  const [forroOptions, setForroOptions] = useState([
+    { id: "estaque", label: "1- Estaque" },
+    { id: "placas", label: "2- Placas" },
+    { id: "madeira", label: "3- Madeira" },
+    { id: "laje", label: "4- Laje" },
+    { id: "gesso", label: "5- Gesso" },
+    { id: "especial", label: "6- Especial" },
+    { id: "sem", label: "7- Sem" },
+  ])
+  const [coberturaOptions, setCoberturaOptions] = useState([
+    { id: "zinco", label: "1- Zinco" },
+    { id: "aluminio", label: "2- Alumínio" },
+    { id: "telha", label: "3- Telha" },
+    { id: "amianto", label: "4- Amianto" },
+    { id: "especial", label: "5- Especial" },
+    { id: "sem", label: "6- Sem" },
+    { id: "laje", label: "7- Laje" },
+  ])
+  const [acabamentoInternoOptions, setAcabamentoInternoOptions] = useState([
+    { id: "caiacao", label: "1- Caiação" },
+    { id: "pinturaSimples", label: "2- Pintura Simples" },
+    { id: "pinturaLavavel", label: "3- Pintura Lavável" },
+    { id: "especial", label: "4- Especial" },
+    { id: "reboco", label: "5- Reboco" },
+    { id: "sem", label: "6- Sem" },
+  ])
+  const [acabamentoExternoOptions, setAcabamentoExternoOptions] = useState([
+    { id: "caiacao", label: "1- Caiação" },
+    { id: "pinturaSimples", label: "2- Pintura Simples" },
+    { id: "pinturaLavavel", label: "3- Pintura Lavável" },
+    { id: "especial", label: "4- Especial" },
+    { id: "reboco", label: "5- Reboco" },
+    { id: "sem", label: "6- Sem" },
+  ])
+
+  useEffect(() => {
+    fetch(apiUrl("/tipo/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setTipoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/uso/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setUsoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/tipo-construcao/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setTipoConstrucaoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/esquadrilha/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setEsquadriasOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/piso/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setPisoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/forro/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setForroOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/cobertura/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setCoberturaOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/acabamento-interno/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setAcabamentoInternoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+    fetch(apiUrl("/acabamento-externo/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setAcabamentoExternoOptions(keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`
+          })))
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -14,14 +202,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">1- Tipo:</h4>
           <div className="space-y-3">
-            {[
-              { id: "casa", label: "1- Casa" },
-              { id: "apartamento", label: "2- Apartamento" },
-              { id: "sala", label: "3- Sala" },
-              { id: "loja", label: "4- Loja" },
-              { id: "galpao", label: "5- Galpão" },
-              { id: "templo", label: "6- Templo" },
-            ].map((item) => (
+            {tipoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -38,13 +219,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">2- Uso:</h4>
           <div className="space-y-3">
-            {[
-              { id: "residencial", label: "1- Residencial" },
-              { id: "comercial", label: "2- Comercial" },
-              { id: "servico", label: "3- Serviço" },
-              { id: "industrial", label: "4- Industrial" },
-              { id: "religioso", label: "5- Religioso" },
-            ].map((item) => (
+            {usoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -63,13 +238,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">3- Tipo de Construção:</h4>
           <div className="space-y-3">
-            {[
-              { id: "madeira", label: "1- Madeira" },
-              { id: "alvenaria", label: "2- Alvenaria" },
-              { id: "metalica", label: "3- Metálica" },
-              { id: "concreto", label: "4- Concreto" },
-              { id: "misto", label: "5- Misto" },
-            ].map((item) => (
+            {tipoConstrucaoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -88,14 +257,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">4- Esquadrias:</h4>
           <div className="space-y-3">
-            {[
-              { id: "rustica", label: "1- Rústica" },
-              { id: "madeira", label: "2- Madeira" },
-              { id: "ferro", label: "3- Ferro" },
-              { id: "aluminio", label: "4- Alumínio" },
-              { id: "especial", label: "5- Especial" },
-              { id: "blindex", label: "6- Blindex" },
-            ].map((item) => (
+            {esquadriasOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -114,15 +276,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">5- Piso:</h4>
           <div className="space-y-3">
-            {[
-              { id: "tijolo", label: "1- Tijolo" },
-              { id: "cimento", label: "2- Cimento" },
-              { id: "tabua", label: "3- Tábua" },
-              { id: "taco", label: "4- Taco" },
-              { id: "ceramica", label: "5- Cerâmica" },
-              { id: "especial", label: "6- Especial" },
-              { id: "porcelanato", label: "7- Porcelanato" },
-            ].map((item) => (
+            {pisoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -139,15 +293,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">6- Forro:</h4>
           <div className="space-y-3">
-            {[
-              { id: "estaque", label: "1- Estaque" },
-              { id: "placas", label: "2- Placas" },
-              { id: "madeira", label: "3- Madeira" },
-              { id: "laje", label: "4- Laje" },
-              { id: "gesso", label: "5- Gesso" },
-              { id: "especial", label: "6- Especial" },
-              { id: "sem", label: "7- Sem" },
-            ].map((item) => (
+            {forroOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -164,15 +310,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">7- Cobertura:</h4>
           <div className="space-y-3">
-            {[
-              { id: "zinco", label: "1- Zinco" },
-              { id: "aluminio", label: "2- Alumínio" },
-              { id: "telha", label: "3- Telha" },
-              { id: "amianto", label: "4- Amianto" },
-              { id: "especial", label: "5- Especial" },
-              { id: "sem", label: "6- Sem" },
-              { id: "laje", label: "7- Laje" },
-            ].map((item) => (
+            {coberturaOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -191,14 +329,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">8- Acabamento Interno:</h4>
           <div className="space-y-3">
-            {[
-              { id: "caiacao", label: "1- Caiação" },
-              { id: "pinturaSimples", label: "2- Pintura Simples" },
-              { id: "pinturaLavavel", label: "3- Pintura Lavável" },
-              { id: "especial", label: "4- Especial" },
-              { id: "reboco", label: "5- Reboco" },
-              { id: "sem", label: "6- Sem" },
-            ].map((item) => (
+            {acabamentoInternoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
@@ -219,14 +350,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         <div>
           <h4 className="font-semibold text-lg mb-4 text-gray-800">9- Acabamento Externo:</h4>
           <div className="space-y-3">
-            {[
-              { id: "caiacao", label: "1- Caiação" },
-              { id: "pinturaSimples", label: "2- Pintura Simples" },
-              { id: "pinturaLavavel", label: "3- Pintura Lavável" },
-              { id: "especial", label: "4- Especial" },
-              { id: "reboco", label: "5- Reboco" },
-              { id: "sem", label: "6- Sem" },
-            ].map((item) => (
+            {acabamentoExternoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}

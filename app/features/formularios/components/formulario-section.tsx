@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
 import { ChevronDown, ChevronRight, type LucideIcon } from "lucide-react"
+import { apiUrl } from "@/lib/api"
 
 interface FormularioSectionProps {
   id: string
@@ -27,6 +28,9 @@ export function FormularioSection({
   onToggle,
   children,
 }: FormularioSectionProps) {
+  // Exemplo de uso dentro do componente:
+  const url = apiUrl("/alguma-rota/")
+
   return (
     <Card className="border-0 shadow-sm">
       <Collapsible open={isOpen} onOpenChange={onToggle}>

@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { CheckboxField } from "./checkbox-field"
-import type { FormularioData } from "@/types/formulario"
+import type { FormularioData } from "../../../types/formulario"
+import { useEffect, useState } from "react"
 
 interface TerrenoTopografiaSectionProps {
   formData: FormularioData
@@ -9,6 +10,17 @@ interface TerrenoTopografiaSectionProps {
 }
 
 export function TerrenoTopografiaSection({ formData, handleCheckboxChange }: TerrenoTopografiaSectionProps) {
+  const [topografiaApi, setTopografiaApi] = useState<any[]>([])
+
+  useEffect(() => {
+    fetch(apiUrl("/topografia/"))
+      .then(res => res.json())
+      .then(setTopografiaApi)
+      .catch(() => setTopografiaApi([]))
+  }, [])
+
+  // Use os dados da API se quiser montar os checkboxes dinamicamente:
+  // const topografiaItems = topografiaApi.length > 0 ? topografiaApi.map(...) : [ ...seu array fixo... ]
   const topografiaItems = [
     { id: "aclive", label: "Aclive", description: "Terreno em subida" },
     { id: "declive", label: "Declive", description: "Terreno em descida" },
@@ -37,3 +49,8 @@ export function TerrenoTopografiaSection({ formData, handleCheckboxChange }: Ter
     </>
   )
 }
+function apiUrl(path: string): string {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+  return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`
+}
+

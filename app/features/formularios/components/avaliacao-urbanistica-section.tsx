@@ -1,10 +1,12 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface AvaliacaoUrbanisticaSectionProps {
   formData: FormularioData
@@ -19,6 +21,34 @@ export function AvaliacaoUrbanisticaSection({
   handleNestedCheckboxChange,
   handleInputChange,
 }: AvaliacaoUrbanisticaSectionProps) {
+  // Exemplo: buscar opções de avaliação urbanística da API usando a variável de ambiente
+  const [avaliacaoOptions, setAvaliacaoOptions] = useState([
+    { value: "alta", label: "(A) Alta" },
+    { value: "media", label: "(B) Média" },
+    { value: "mediaBaixa", label: "(C) Média Baixa" },
+    { value: "baixa", label: "(D) Baixa" },
+    { value: "muitoBaixa", label: "(E) Muito Baixa" },
+  ])
+
+  useEffect(() => {
+    fetch(apiUrl("/avali-urba-logradouro/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setAvaliacaoOptions(
+            keys.map((key, idx) => ({
+              value: key,
+              label: `(${String.fromCharCode(65 + idx)}) ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`
+            }))
+          )
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  // Você pode fazer o mesmo para calçamento e extensão, se quiser buscar da API
+
   return (
     <div className="space-y-8">
       {/* Avaliação Urbanística do Logradouro */}
@@ -29,13 +59,7 @@ export function AvaliacaoUrbanisticaSection({
           onValueChange={(value) => handleInputChange("avaliacaoUrbanistica", value)}
           className="space-y-3"
         >
-          {[
-            { value: "alta", label: "(A) Alta" },
-            { value: "media", label: "(B) Média" },
-            { value: "mediaBaixa", label: "(C) Média Baixa" },
-            { value: "baixa", label: "(D) Baixa" },
-            { value: "muitoBaixa", label: "(E) Muito Baixa" },
-          ].map((item) => (
+          {avaliacaoOptions.map((item) => (
             <div key={item.value} className="flex items-center space-x-2">
               <RadioGroupItem value={item.value} id={item.value} />
               <Label htmlFor={item.value} className="font-medium cursor-pointer">

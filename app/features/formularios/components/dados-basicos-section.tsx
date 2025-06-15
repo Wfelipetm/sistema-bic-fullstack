@@ -1,20 +1,36 @@
 "use client"
 
+import { useEffect } from "react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface DadosBasicosSectionProps {
   formData: FormularioData
   handleInputChange: (field: string, value: string) => void
-  handleNestedInputChange: (section: string, field: string, value: string) => void
 }
 
 export function DadosBasicosSection({
   formData,
   handleInputChange,
-  handleNestedInputChange,
 }: DadosBasicosSectionProps) {
+  
+
+  // Exemplo: buscar dados do proprietário ao digitar o CPF
+  useEffect(() => {
+    if (formData.cpf && formData.cpf.length === 11) {
+      fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
+        .then(res => res.json())
+        .then(data => {
+          if (data?.nome) {
+            handleInputChange("proprietario", data.nome)
+          }
+        })
+        .catch(() => {})
+    }
+  }, [formData.cpf])
+
   return (
     <div className="space-y-6">
       {/* Primeira linha - Dados principais */}
@@ -34,60 +50,22 @@ export function DadosBasicosSection({
 
         <div>
           <Label className="text-sm font-medium">Lançamento novo em:</Label>
-          <div className="flex gap-2 mt-1">
-            <Input
-              placeholder="DD"
-              maxLength={2}
-              value={formData.lancamentoNovo.dia}
-              onChange={(e) => handleNestedInputChange("lancamentoNovo", "dia", e.target.value)}
-              className="w-16"
-            />
-            <span className="self-center">/</span>
-            <Input
-              placeholder="MM"
-              maxLength={2}
-              value={formData.lancamentoNovo.mes}
-              onChange={(e) => handleNestedInputChange("lancamentoNovo", "mes", e.target.value)}
-              className="w-16"
-            />
-            <span className="self-center">/</span>
-            <Input
-              placeholder="AAAA"
-              maxLength={4}
-              value={formData.lancamentoNovo.ano}
-              onChange={(e) => handleNestedInputChange("lancamentoNovo", "ano", e.target.value)}
-              className="w-20"
-            />
-          </div>
+          <Input
+            type="date"
+            value={formData.lancamentoNovo}
+            onChange={(e) => handleInputChange("lancamentoNovo", e.target.value)}
+            className="mt-1"
+          />
         </div>
 
         <div>
           <Label className="text-sm font-medium">Revisão em:</Label>
-          <div className="flex gap-2 mt-1">
-            <Input
-              placeholder="DD"
-              maxLength={2}
-              value={formData.revisao.dia}
-              onChange={(e) => handleNestedInputChange("revisao", "dia", e.target.value)}
-              className="w-16"
-            />
-            <span className="self-center">/</span>
-            <Input
-              placeholder="MM"
-              maxLength={2}
-              value={formData.revisao.mes}
-              onChange={(e) => handleNestedInputChange("revisao", "mes", e.target.value)}
-              className="w-16"
-            />
-            <span className="self-center">/</span>
-            <Input
-              placeholder="AAAA"
-              maxLength={4}
-              value={formData.revisao.ano}
-              onChange={(e) => handleNestedInputChange("revisao", "ano", e.target.value)}
-              className="w-20"
-            />
-          </div>
+          <Input
+            type="date"
+            value={formData.revisao}
+            onChange={(e) => handleInputChange("revisao", e.target.value)}
+            className="mt-1"
+          />
         </div>
       </div>
 

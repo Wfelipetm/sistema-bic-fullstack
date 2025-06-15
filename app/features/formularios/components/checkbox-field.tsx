@@ -1,5 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { apiUrl } from "@/lib/api"
 
 interface CheckboxFieldProps {
   id: string
@@ -10,6 +11,8 @@ interface CheckboxFieldProps {
 }
 
 export function CheckboxField({ id, label, description, checked, onCheckedChange }: CheckboxFieldProps) {
+  const url = apiUrl("/alguma-rota/")
+
   return (
     <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
       <Checkbox id={id} checked={checked} onCheckedChange={onCheckedChange} className="mt-1" />

@@ -98,7 +98,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <AvatarFallback className="bg-blue-600 text-white">
                     {currentUser.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")
                       .substring(0, 2)}
                   </AvatarFallback>
@@ -112,7 +112,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <AvatarFallback className="bg-blue-600 text-white">
                     {currentUser.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")
                       .substring(0, 2)}
                   </AvatarFallback>

@@ -13,6 +13,7 @@ import { ConstrucaoSection } from "./components/construcao-section"
 import { ServentiasSection } from "./components/serventias-section"
 import { AvaliacaoUrbanisticaSection } from "./components/avaliacao-urbanistica-section"
 import type { FormularioData } from "@/app/types/formulario"
+import { createBoletim } from "./components/boletim-service"
 
 export default function FormularioTecnico() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -27,8 +28,12 @@ export default function FormularioTecnico() {
 
   const [formData, setFormData] = useState<FormularioData>({
     inscricaoNumero: "",
-    lancamentoNovo: { dia: "", mes: "", ano: "" },
-    revisao: { dia: "", mes: "", ano: "" },
+    numeroInscricao: "",
+    numeroBote: "",
+    numeroQuadra: "",
+    nomeLogradouro: "",
+    lancamentoNovo: "", // string ISO ex: "2024-06-13T00:00:00.000Z"
+    revisao: "",        // string ISO ex: "2024-06-13T00:00:00.000Z"
     lote: "",
     quadra: "",
     loteamento: "",
@@ -71,6 +76,23 @@ export default function FormularioTecnico() {
         aoNivel: false,
         acimaNivel: false,
       },
+    },
+    terrenoCaracteristicas: {
+      alagadico: false,
+      arenoso: false,
+      rochoso: false,
+      normal: false,
+    },
+    terrenoNivelamento: {
+      abaixoNivel: false,
+      aoNivel: false,
+      acimaNivel: false,
+    },
+    terrenoTopografia: {
+      aclive: false,
+      declive: false,
+      encosta: false,
+      horizontal: false,
     },
     metragens: {
       areaTerreno: "",
@@ -181,6 +203,7 @@ export default function FormularioTecnico() {
     },
     logradouroComPlaca: false,
     observacoes: "",
+    responsavel: "",
   })
 
   const toggleSection = (section: string) => {
@@ -201,7 +224,7 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...{ ...(prev[section as keyof typeof prev] as object) },
         [field]: value,
       },
     }))
@@ -211,28 +234,68 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...{ ...(prev[section as keyof typeof prev] as object) },
         [field]: checked,
       },
     }))
   }
 
-  const handleNestedCheckboxChange = (section: string, subsection: string, field: string, checked: boolean) => {
+  const handleNestedCheckboxChange = (
+    section: string,
+    subsection: string,
+    field: string,
+    checked: boolean
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...(prev[section as keyof typeof prev] as Record<string, any>),
         [subsection]: {
-          ...prev[section][subsection],
+          ...((prev[section as keyof typeof prev] as Record<string, any>)[subsection]),
           [field]: checked,
         },
       },
     }))
   }
 
-  const handleSave = () => {
-    console.log("Dados do BIC salvos:", formData)
-    alert("Formulário BIC salvo com sucesso!")
+  const handleSave = async () => {
+    try {
+      // Removido o bloco de validação dos campos obrigatórios
+      // Agora permite salvar mesmo com campos vazios
+
+      // Validação de data ISO simples (opcional, pode remover se quiser permitir datas vazias)
+      const isDataISO = (data: string) =>
+        !!data && /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}\.\d{3}Z)?$/.test(data)
+
+      // Se quiser permitir datas vazias, remova os blocos abaixo:
+      // if (!isDataISO(formData.lancamentoNovo)) {
+      //   alert(
+      //     "Preencha corretamente a data de lançamento novo!\nValor atual: " +
+      //     formData.lancamentoNovo
+      //   )
+      //   return
+      // }
+      // if (!isDataISO(formData.revisao)) {
+      //   alert(
+      //     "Preencha corretamente a data de revisão!\nValor atual: " +
+      //     formData.revisao
+      //   )
+      //   return
+      // }
+
+      // Chama o serviço para criar o boletim
+      const inscricaoValue = formData.inscricaoNumero || formData.numeroInscricao
+      const payload = {
+        inscricao: inscricaoValue ? Number(inscricaoValue) : "", // ou remova se vazio
+        ...formData,
+      }
+      const boletim = await createBoletim(payload)
+
+      alert("Formulário BIC salvo com sucesso!")
+    } catch (e) {
+      alert("Erro ao salvar o formulário!")
+      console.error(e)
+    }
   }
 
   return (
@@ -280,7 +343,6 @@ export default function FormularioTecnico() {
           <DadosBasicosSection
             formData={formData}
             handleInputChange={handleInputChange}
-            handleNestedInputChange={handleNestedInputChange}
           />
         </FormularioSection>
 

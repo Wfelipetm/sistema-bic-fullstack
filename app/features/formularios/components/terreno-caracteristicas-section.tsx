@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { CheckboxField } from "./checkbox-field"
-import type { FormularioData } from "@/types/formulario"
+import type { FormularioData } from "../../../types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface TerrenoCaracteristicasSectionProps {
   formData: FormularioData
@@ -9,11 +11,30 @@ interface TerrenoCaracteristicasSectionProps {
 }
 
 export function TerrenoCaracteristicasSection({ formData, handleCheckboxChange }: TerrenoCaracteristicasSectionProps) {
-  const caracteristicasItems = [
+  const [caracteristicasItems, setCaracteristicasItems] = useState([
     { id: "alagadico", label: "Alagadiço", description: "Solo com tendência ao alagamento" },
     { id: "arenoso", label: "Arenoso", description: "Solo com predominância de areia" },
     { id: "rochoso", label: "Rochoso", description: "Solo com presença de rochas" },
-  ]
+    { id: "normal", label: "Normal", description: "Solo normal" },
+  ])
+
+  useEffect(() => {
+    fetch(apiUrl("/caracter-solo/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setCaracteristicasItems(
+            keys.map(key => ({
+              id: key,
+              label: key.charAt(0).toUpperCase() + key.slice(1),
+              description: "",
+            }))
+          )
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <>

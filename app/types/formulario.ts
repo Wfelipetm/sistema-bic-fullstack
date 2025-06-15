@@ -1,16 +1,15 @@
 export interface FormularioData {
+  numeroInscricao: string | number | readonly string[] | undefined
+  numeroBote: string | number | readonly string[] | undefined
+  numeroQuadra: string | number | readonly string[] | undefined
+  nomeLogradouro: string | number | readonly string[] | undefined
+  terrenoCaracteristicas: any
+  terrenoNivelamento: any
+  terrenoTopografia: any
   // Dados básicos
   inscricaoNumero: string
-  lancamentoNovo: {
-    dia: string
-    mes: string
-    ano: string
-  }
-  revisao: {
-    dia: string
-    mes: string
-    ano: string
-  }
+  lancamentoNovo: string // Ex: "2024-06-13T00:00:00.000Z"
+  revisao: string        // Ex: "2024-06-13T00:00:00.000Z"
 
   // Localização
   lote: string
@@ -209,4 +208,7 @@ export interface FormularioData {
 
   // Observações
   observacoes: string
+
+  // Responsável
+  responsavel?: string
 }

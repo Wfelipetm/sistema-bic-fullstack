@@ -1,8 +1,10 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface MetragensSectionProps {
   formData: FormularioData
@@ -10,6 +12,17 @@ interface MetragensSectionProps {
 }
 
 export function MetragensSection({ formData, handleNestedInputChange }: MetragensSectionProps) {
+  const [metragensApi, setMetragensApi] = useState<any[]>([])
+
+  useEffect(() => {
+    fetch(apiUrl("/metragem/"))
+      .then(res => res.json())
+      .then(setMetragensApi)
+      .catch(() => setMetragensApi([]))
+  }, [])
+
+  // Você pode usar metragensApi para preencher sugestões, autocomplete, ou exibir dados existentes
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="text-center">

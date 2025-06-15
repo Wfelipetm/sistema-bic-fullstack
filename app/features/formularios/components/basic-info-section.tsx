@@ -1,9 +1,11 @@
 "use client"
 
+import { useEffect } from "react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import type { FormularioData } from "@/types/formulario"
+import type { FormularioData } from "../../../types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface BasicInfoSectionProps {
   formData: FormularioData
@@ -11,6 +13,20 @@ interface BasicInfoSectionProps {
 }
 
 export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSectionProps) {
+  // Buscar dados do proprietário ao digitar o CPF
+  useEffect(() => {
+    if (formData.cpf && formData.cpf.length === 11) {
+      fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
+        .then(res => res.json())
+        .then(data => {
+          if (data?.nome) {
+            handleInputChange("proprietario", data.nome)
+          }
+        })
+        .catch(() => {})
+    }
+  }, [formData.cpf])
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div>
@@ -43,7 +59,7 @@ export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSecti
         </Label>
         <Input
           id="revisao"
-          placeholder="Número da revisão"
+          type="date"
           value={formData.revisao}
           onChange={(e) => handleInputChange("revisao", e.target.value)}
           className="mt-1"

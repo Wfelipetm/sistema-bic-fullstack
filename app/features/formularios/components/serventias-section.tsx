@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
+import { apiUrl } from "@/lib/api"
 
 interface ServentiasSectionProps {
   formData: FormularioData
@@ -9,7 +11,7 @@ interface ServentiasSectionProps {
 }
 
 export function ServentiasSection({ formData, handleCheckboxChange }: ServentiasSectionProps) {
-  const serventiasItems = [
+  const [serventiasItems, setServentiasItems] = useState([
     { id: "sala", label: "1- Sala" },
     { id: "quarto", label: "2- Quarto" },
     { id: "copa", label: "3- Copa" },
@@ -20,7 +22,24 @@ export function ServentiasSection({ formData, handleCheckboxChange }: Serventias
     { id: "corredor", label: "8- Corredor" },
     { id: "area", label: "9- Área" },
     { id: "poraoHabital", label: "10- Porão Habital" },
-  ]
+  ])
+
+  useEffect(() => {
+    fetch(apiUrl("/serventias/"))
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          setServentiasItems(
+            keys.map((key, idx) => ({
+              id: key,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`
+            }))
+          )
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <div>
