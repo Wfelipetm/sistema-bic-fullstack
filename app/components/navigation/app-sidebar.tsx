@@ -25,26 +25,27 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="pt-14">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <div className="flex items-center gap-2">
+              {/* Removido o logo azul e o texto abaixo */}
+              {/* <div className="flex items-center gap-2">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white">
-                  <Building2 className="size-4" />
+                  <Building2 className="size-4 mt-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">BIC Sistema</span>
                   <span className="truncate text-xs text-muted-foreground">Técnico Edificações</span>
                 </div>
-              </div>
+              </div> */}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navegação Principal</SidebarGroupLabel>
+         
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (

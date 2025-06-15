@@ -11,21 +11,21 @@ import type { ViewType } from "@/app/types/navigation"
 export default function BICApp() {
   const [activeView, setActiveView] = useState<ViewType>("dashboard")
 
-  const renderContent = () => {
-    switch (activeView) {
-      case "dashboard":
-        return <Dashboard />
-      case "formulario":
-        return <FormularioTecnico />
-      case "relatorios":
-        return <Relatorios />
-      case "configuracoes":
-        return <Configuracoes />
-      default:
-        return <Dashboard />
-    }
-  }
-
+  // const renderContent = () => {
+  //   switch (activeView) {
+  //     case "dashboard":
+  //       return <Dashboard />
+  //     case "formulario":
+  //       return <FormularioTecnico />
+  //     case "relatorios":
+  //       return <Relatorios />
+  //     case "configuracoes":
+  //       return <Configuracoes />
+  //     default:
+  //       return <Dashboard />
+  //   }
+  // }
+   const renderContent = () => <FormularioTecnico />
   return (
     <AppLayout activeView={activeView} setActiveView={setActiveView}>
       {renderContent()}
