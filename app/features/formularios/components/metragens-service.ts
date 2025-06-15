@@ -1,0 +1,11 @@
+import { apiUrl } from "@/lib/api"
+
+export async function createMetragens(data: any) {
+    const res = await fetch(apiUrl("/metragem/"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    })
+    if (!res.ok) throw new Error("Erro ao salvar metragem")
+    return res.json()
+}

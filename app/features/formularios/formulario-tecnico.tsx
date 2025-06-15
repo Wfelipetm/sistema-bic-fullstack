@@ -14,6 +14,10 @@ import { ServentiasSection } from "./components/serventias-section"
 import { AvaliacaoUrbanisticaSection } from "./components/avaliacao-urbanistica-section"
 import type { FormularioData } from "@/app/types/formulario"
 import { createBoletim } from "./components/boletim-service"
+import { createLogradouro } from "./components/logradouro-service"
+import { createTerreno } from "./components/terreno-service"
+import { createMetragens } from "./components/metragens-service"
+import { createConstrucao } from "./components/construcao-service"
 
 export default function FormularioTecnico() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -260,36 +264,22 @@ export default function FormularioTecnico() {
 
   const handleSave = async () => {
     try {
-      // Removido o bloco de validação dos campos obrigatórios
-      // Agora permite salvar mesmo com campos vazios
-
-      // Validação de data ISO simples (opcional, pode remover se quiser permitir datas vazias)
-      const isDataISO = (data: string) =>
-        !!data && /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}\.\d{3}Z)?$/.test(data)
-
-      // Se quiser permitir datas vazias, remova os blocos abaixo:
-      // if (!isDataISO(formData.lancamentoNovo)) {
-      //   alert(
-      //     "Preencha corretamente a data de lançamento novo!\nValor atual: " +
-      //     formData.lancamentoNovo
-      //   )
-      //   return
-      // }
-      // if (!isDataISO(formData.revisao)) {
-      //   alert(
-      //     "Preencha corretamente a data de revisão!\nValor atual: " +
-      //     formData.revisao
-      //   )
-      //   return
-      // }
-
-      // Chama o serviço para criar o boletim
+      // 1. Cria o boletim e pega o id
       const inscricaoValue = formData.inscricaoNumero || formData.numeroInscricao
       const payload = {
-        inscricao: inscricaoValue ? Number(inscricaoValue) : "", // ou remova se vazio
+        inscricao: inscricaoValue ? Number(inscricaoValue) : "",
         ...formData,
       }
       const boletim = await createBoletim(payload)
+
+      // 2. Usa o id do boletim para os outros POSTs
+      await Promise.all([
+        createLogradouro({ ...formData.logradouro, boletim_id: boletim.id }),
+        createTerreno({ ...formData.terreno, boletim_id: boletim.id }),
+        createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
+        createConstrucao({ ...formData.construcao, boletim_id: boletim.id }),
+        // ...adicione outros POSTs aqui...
+      ])
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
