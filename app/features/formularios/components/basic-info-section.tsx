@@ -13,6 +13,11 @@ interface BasicInfoSectionProps {
 }
 
 export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSectionProps) {
+  // Depuração: veja o estado do formulário sempre que ele mudar
+  useEffect(() => {
+    console.log("formData (BasicInfoSection):", formData)
+  }, [formData])
+
   // Buscar dados do proprietário ao digitar o CPF
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {

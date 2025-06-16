@@ -9,6 +9,11 @@ interface LogradouroSectionProps {
 }
 
 export function LogradouroSection({ formData, handleCheckboxChange }: LogradouroSectionProps) {
+  // Depuração: veja o estado do formulário sempre que ele mudar
+  useEffect(() => {
+    console.log("formData (LogradouroSection):", formData)
+  }, [formData])
+
   const [logradouroItems, setLogradouroItems] = useState([
     { id: "pavimentacao", label: "1- Pavimentação", description: "Via pavimentada" },
     { id: "iluminacaoPublica", label: "2- Iluminação Pública", description: "Iluminação adequada" },

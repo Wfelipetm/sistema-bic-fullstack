@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Filter, Search } from "lucide-react"
-import type { FiltrosRelatorio } from "@/types/relatorio"
+import type { FiltrosRelatorio } from "../../../types/relatorio"
 
 interface FiltrosRelatorioProps {
   filtros: FiltrosRelatorio
