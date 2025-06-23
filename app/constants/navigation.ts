@@ -16,13 +16,13 @@ export const navigationItems: NavigationItem[] = [
     id: "formulario",
     description: "Preenchimento de dados",
   },
-  // {
-  //   title: "Relatórios",
-  //   url: "#",
-  //   icon: BarChart3,
-  //   id: "relatorios",
-  //   description: "Visualizar e imprimir",
-  // },
+  {
+    title: "Relatórios",
+    url: "#",
+    icon: BarChart3,
+    id: "relatorios",
+    description: "Visualizar e imprimir",
+  },
   // {
   //   title: "Configurações",
   //   url: "#",
