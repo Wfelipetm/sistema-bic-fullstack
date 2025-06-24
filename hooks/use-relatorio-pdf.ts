@@ -243,32 +243,32 @@ export function gerarRelatorioPDF() {
       {
         titulo: "1- Tipo:",
         opcoes: ["1- Casa", "2- Apartamento", "3- Sala", "4- Loja", "5- Galpão", "6- Templo"],
-        espacoApos: 4,
+        espacoApos: 2,
       },
       {
         titulo: "2- Uso:",
         opcoes: ["1- Residencial", "2- Comercial", "3- Serviço", "4- Industrial", "5- Religioso"],
-        espacoApos: 9,
+        espacoApos: 7,
       },
       {
         titulo: "3- Tipo de\nConstrução:",
         opcoes: ["1- Madeira", "2- Alvenaria", "3- Metálica", "4- Concreto", "5- Misto"],
-        espacoApos: 4,
+        espacoApos: 3,
       },
       {
         titulo: "4- Esquadrias:",
         opcoes: ["1- Rústica", "2- Madeira", "3- Ferro", "4- Alumínio", "5- Especial", "6- Blindex"],
-        espacoApos: 9,
+        espacoApos: 7,
       },
       {
         titulo: "5- Piso:",
         opcoes: ["1- Tijolo", "2- Cimento", "3- Tábua", "4- Taco", "5- Cerâmica", "6- Especial", "7- Porcelanato"],
-        espacoApos: 4,
+        espacoApos: 2,
       },
       {
         titulo: "6- Forro:",
         opcoes: ["1- Estuque", "2- Placas", "3- Madeira", "4- Laje", "5- Gesso", "6- Especial", "7- Sem"],
-        espacoApos: 5,
+        espacoApos: 2,
       },
       {
         titulo: "7- Cobertura:",
@@ -339,14 +339,54 @@ export function gerarRelatorioPDF() {
 
 
 
-  opcoesServentia();
-  renderInfoConstrucao();
-
   doc.setDrawColor(0, 0, 0);
   doc.rect(5, 24, 185, 180); // área visual esquerda
   doc.setDrawColor(0, 0, 0);
   doc.rect(190, 24, 102, 180); // área visual direita
+  const renderObservacoes = () => {
+    const startX = 195;
+    let startY = y - 3;
 
+    doc.setFont(undefined, "bold");
+    doc.setFontSize(9);
+    doc.text("Observações:", startX, startY);
+
+    startY += 3;
+    const largura = 93;
+    const alturaLinha = 5;
+    const linhas = 6;
+
+    // caixa externa
+    doc.setDrawColor(0);
+    doc.rect(startX, startY, largura, linhas * alturaLinha);
+
+    // linhas horizontais
+    for (let i = 1; i < linhas; i++) {
+      doc.line(startX, startY + i * alturaLinha, startX + largura, startY + i * alturaLinha);
+    }
+
+    y = startY + linhas * alturaLinha + 5; // avança y
+  };
+  const renderLogradouroComPlaca = () => {
+  const x = 195;
+  const yBox = y +0.5 ;
+
+  doc.setFont(undefined, "bold");
+  doc.setFontSize(9);
+  doc.text("Logradouro com Placa?", x, yBox);
+
+  // desenha a caixa de seleção ao lado do texto
+  doc.setFont(undefined, "normal");
+  doc.rect(x + 38, yBox - 3.5, 4, 4); // x, y, largura, altura
+
+  y += 10; // avança y geral
+};
+
+
+  opcoesServentia();
+  renderInfoConstrucao();
+  renderObservacoes();
+  renderLogradouroComPlaca();
 
   // ASSINATURAS
   // doc.line(60, y, 120, y);
