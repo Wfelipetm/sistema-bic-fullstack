@@ -79,22 +79,18 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       <div>
         <h4 className="font-semibold text-lg mb-4 text-gray-800">2- Características do Solo:</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {soilOptions.length > 0
-            ? soilOptions.map((item, idx) => (
-                <CheckboxField
-                  key={idx}
-                  id={Object.keys(item)[0]}
-                  label={Object.keys(item)[0]}
-                  description=""
-                  checked={
-                    formData.terreno.caracteristicasSolo[Object.keys(item)[0] as keyof typeof formData.terreno.caracteristicasSolo]
-                  }
-                  onCheckedChange={(checked) =>
-                    handleNestedCheckboxChange("terreno", "caracteristicasSolo", Object.keys(item)[0], checked)
-                  }
-                />
-              ))
-            : null}
+          {["alagadico", "arenoso", "rochoso", "normal"].map((key) => (
+            <CheckboxField
+              key={key}
+              id={key}
+              label={key.charAt(0).toUpperCase() + key.slice(1)}
+              description=""
+              checked={formData.terreno.caracteristicasSolo[key as keyof typeof formData.terreno.caracteristicasSolo]}
+              onCheckedChange={(checked) =>
+                handleNestedCheckboxChange("terreno", "caracteristicasSolo", key, checked)
+              }
+            />
+          ))}
         </div>
       </div>
 

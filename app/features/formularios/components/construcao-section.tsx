@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import {
+  tipoAPI,
+  usoAPI,
+  tipoConstrucaoAPI,
+  esquadrilhaAPI,
+  pisoAPI,
+  forroAPI,
+  coberturaAPI,
+  acabamentoInternoAPI,
+  acabamentoExternoAPI,
+} from "@/lib/api-services"
 
 interface ConstrucaoSectionProps {
   formData: FormularioData
@@ -85,8 +95,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
   ])
 
   useEffect(() => {
-    fetch(apiUrl("/tipo/"))
-      .then(res => res.json())
+    tipoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -97,8 +106,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/uso/"))
-      .then(res => res.json())
+    usoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -109,8 +117,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/tipo-construcao/"))
-      .then(res => res.json())
+    tipoConstrucaoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -121,8 +128,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/esquadrilha/"))
-      .then(res => res.json())
+    esquadrilhaAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -133,8 +139,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/piso/"))
-      .then(res => res.json())
+    pisoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -145,8 +150,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/forro/"))
-      .then(res => res.json())
+    forroAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -157,8 +161,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/cobertura/"))
-      .then(res => res.json())
+    coberturaAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -169,8 +172,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/acabamento-interno/"))
-      .then(res => res.json())
+    acabamentoInternoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")
@@ -181,8 +183,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         }
       })
       .catch(() => {})
-    fetch(apiUrl("/acabamento-externo/"))
-      .then(res => res.json())
+    acabamentoExternoAPI.get()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(k => k !== "id")

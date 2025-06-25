@@ -19,6 +19,7 @@ import { createTerreno } from "./components/terreno-service"
 import { createMetragens } from "./components/metragens-service"
 import { createConstrucao } from "./components/construcao-service"
 import { formularioInicial } from "./components/formulario-inicial"
+import { caracterSoloAPI } from "@/lib/api-services"
 
 export default function FormularioTecnico() {
   const [formData, setFormData] = useState<FormularioData>(formularioInicial)
@@ -100,7 +101,7 @@ export default function FormularioTecnico() {
         createTerreno({ ...formData.terreno, boletim_id: boletim.id }),
         createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
         createConstrucao({ ...formData.construcao, boletim_id: boletim.id }),
-        // ...adicione outros POSTs aqui...
+        caracterSoloAPI.create({ ...formData.terreno.caracteristicasSolo, boletim_id: boletim.id }),
       ])
 
       alert("Formulário BIC salvo com sucesso!")
