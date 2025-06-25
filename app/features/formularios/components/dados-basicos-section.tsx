@@ -1,35 +1,33 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { useEffect } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import type { FormularioData } from "@/app/types/formulario";
+import { apiUrl } from "@/lib/api";
 
 interface DadosBasicosSectionProps {
-  formData: FormularioData
-  handleInputChange: (field: string, value: string) => void
+  formData: FormularioData;
+  handleInputChange: (field: string, value: string) => void;
 }
 
 export function DadosBasicosSection({
   formData,
   handleInputChange,
 }: DadosBasicosSectionProps) {
-  
-
   // Exemplo: buscar dados do proprietário ao digitar o CPF
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {
       fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data?.nome) {
-            handleInputChange("proprietario", data.nome)
+            handleInputChange("proprietario", data.nome);
           }
         })
-        .catch(() => {})
+        .catch(() => {});
     }
-  }, [formData.cpf])
+  }, [formData.cpf]);
 
   return (
     <div className="space-y-6">
@@ -43,7 +41,9 @@ export function DadosBasicosSection({
             id="inscricaoNumero"
             placeholder="Número da inscrição"
             value={formData.inscricaoNumero}
-            onChange={(e) => handleInputChange("inscricaoNumero", e.target.value)}
+            onChange={(e) =>
+              handleInputChange("inscricaoNumero", e.target.value)
+            }
             className="mt-1"
           />
         </div>
@@ -53,7 +53,9 @@ export function DadosBasicosSection({
           <Input
             type="date"
             value={formData.lancamentoNovo}
-            onChange={(e) => handleInputChange("lancamentoNovo", e.target.value)}
+            onChange={(e) =>
+              handleInputChange("lancamentoNovo", e.target.value)
+            }
             className="mt-1"
           />
         </div>
@@ -154,10 +156,10 @@ export function DadosBasicosSection({
       </div>
 
       {/* Quarta linha - Proprietário */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="md:col-span-2">
           <Label htmlFor="proprietario" className="text-sm font-medium">
-            Proprietário (Compromissário) *
+            Proprietário (Compromissário)
           </Label>
           <Input
             id="proprietario"
@@ -180,10 +182,6 @@ export function DadosBasicosSection({
             className="mt-1"
           />
         </div>
-      </div>
-
-      {/* Quinta linha - Contato */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <Label htmlFor="telefone" className="text-sm font-medium">
             Tel.: p/Contato
@@ -198,5 +196,5 @@ export function DadosBasicosSection({
         </div>
       </div>
     </div>
-  )
+  );
 }

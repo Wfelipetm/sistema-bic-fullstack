@@ -44,7 +44,7 @@ export function ServentiasSection({ formData, handleCheckboxChange }: Serventias
   return (
     <div>
       <h4 className="font-semibold text-lg mb-4 text-gray-800">Serventias:</h4>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {serventiasItems.map((item) => (
           <CheckboxField
             key={item.id}

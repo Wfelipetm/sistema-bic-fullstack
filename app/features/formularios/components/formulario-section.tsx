@@ -1,20 +1,25 @@
-import type { ReactNode } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Badge } from "@/components/ui/badge"
-import { ChevronDown, ChevronRight, type LucideIcon } from "lucide-react"
-import { apiUrl } from "@/lib/api"
+import type { ReactNode } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown, ChevronRight, type LucideIcon } from "lucide-react";
+import { apiUrl } from "@/lib/api";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FormularioSectionProps {
-  id: string
-  title: string
-  description: string
-  icon: LucideIcon
-  iconColor: string
-  iconBgColor: string
-  isOpen: boolean
-  onToggle: () => void
-  children: ReactNode
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  iconColor: string;
+  iconBgColor: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: ReactNode;
 }
 
 export function FormularioSection({
@@ -29,7 +34,7 @@ export function FormularioSection({
   children,
 }: FormularioSectionProps) {
   // Exemplo de uso dentro do componente:
-  const url = apiUrl("/alguma-rota/")
+  const url = apiUrl("/alguma-rota/");
 
   return (
     <Card className="border-0 shadow-sm">
@@ -43,20 +48,36 @@ export function FormularioSection({
                 </div>
                 <div>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    {isOpen ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
                     {title}
                   </CardTitle>
                   <p className="text-sm text-gray-500 mt-1">{description}</p>
                 </div>
               </div>
-              <Badge variant={isOpen ? "default" : "secondary"}>{isOpen ? "Aberto" : "Fechado"}</Badge>
+              <Badge variant={isOpen ? "default" : "secondary"}>
+                {isOpen ? "Aberto" : "Fechado"}
+              </Badge>
             </div>
           </CardHeader>
         </CollapsibleTrigger>
-        <CollapsibleContent>
-          <CardContent className="space-y-6 pt-0">{children}</CardContent>
-        </CollapsibleContent>
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              key="content"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <CardContent className="space-y-6 pt-0">{children}</CardContent>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Collapsible>
     </Card>
-  )
+  );
 }
