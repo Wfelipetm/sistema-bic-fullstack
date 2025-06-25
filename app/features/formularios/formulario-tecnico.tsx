@@ -19,7 +19,25 @@ import { createTerreno } from "./components/terreno-service"
 import { createMetragens } from "./components/metragens-service"
 import { createConstrucao } from "./components/construcao-service"
 import { formularioInicial } from "./components/formulario-inicial"
-import { caracterSoloAPI } from "@/lib/api-services"
+import {
+  usoAPI,
+  topografiaAPI,
+  tipoConstrucaoAPI,
+  tipoAPI,
+  situacaoAPI,
+  serventiasAPI,
+  pisoAPI,
+  obsLogradouroAPI,
+  nivelamentoAPI,
+  forroAPI,
+  esquadrilhaAPI,
+  coberturaAPI,
+  calcamentoAPI,
+  avaliUrbaLogradouroAPI,
+  acabamentoInternoAPI,
+  acabamentoExternoAPI,
+  caracterSoloAPI,
+} from "@/lib/api-services"
 
 export default function FormularioTecnico() {
   const [formData, setFormData] = useState<FormularioData>(formularioInicial)
@@ -95,12 +113,78 @@ export default function FormularioTecnico() {
       }
       const boletim = await createBoletim(payload)
 
-      // 2. Usa o id do boletim para os outros POSTs
+      // 2. Cria todos os registros auxiliares e pega os ids
+      // Monte o payload correto para avaliação urbanística
+      const avaliacao = formData.avaliacaoUrbanistica
+      const avaliUrbaPayload = {
+        alta: avaliacao === "alta",
+        media: avaliacao === "media",
+        media_baixa: avaliacao === "mediaBaixa",
+        baixa: avaliacao === "baixa",
+        muito_baixa: avaliacao === "muitoBaixa",
+      }
+
+      const [
+        usoRes,
+        topografiaRes,
+        tipoConstrucaoRes,
+        tipoRes,
+        situacaoRes,
+        serventiasRes,
+        pisoRes,
+        obsLogradouroRes,
+        nivelamentoRes,
+        forroRes,
+        esquadrilhaRes,
+        coberturaRes,
+        calcamentoRes,
+        avaliUrbaLogradouroRes,
+        acabamentoInternoRes,
+        acabamentoExternoRes,
+      ] = await Promise.all([
+        usoAPI.create(formData.construcao.uso),
+        topografiaAPI.create(formData.terreno.topografia),
+        tipoConstrucaoAPI.create(formData.construcao.tipoConstrucao),
+        tipoAPI.create(formData.construcao.tipo),
+        situacaoAPI.create(formData.terreno.situacao),
+        serventiasAPI.create(formData.serventias),
+        pisoAPI.create(formData.construcao.piso),
+        obsLogradouroAPI.create(formData.obsLogradouro),
+        nivelamentoAPI.create(formData.terreno.nivelamento),
+        forroAPI.create(formData.construcao.forro),
+        esquadrilhaAPI.create(formData.construcao.esquadrias),
+        coberturaAPI.create(formData.construcao.cobertura),
+        calcamentoAPI.create(formData.calcamento),
+        avaliUrbaLogradouroAPI.create(avaliUrbaPayload), // <-- aqui!
+        acabamentoInternoAPI.create(formData.construcao.acabamentoInterno),
+        acabamentoExternoAPI.create(formData.construcao.acabamentoExterno),
+      ])
+
+      // 3. Usa os ids para os outros POSTs
       await Promise.all([
         createLogradouro({ ...formData.logradouro, boletim_id: boletim.id }),
         createTerreno({ ...formData.terreno, boletim_id: boletim.id }),
         createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
-        createConstrucao({ ...formData.construcao, boletim_id: boletim.id }),
+        createConstrucao({
+          ...formData.construcao,
+          uso_id: usoRes.id,
+          topografia_id: topografiaRes.id,
+          tipo_construcao_id: tipoConstrucaoRes.id,
+          tipo_id: tipoRes.id,
+          situacao_id: situacaoRes.id,
+          serventias_id: serventiasRes.id,
+          piso_id: pisoRes.id,
+          obs_logradouro_id: obsLogradouroRes.id,
+          nivelamento_id: nivelamentoRes.id,
+          forro_id: forroRes.id,
+          esquadrilha_id: esquadrilhaRes.id,
+          cobertura_id: coberturaRes.id,
+          calcamento_id: calcamentoRes.id,
+          avali_urba_logradouro_id: avaliUrbaLogradouroRes.id,
+          acabamento_interno_id: acabamentoInternoRes.id,
+          acabamento_externo_id: acabamentoExternoRes.id,
+          boletim_id: boletim.id,
+        }),
         caracterSoloAPI.create({ ...formData.terreno.caracteristicasSolo, boletim_id: boletim.id }),
       ])
 
