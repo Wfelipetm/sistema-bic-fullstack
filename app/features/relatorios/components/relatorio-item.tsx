@@ -21,7 +21,11 @@ export function RelatorioItem({
   onPrint,
 }: RelatorioItemProps) {
   const handlePreview = async () => {
-    const blob = await gerarRelatorioPDF();
+    const blob = await gerarRelatorioPDF(Number(relatorio.id));
+    if (!blob) {
+      // Optionally, show an error message to the user here
+      return;
+    }
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
