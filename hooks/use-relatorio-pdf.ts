@@ -13,24 +13,24 @@ export function gerarRelatorioPDF() {
   doc.addImage(logoBase64, "PNG", 8, 6, 12, 15); // (x, y, width, height)
   doc.setFontSize(10);
   doc.setTextColor(255, 255, 255)
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("PREFEITURA MUNICIPAL DE ITAGUAÍ", 25, 10);
   doc.setFontSize(7);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("Estado do Rio de Janeiro", 25, 13);
   doc.text("Secretaria de Fazenda", 25, 16);
-  doc.setFont(undefined, "italic");
+  doc.setFont("helvetica", "italic");
   doc.text("Subsecretaria de Arrecadação", 25, 19);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.setDrawColor(255, 255, 255); // vermelho
 
 
   doc.line(210, 15, 285, 15);
-  doc.setFont(undefined, "italic", "bold");
+  doc.setFont("helvetica", "italic", "bold");
   doc.text("Carimbo e Assinatura do Fiscal", 230, 18);
   doc.setDrawColor(0, 0, 0); // vermelho
   doc.setFontSize(14);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)", 140, y, { align: "center" });
 
   y += 3;
@@ -39,31 +39,31 @@ export function gerarRelatorioPDF() {
   doc.setTextColor(0, 0, 0)
   // INSCRIÇÃO / DATAS
   doc.setFontSize(10);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("INSCRIÇÃO Nº:", 10, (y += 6));
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("12345", 38, y);
 
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Lançamento novo em:", 55, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("15/01/2024", 95, y);
 
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Revisão em:", 120, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("15/01/2024", 145, y);
   doc.line(5, 32, 190, 32);
   y += 4;
 
   // LOCALIZAÇÃO
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Lote:", 10, (y += 6));
   doc.text("Quadra:", 30, y);
   doc.text("Loteamento:", 55, y);
   doc.text("Distrito:", 120, y);
 
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("001", 20, y);
   doc.text("A", 45, y);
   doc.text("Vila Nova", 80, y);
@@ -72,35 +72,35 @@ export function gerarRelatorioPDF() {
   y += 4;
 
   // ENDEREÇO
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Endereço:", 10, (y += 6));
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("Rua das Flores, 123", 30, y);
 
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("CEP:", 120, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("23815-000", 130, y);
   doc.line(5, 52, 190, 52);
   y += 4;
 
   // PROPRIETÁRIO
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Proprietário (Compromissário):", 10, (y += 6));
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("João Silva", 65, y);
 
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("CPF:", 120, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("123.456.789-00", 130, y);
   doc.line(5, 62, 190, 62);
   y += 4;
 
   // LOGRADOURO
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("I - INFORMAÇÕES SOBRE O LOGRADOURO:", 60, (y += 5));
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.line(5, 70, 190, 70);
   y += 2;
   const InformacoesLogradouro = [
@@ -122,7 +122,7 @@ export function gerarRelatorioPDF() {
   y += 10;
 
   // TERRENO - EXIBIÇÃO EM COLUNAS
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("II - INFORMAÇÕES SOBRE O TERRENO:", 64, y + 4);
   doc.line(5, 86, 190, 86);
@@ -155,7 +155,7 @@ export function gerarRelatorioPDF() {
       const x = 10 + i * colWidth;
       let offsetY = 0;
 
-      doc.setFont(undefined, "bold");
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.text(grupo.titulo, x, startY);
 
@@ -163,7 +163,7 @@ export function gerarRelatorioPDF() {
         const itemY = startY + 6 + idx * 5;
         doc.rect(x, itemY - 3, 4, 4);
         doc.setFontSize(8);
-        doc.setFont(undefined, "normal");
+        doc.setFont("helvetica", "normal");
         doc.text(check, x + 1, itemY);
         doc.text(label, x + 6, itemY);
         offsetY = itemY;
@@ -178,21 +178,21 @@ export function gerarRelatorioPDF() {
   renderTerrenoHorizontal();
   doc.line(5, 124, 190, 124);
   // METRAGENS
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("III - METRAGENS:", 85, 128);
   doc.line(5, 130, 190, 130);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Área do Terreno:", 10, (y += 3));
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("450,00 m²", 40, y);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Testada:", 79, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("15,00 m", 95, y);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Área Edificada:", 127, y);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text("120,00 m²", 155, y);
   doc.line(5, 137, 190, 137);
   y -= 3;
@@ -221,7 +221,7 @@ export function gerarRelatorioPDF() {
       const x = 10 + i * colWidth;
       let offsetY = 0;
 
-      doc.setFont(undefined, "bold");
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.text(grupo.titulo, x, startY);
 
@@ -229,7 +229,7 @@ export function gerarRelatorioPDF() {
         const itemY = startY + 5 + idx * 5;
         doc.rect(x, itemY - 3, 4, 4);
         doc.setFontSize(8);
-        doc.setFont(undefined, "normal");
+        doc.setFont("helvetica", "normal");
         doc.text(check, x + 1, itemY);
         doc.text(label, x + 6, itemY);
         offsetY = itemY;
@@ -292,7 +292,7 @@ export function gerarRelatorioPDF() {
         espacoApos: 4,
       },
     ];
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.text("IV - INFORMAÇÕES SOBRE A CONSTRUÇÃO", 200, 30);
 
@@ -303,26 +303,36 @@ export function gerarRelatorioPDF() {
       [grupos[2], grupos[5], grupos[8]],
     ];
 
-    const renderGrupo = (grupo, x, yStart) => {
+    interface GrupoConstrucao {
+      titulo: string;
+      opcoes: string[];
+      espacoApos?: number;
+    }
+
+    const renderGrupo = (
+      grupo: GrupoConstrucao,
+      x: number,
+      yStart: number
+    ): number => {
       let y = yStart;
 
-      const linhasTitulo = grupo.titulo.split("\n");
-      doc.setFont(undefined, "bold");
+      const linhasTitulo: string[] = grupo.titulo.split("\n");
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
-      linhasTitulo.forEach((linha) => {
-        doc.text(linha, x, y);
-        y += 4;
+      linhasTitulo.forEach((linha: string) => {
+      doc.text(linha, x, y);
+      y += 4;
       });
 
       y += 2;
 
-      doc.setFont(undefined, "normal");
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
 
-      grupo.opcoes.forEach((texto) => {
-        doc.rect(x, y - 3.5, 4, 4);
-        doc.text(texto, x + 6, y);
-        y += 5;
+      grupo.opcoes.forEach((texto: string) => {
+      doc.rect(x, y - 3.5, 4, 4);
+      doc.text(texto, x + 6, y);
+      y += 5;
       });
 
       // altura personalizada por grupo
@@ -353,7 +363,7 @@ export function gerarRelatorioPDF() {
     const startX = 195;
     let startY = y - 3;
 
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.text("Observações:", startX, startY);
 
@@ -377,12 +387,12 @@ export function gerarRelatorioPDF() {
     const x = 195;
     const yBox = y + 0.5;
 
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.text("Logradouro com Placa?", x, yBox);
 
     // desenha a caixa de seleção ao lado do texto
-    doc.setFont(undefined, "normal");
+    doc.setFont("helvetica", "normal");
     doc.rect(x + 38, yBox - 3.5, 4, 4); // x, y, largura, altura
 
     y += 10; // avança y geral
