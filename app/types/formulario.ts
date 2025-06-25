@@ -206,8 +206,11 @@ export interface FormularioData {
   // Logradouro com Placa
   logradouroComPlaca: boolean
 
-  // Observações
-  observacoes: string
+  // Observações do Logradouro (ajustado para refletir a entidade do banco)
+  obsLogradouro: {
+    logradouro_placa: boolean
+    observacoes: string
+  }
 
   // Responsável
   responsavel?: string
