@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FileText } from "lucide-react"
@@ -18,6 +18,14 @@ export default function Relatorios() {
     status: "all",
     tecnico: "all",
   })
+
+  const [relatorios, setRelatorios] = useState([])
+
+  useEffect(() => {
+    fetch("http://10.200.200.187:5001/relatorios")
+      .then((res) => res.json())
+      .then((data) => setRelatorios(data))
+  }, [])
 
   const handlePreview = (relatorioId: string) => {
     console.log(`Visualizando relatório ${relatorioId}`)
@@ -53,7 +61,7 @@ export default function Relatorios() {
 
       {/* Lista de Relatórios */}
       <RelatoriosList
-        relatorios={mockRelatorios}
+        relatorios={relatorios}
         onPreview={handlePreview}
         onDownload={handleDownload}
         onPrint={handlePrint}

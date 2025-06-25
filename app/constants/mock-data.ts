@@ -10,42 +10,7 @@ export const currentUser: UserProfile = {
 }
 
 export const mockRelatorios: Relatorio[] = [
-  {
-    id: "BIC-REL-001",
-    titulo: "Relatório Técnico - Rua das Flores, 123",
-    data: "15/01/2024",
-    status: "Concluído",
-    tecnico: "João Silva",
-    tipo: "Residencial",
-    tamanho: "2.3 MB",
-  },
-  {
-    id: "BIC-REL-002",
-    titulo: "Relatório Técnico - Av. Principal, 456",
-    data: "14/01/2024",
-    status: "Pendente",
-    tecnico: "Maria Santos",
-    tipo: "Comercial",
-    tamanho: "1.8 MB",
-  },
-  {
-    id: "BIC-REL-003",
-    titulo: "Relatório Técnico - Rua do Comércio, 789",
-    data: "13/01/2024",
-    status: "Concluído",
-    tecnico: "Pedro Costa",
-    tipo: "Industrial",
-    tamanho: "3.1 MB",
-  },
-  {
-    id: "BIC-REL-004",
-    titulo: "Relatório Técnico - Praça Central, 321",
-    data: "12/01/2024",
-    status: "Em Revisão",
-    tecnico: "Ana Oliveira",
-    tipo: "Público",
-    tamanho: "2.7 MB",
-  },
+
 ]
 
 export const dashboardStats = [

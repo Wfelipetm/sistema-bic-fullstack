@@ -39,6 +39,14 @@ import {
   caracterSoloAPI,
 } from "@/lib/api-services"
 
+function sanitizeBooleans<T extends Record<string, any>>(obj: T): T {
+  const sanitized: Record<string, any> = {}
+  for (const key in obj) {
+    sanitized[key] = typeof obj[key] === "boolean" ? obj[key] : false
+  }
+  return sanitized as T
+}
+
 export default function FormularioTecnico() {
   const [formData, setFormData] = useState<FormularioData>(formularioInicial)
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -124,6 +132,10 @@ export default function FormularioTecnico() {
         muito_baixa: avaliacao === "muitoBaixa",
       }
 
+      const situacaoPayload = sanitizeBooleans(formData.terreno.situacao)
+      const usoPayload = sanitizeBooleans(formData.construcao.uso)
+      // Repita para outros objetos booleanos
+
       const [
         usoRes,
         topografiaRes,
@@ -142,22 +154,22 @@ export default function FormularioTecnico() {
         acabamentoInternoRes,
         acabamentoExternoRes,
       ] = await Promise.all([
-        usoAPI.create(formData.construcao.uso),
-        topografiaAPI.create(formData.terreno.topografia),
-        tipoConstrucaoAPI.create(formData.construcao.tipoConstrucao),
-        tipoAPI.create(formData.construcao.tipo),
-        situacaoAPI.create(formData.terreno.situacao),
-        serventiasAPI.create(formData.serventias),
-        pisoAPI.create(formData.construcao.piso),
+        usoAPI.create(usoPayload),
+        topografiaAPI.create(sanitizeBooleans(formData.terreno.topografia)),
+        tipoConstrucaoAPI.create(sanitizeBooleans(formData.construcao.tipoConstrucao)),
+        tipoAPI.create(sanitizeBooleans(formData.construcao.tipo)),
+        situacaoAPI.create(situacaoPayload),
+        serventiasAPI.create(sanitizeBooleans(formData.serventias)),
+        pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
         obsLogradouroAPI.create(formData.obsLogradouro),
-        nivelamentoAPI.create(formData.terreno.nivelamento),
-        forroAPI.create(formData.construcao.forro),
-        esquadrilhaAPI.create(formData.construcao.esquadrias),
-        coberturaAPI.create(formData.construcao.cobertura),
+        nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
+        forroAPI.create(sanitizeBooleans(formData.construcao.forro)),
+        esquadrilhaAPI.create(sanitizeBooleans(formData.construcao.esquadrias)),
+        coberturaAPI.create(sanitizeBooleans(formData.construcao.cobertura)),
         calcamentoAPI.create(formData.calcamento),
-        avaliUrbaLogradouroAPI.create(avaliUrbaPayload), // <-- aqui!
-        acabamentoInternoAPI.create(formData.construcao.acabamentoInterno),
-        acabamentoExternoAPI.create(formData.construcao.acabamentoExterno),
+        avaliUrbaLogradouroAPI.create(avaliUrbaPayload),
+        acabamentoInternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoInterno)),
+        acabamentoExternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoExterno)),
       ])
 
       // 3. Usa os ids para os outros POSTs
