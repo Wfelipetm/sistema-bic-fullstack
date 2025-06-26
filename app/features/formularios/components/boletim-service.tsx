@@ -23,7 +23,8 @@ export async function createBoletim(formData: FormularioData) {
     proprietario: formData.proprietario,
     cpf: Number(formData.cpf),
     contato: Number(formData.telefone),
-    responsavel: formData.responsavel || "Responsável"
+    responsavel: formData.responsavel || "Responsável",
+    tecnico_id: Number(formData.tecnicoId) // Adicione esta linha!
   }
 
   // Log para depuração

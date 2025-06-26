@@ -214,4 +214,7 @@ export interface FormularioData {
 
   // Responsável
   responsavel?: string
+
+  // Técnico responsável
+  tecnicoId?: string | number
 }
