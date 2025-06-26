@@ -25,7 +25,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="pt-14">
+      <SidebarHeader className="pt-24">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
@@ -57,8 +57,8 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
                     onClick={() => setActiveView(item.id)}
                   >
                     <button className="flex items-center gap-2 w-full">
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="size-4 text-blue-700 stroke-2" />
+                      <span className="text-blue-700 font-medium">{item.title}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -67,6 +67,19 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <div className="mt-auto p-4 border-t border-blue-100">
+        <div className="flex flex-col items-end">
+          <span className="text-xs text-end text-blue-700 dark:text-blue-200">
+            © 2025 Sistema BIC.
+          </span>
+          <span className="text-xs text-end text-blue-700 dark:text-blue-200">
+            Desenvolvido por SMCTIC.
+          </span>
+          <span className="text-[10px] text-blue-400 mt-1">
+            Versão 3.0.0
+          </span>
+        </div>
+      </div>
     </Sidebar>
   )
 }

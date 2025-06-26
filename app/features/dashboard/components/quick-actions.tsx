@@ -4,7 +4,7 @@ import { FileText, BarChart3, Users, TrendingUp } from "lucide-react"
 
 export function QuickActions() {
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="border-0">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-gray-900">Ações Rápidas</CardTitle>
         <CardDescription>Acesso rápido às principais funcionalidades</CardDescription>

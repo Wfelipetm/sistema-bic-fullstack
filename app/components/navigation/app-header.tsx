@@ -33,7 +33,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="flex h-16 items-center px-6">
+      <div className="flex h-24 items-center px-6">
         {/* Logo e Título */}
         <div className="flex items-center gap-3">
           <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
@@ -45,43 +45,14 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
           </div>
         </div>
 
-        {/* Página Atual - REMOVIDO */}
-        {/*
-        <div className="hidden md:flex items-center gap-2 ml-8">
-          <span className="text-gray-400">/</span>
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-            {getPageTitle()}
-          </Badge>
+        {/* Imagem centralizada */}
+        <div className="flex-1 flex justify-center">
+          <img
+            src="/images/regua-logo-itaguai_light3.png"
+            alt="Logo Prefeitura"
+            className="h-20 object-contain"
+          />
         </div>
-        */}
-
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Busca - REMOVIDO */}
-        {/*
-        <div className="hidden lg:flex items-center gap-4 mr-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Buscar formulários, relatórios..."
-              className="pl-10 w-80 bg-gray-50 border-gray-200 focus:bg-white"
-            />
-          </div>
-        </div>
-        */}
-
-        {/* Notificações - REMOVIDO */}
-        {/*
-        <div className="flex items-center gap-3 mr-4">
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5 text-gray-600" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-              3
-            </span>
-          </Button>
-        </div>
-        */}
 
         {/* Perfil do usuário */}
         <div className="flex items-center gap-3">
@@ -93,14 +64,13 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" alt={currentUser.name} />
-                  <AvatarFallback className="bg-blue-600 text-white">
-                    {currentUser.name
-                      .split(" ")
-                      .map((n: string) => n[0])
-                      .join("")
-                      .substring(0, 2)}
+                <Avatar className="h-10 w-10  text-white">
+                  <AvatarFallback className="bg-[#2563EB]">
+                  {currentUser.name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .join("")
+                    .substring(0, 2)}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -108,8 +78,8 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
             <DropdownMenuContent className="w-64" align="end" forceMount>
               <div className="flex items-center justify-start gap-3 p-3 border-b">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src="/placeholder.svg?height=48&width=48" alt={currentUser.name} />
-                  <AvatarFallback className="bg-blue-600 text-white">
+                  <AvatarImage  alt={currentUser.name} />
+                  <AvatarFallback className=" text-white bg-[#2563EB]">
                     {currentUser.name
                       .split(" ")
                       .map((n: string) => n[0])
@@ -124,7 +94,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                 </div>
               </div>
               <div className="p-1">
-                <DropdownMenuItem className="cursor-pointer" onClick={() => setActiveView("configuracoes")}>
+                {/* <DropdownMenuItem className="cursor-pointer" onClick={() => setActiveView("configuracoes")}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Meu Perfil</span>
                 </DropdownMenuItem>
@@ -133,10 +103,10 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
                   <span>Configurações</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer">
-                  <Bell className="mr-2 h-4 w-4" /> {/* Mantido no dropdown, mas removido do header principal */}
+                  <Bell className="mr-2 h-4 w-4" /> 
                   <span>Notificações</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer text-red-600 mt-2 border-t pt-2">
+                </DropdownMenuItem> */}
+                <DropdownMenuItem className="cursor-pointer text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sair do Sistema</span>
                 </DropdownMenuItem>

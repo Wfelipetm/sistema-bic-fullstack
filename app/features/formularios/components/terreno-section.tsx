@@ -79,7 +79,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       {/* 2- Características do Solo */}
       <div>
         <h4 className="font-semibold text-lg mb-4 text-gray-800">2- Características do Solo:</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {["alagadico", "arenoso", "rochoso", "normal"].map((key) => (
             <CheckboxField
               key={key}
@@ -98,7 +98,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       {/* 3- Topografia */}
       <div>
         <h4 className="font-semibold text-lg mb-4 text-gray-800">3- Topografia:</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {topografiaOptions.length > 0
             ? topografiaOptions.map((item, idx) => (
                 <CheckboxField
@@ -119,7 +119,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       {/* 4- Nivelamento */}
       <div>
         <h4 className="font-semibold text-lg mb-4 text-gray-800">4- Nivelamento:</h4>
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {nivelamentoOptions.length > 0
             ? nivelamentoOptions.map((item, idx) => (
                 <CheckboxField

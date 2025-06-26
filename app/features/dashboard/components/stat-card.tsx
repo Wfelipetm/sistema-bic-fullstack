@@ -30,7 +30,7 @@ export function StatCard({ title, value, description, icon, color, bgColor, tren
   const isTrendPositive = trend.startsWith("+")
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="border-0 shadow-md hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
         <div className={`p-2 rounded-lg ${bgColor}`}>{renderIcon()}</div>

@@ -103,7 +103,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
                 </div>
               </div>
               <div className="p-1">
-                <DropdownMenuItem className="cursor-pointer" onClick={() => setActiveView("configuracoes")}>
+                {/* <DropdownMenuItem className="cursor-pointer" onClick={() => setActiveView("configuracoes")}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Meu Perfil</span>
                 </DropdownMenuItem>
@@ -114,7 +114,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
                 <DropdownMenuItem className="cursor-pointer">
                   <Bell className="mr-2 h-4 w-4" />
                   <span>Notificações</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem className="cursor-pointer text-red-600 mt-2 border-t pt-2">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sair do Sistema</span>

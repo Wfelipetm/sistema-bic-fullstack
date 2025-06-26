@@ -14,7 +14,7 @@ export default function Dashboard() {
         <div>
           <p className="text-sm text-gray-600">Bem-vindo de volta!</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-500 hover:bg-blue-700">
           <Plus className="h-4 w-4 mr-2" />
           Novo Formulário
         </Button>

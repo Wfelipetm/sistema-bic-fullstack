@@ -210,7 +210,7 @@ export default function FormularioTecnico() {
   return (
     <div className="space-y-6">
       {/* Header com referência ao formulário oficial */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-lg">
+      <div className="bg-blue-800 text-white p-6 rounded-lg shadow-lg">
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 bg-white/20 rounded-lg">
             <FileText className="h-8 w-8" />
@@ -221,15 +221,15 @@ export default function FormularioTecnico() {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+        <div className="flex justify-end items-center">
+          {/* <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
             Novo Formulário BIC
-          </Badge>
+          </Badge> */}
           <div className="flex gap-2">
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+            {/* <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
               Salvar Rascunho
-            </Button>
-            <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
+            </Button> */}
+            <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-300">
               <Save className="h-4 w-4 mr-2" />
               Salvar BIC
             </Button>

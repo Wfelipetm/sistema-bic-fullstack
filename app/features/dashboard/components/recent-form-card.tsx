@@ -12,7 +12,7 @@ interface RecentFormProps {
 
 export function RecentFormCard({ id, local, data, status, tecnico, tipo }: RecentFormProps) {
   return (
-    <div className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
+    <div className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors shadow-md">
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-2">
           <p className="font-medium text-gray-900">#{id}</p>

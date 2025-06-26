@@ -12,7 +12,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "BIC - Sistema de Informação Cadastral",
   description: "Sistema de Boletim de Informações Cadastrais para técnicos em edificações",
-    generator: 'v0.dev'
+    generator: 'Prefeitura Municipal de Itaguaí',
+    icons: {
+		icon: [			
+			{ url: "/favicon/building.png" },
+		],
+	}
 }
 
 export default function RootLayout({

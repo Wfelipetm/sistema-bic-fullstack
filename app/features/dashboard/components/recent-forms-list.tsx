@@ -4,7 +4,7 @@ import { recentForms } from "@/app/constants/mock-data"
 
 export function RecentFormsList() {
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="border-0">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-gray-900">Formulários Recentes</CardTitle>
         <CardDescription>Últimos formulários preenchidos no sistema</CardDescription>
