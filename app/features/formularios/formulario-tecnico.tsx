@@ -113,13 +113,21 @@ export default function FormularioTecnico() {
 
   const handleSave = async () => {
     try {
-      // 1. Cria o boletim e pega o id
-      const inscricaoValue = formData.inscricaoNumero || formData.numeroInscricao
-      const payload = {
-        inscricao: inscricaoValue ? Number(inscricaoValue) : "",
-        ...formData,
+      console.log("🚀 FormData completo:", formData);
+      console.log("🎯 tecnicoId:", formData.tecnicoId, "tipo:", typeof formData.tecnicoId);
+
+      // Validar se técnico foi selecionado
+      if (!formData.tecnicoId) {
+        alert("Por favor, selecione um técnico responsável")
+        return
       }
-      const boletim = await createBoletim(payload)
+
+      // 1. Cria o boletim e pega o id
+      console.log("📦 FormData sendo enviado:", formData);
+      console.log("🎯 tecnicoId no formData:", formData.tecnicoId, "tipo:", typeof formData.tecnicoId);
+
+      const boletim = await createBoletim(formData)
+      console.log("✅ Boletim criado:", boletim);
 
       // 2. Cria todos os registros auxiliares e pega os ids
       // Monte o payload correto para avaliação urbanística
@@ -202,8 +210,8 @@ export default function FormularioTecnico() {
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
+      console.error("❌ Erro completo:", e);
       alert("Erro ao salvar o formulário!")
-      console.error(e)
     }
   }
 

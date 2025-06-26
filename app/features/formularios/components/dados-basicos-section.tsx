@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { FormularioData } from "@/app/types/formulario";
 import { apiUrl } from "@/lib/api";
+
+interface Tecnico {
+  id: number;
+  nome: string;
+}
 
 interface DadosBasicosSectionProps {
   formData: FormularioData;
@@ -15,6 +20,27 @@ export function DadosBasicosSection({
   formData,
   handleInputChange,
 }: DadosBasicosSectionProps) {
+  const [tecnicos, setTecnicos] = useState<Tecnico[]>([]);
+  const [loadingTecnicos, setLoadingTecnicos] = useState(false);
+
+  // Buscar técnicos na inicialização
+  useEffect(() => {
+    const fetchTecnicos = async () => {
+      setLoadingTecnicos(true);
+      try {
+        const response = await fetch("http://10.200.200.187:5001/tecnicos");
+        const data = await response.json();
+        setTecnicos(data);
+      } catch (error) {
+        console.error("Erro ao buscar técnicos:", error);
+      } finally {
+        setLoadingTecnicos(false);
+      }
+    };
+
+    fetchTecnicos();
+  }, []);
+
   // Exemplo: buscar dados do proprietário ao digitar o CPF
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {
@@ -126,9 +152,9 @@ export function DadosBasicosSection({
         </div>
       </div>
 
-      {/* Terceira linha - Endereço */}
+      {/* Terceira linha - Endereço e Técnico */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
+        <div>
           <Label htmlFor="endereco" className="text-sm font-medium">
             Endereço *
           </Label>
@@ -139,6 +165,32 @@ export function DadosBasicosSection({
             onChange={(e) => handleInputChange("endereco", e.target.value)}
             className="mt-1"
           />
+        </div>
+
+        <div>
+          <Label htmlFor="tecnicoId" className="text-sm font-medium">
+            Técnico Responsável * {formData.tecnicoId && `(ID: ${formData.tecnicoId})`}
+          </Label>
+          <select
+            id="tecnicoId"
+            value={formData.tecnicoId || ""}
+            onChange={(e) => {
+              const numericValue = parseInt(e.target.value, 10);
+              console.log("🔧 Técnico selecionado:", numericValue, typeof numericValue);
+              handleInputChange("tecnicoId", numericValue.toString()); // Mantém como string no formData
+            }}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+            disabled={loadingTecnicos}
+          >
+            <option value="">
+              {loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}
+            </option>
+            {tecnicos.map((tecnico) => (
+              <option key={tecnico.id} value={tecnico.id}>
+                {tecnico.nome} (ID: {tecnico.id})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
