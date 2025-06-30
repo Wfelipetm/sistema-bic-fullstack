@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { Filter, Search, X, Eye, Download, Printer } from "lucide-react"
+import { Filter, Search, X, Eye, Download, Printer, FileText } from "lucide-react"
 import type { FiltrosRelatorio } from "../../../types/relatorio"
 import { buscarRelatorios } from "../services/relatorio-service"
 import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf"
@@ -73,9 +73,9 @@ export function FiltrosRelatorioCard() {
       console.log("🔍 Buscando com filtros:", filtros)
       const dados = await buscarRelatorios(filtros)
       setRelatorios(dados)
-      console.log("✅ Relatórios encontrados:", dados.length)
+      console.log("Relatórios encontrados:", dados.length)
     } catch (error) {
-      console.error("❌ Erro ao buscar relatórios:", error)
+      console.error("Erro ao buscar relatórios:", error)
       alert("Erro ao buscar relatórios. Verifique o console.")
     } finally {
       setLoading(false)
@@ -103,14 +103,14 @@ export function FiltrosRelatorioCard() {
       const url = URL.createObjectURL(blob)
       window.open(url, "_blank")
     } catch (error) {
-      console.error("❌ Erro ao gerar preview:", error)
+      console.error("Erro ao gerar preview:", error)
       alert("Erro ao gerar preview do relatório")
     }
   }
 
   const handleDownload = async (id: string) => {
     try {
-      console.log("⬇️ Baixando relatório:", id)
+      console.log("Baixando relatório:", id)
       const blob = await gerarRelatorioPDF(Number(id))
       if (!blob) {
         alert("Erro ao gerar o PDF do relatório")
@@ -127,15 +127,15 @@ export function FiltrosRelatorioCard() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
       
-      console.log("✅ Download concluído")
+      console.log("Download concluído")
     } catch (error) {
-      console.error("❌ Erro ao baixar relatório:", error)
+      console.error("Erro ao baixar relatório:", error)
       alert("Erro ao baixar relatório")
     }
   }
 
   const handlePrint = (id: string) => {
-    console.log("🖨️ Imprimindo relatório:", id)
+    console.log("Imprimindo relatório:", id)
     window.print()
   }
 
@@ -251,15 +251,16 @@ export function FiltrosRelatorioCard() {
           {!loading && relatorios.length > 0 && (
             <div className="space-y-4">
               {relatorios.map((relatorio) => (
-                <div key={relatorio.id} className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div key={relatorio.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                       <h3 className="font-semibold text-lg text-blue-700">
+                        <FileText className="h-4 w-4 text-blue-600" />
                         📋 Inscrição: {relatorio.inscricao}
                       </h3>
                       <p className="text-sm text-gray-600">ID: {relatorio.id}</p>
                       <p className="text-sm text-gray-500">
-                        📅 Criado: {new Date(relatorio.created_at).toLocaleDateString('pt-BR')}
+                        📅 {new Date(relatorio.created_at).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                     <div>
@@ -276,7 +277,7 @@ export function FiltrosRelatorioCard() {
                       {relatorio.tecnico_id && (
                         <p className="text-sm"><strong>👨‍💼 Técnico ID:</strong> {relatorio.tecnico_id}</p>
                       )}
-                      <div className="flex gap-2 mt-2">
+                      <div className="flex justify-end gap-2 mt-2">
                         <Button
                           onClick={() => handlePreview(relatorio.id.toString())}
                           size="sm"
@@ -286,7 +287,7 @@ export function FiltrosRelatorioCard() {
                           <Eye className="h-4 w-4 mr-1" />
                           Visualizar
                         </Button>
-                        <Button
+                        {/* <Button
                           onClick={() => handleDownload(relatorio.id.toString())}
                           size="sm"
                           variant="outline"
@@ -303,7 +304,7 @@ export function FiltrosRelatorioCard() {
                         >
                           <Printer className="h-4 w-4 mr-1" />
                           Imprimir
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
                   </div>

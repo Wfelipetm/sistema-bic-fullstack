@@ -46,10 +46,10 @@ export function RelatorioItem({
           <span>📅 {relatorio.data}</span>
           <span>👤 {relatorio.tecnico}</span>
           
-          <Badge variant="outline" className={getTipoColor(relatorio.tipo)}>
+          <Badge variant="outline" >
             {relatorio.tipo}
           </Badge>
-          <Badge className={getStatusColor(relatorio.status)}>
+          <Badge >
             {relatorio.status}
           </Badge>
         </div>
