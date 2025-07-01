@@ -149,16 +149,16 @@ export const formularioInicial: FormularioData = {
         },
     },
     serventias: {
-        sala: false,
-        quarto: false,
-        copa: false,
-        cozinha: false,
-        banheiro: false,
-        garagem: false,
-        varanda: false,
-        corredor: false,
-        area: false,
-        poraoHabital: false,
+        sala: 0,
+        quarto: 0,
+        copa: 0,
+        cozinha: 0,
+        banheiro: 0,
+        garagem: 0,
+        varanda: 0,
+        corredor: 0,
+        area: 0,
+        porao_habital: 0, // Corrigido para o nome e tipo corretos
     },
     avaliacaoUrbanistica: "",
     calcamento: {
@@ -176,6 +176,9 @@ export const formularioInicial: FormularioData = {
         },
     },
     logradouroComPlaca: false,
-    observacoes: "",
     responsavel: "",
+    obsLogradouro: {
+        logradouro_placa: false,
+        observacoes: "",
+    },
 }

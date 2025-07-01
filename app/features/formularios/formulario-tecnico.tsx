@@ -77,8 +77,11 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...{ ...(prev[section as keyof typeof prev] as object) },
-        [field]: value,
+        ...prev[section as keyof typeof prev],
+        [field]:
+          section === "serventias"
+            ? value === "" ? "" : Number(value)
+            : value,
       },
     }))
   }
@@ -167,7 +170,7 @@ export default function FormularioTecnico() {
         tipoConstrucaoAPI.create(sanitizeBooleans(formData.construcao.tipoConstrucao)),
         tipoAPI.create(sanitizeBooleans(formData.construcao.tipo)),
         situacaoAPI.create(situacaoPayload),
-        serventiasAPI.create(sanitizeBooleans(formData.serventias)),
+        serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
         obsLogradouroAPI.create(formData.obsLogradouro),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
@@ -207,6 +210,12 @@ export default function FormularioTecnico() {
         }),
         caracterSoloAPI.create({ ...formData.terreno.caracteristicasSolo, boletim_id: boletim.id }),
       ])
+
+      // Limpar campos da serventia antes de enviar
+      const cleanServentias = Object.fromEntries(
+        Object.entries(formData.serventias).filter(([_, v]) => v !== 0)
+      );
+      await serventiasAPI.create({ serventias: formData.serventias });
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
@@ -261,6 +270,20 @@ export default function FormularioTecnico() {
             formData={formData}
             handleInputChange={handleInputChange}
           />
+
+          {/* Campo Responsável Tributário */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Responsável Tributário
+            </label>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              value={formData.responsavel_tributario || ""}
+              onChange={e => handleInputChange("responsavel_tributario", e.target.value)}
+              placeholder="Digite o responsável tributário"
+            />
+          </div>
         </FormularioSection>
 
         {/* I - Informações sobre o Logradouro */}
@@ -332,9 +355,7 @@ export default function FormularioTecnico() {
         >
           <ServentiasSection
             formData={formData}
-            handleCheckboxChange={handleCheckboxChange}
-            handleNestedCheckboxChange={handleNestedCheckboxChange}
-            handleInputChange={handleInputChange}
+            handleNestedInputChange={handleNestedInputChange}
           />
         </FormularioSection>
 

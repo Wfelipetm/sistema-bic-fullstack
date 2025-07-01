@@ -77,7 +77,7 @@ export async function gerarRelatorioPDF(id: number) {
   doc.line(5, 42, 190, 42);
   y += 4;
 
-  // ENDEREÇO
+  // ENDEREÇO + RESPONSÁVEL TRIBUTÁRIO NA MESMA LINHA
   doc.setFont("helvetica", "bold");
   doc.text("Endereço:", 10, (y += 6));
   doc.setFont("helvetica", "normal");
@@ -87,6 +87,12 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text("CEP:", 120, y);
   doc.setFont("helvetica", "normal");
   doc.text(String(data.cep ?? ""), 130, y);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Resp. Tributário:", 160, y); // Posição ajustada para caber ao lado do CEP
+  doc.setFont("helvetica", "normal");
+  doc.text(String(data.responsavel_tributario ?? ""), 185, y); // Posição ajustada
+
   doc.line(5, 52, 190, 52);
   y += 4;
 
