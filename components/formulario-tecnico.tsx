@@ -55,6 +55,18 @@ export default function FormularioTecnico() {
       aoNivel: false,
       acimaNivel: false,
     },
+    serventias: {
+      sala: 0,
+      quarto: 0,
+      copa: 0,
+      cozinha: 0,
+      banheiro: 0,
+      garagem: 0,
+      varanda: 0,
+      corredor: 0,
+      area: 0,
+      porao_habital: 0,
+    },
   })
 
   const toggleSection = (section: string) => {
@@ -75,14 +87,14 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...(prev as any)[section],
         [field]: checked,
       },
     }))
   }
 
   const handleSave = () => {
-    console.log("Dados salvos:", formData)
+    console.log("Payload enviado:", { serventias: formData.serventias })
     alert("Formulário salvo com sucesso!")
   }
 
