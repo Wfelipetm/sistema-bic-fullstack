@@ -28,7 +28,7 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="pt-24">
+      <SidebarHeader className="pt-24 -mt-1.5">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
