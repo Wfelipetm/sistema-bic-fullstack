@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import {
   Card,
   CardContent,
@@ -46,6 +46,7 @@ interface Relatorio {
   quadra: string;
   cpf: string;
   contato: string;
+  cep?: string; // Adicionado para evitar erro de propriedade inexistente
   tecnico_id?: number;
   created_at: string;
   updated_at: string;
@@ -54,8 +55,8 @@ interface Relatorio {
 }
 
 interface FiltrosRelatorioCardProps {
-  filtros: FiltrosRelatorio
-  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>
+  filtros: FiltrosRelatorio;
+  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>;
 }
 
 // Componente independente (não recebe props)
@@ -299,41 +300,66 @@ export function FiltrosRelatorioCard() {
             <div className="space-y-2">
               {relatorios.map((relatorio) => (
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
-      <div className="flex-1">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <FileText className="h-4 w-4 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="font-medium text-gray-900">Relatório técnico - {relatorio.endereco}</h3>
-            <p className="text-sm text-gray-500">ID: {relatorio.id}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
-          <span>📅 {new Date(relatorio.created_at).toLocaleDateString("pt-BR")}</span>
-          <span>
-            👤{" "}
-            {relatorio.tecnico_id
-              ? tecnicos.find((t) => t.id === relatorio.tecnico_id)?.nome || "Técnico não encontrado"
-              : "Sem técnico"}
-          </span>
-          
-          {/* <Badge variant="outline" >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-blue-50 rounded-lg">
+                        <FileText className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          Relatório técnico Nº.: {relatorio.inscricao}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-gray-500">
+                            Endereço: {relatorio.endereco}
+                          </p>
+                          <a
+                            className="text-sm text-gray-500 cursor-pointer"
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                              relatorio.cep ?? ""
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            CEP: {relatorio.cep}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex mx-1.5 items-center gap-4 text-sm text-gray-600">
+                      <span className="flex items-center gap-x-5">
+                        <span>📅</span>
+                        <span>
+                          {new Date(relatorio.created_at).toLocaleDateString(
+                            "pt-BR"
+                          )}
+                        </span>
+                      </span>
+                      <span>
+                        Proprietário: {relatorio.proprietario || "Proprietário não informado"}
+                        <span className="mx-2"></span>
+                        Contato: {relatorio.contato || "Contato não informado"}
+                      </span>
+
+                      {/* <Badge variant="outline" >
             {relatorio.tipo}
           </Badge>
           <Badge >
             {relatorio.status}
           </Badge> */}
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" onClick={() => handlePreview(relatorio.id.toString())}>
-          <Eye className="h-4 w-4 mr-2" />
-          Visualizar
-        </Button>
-        
-      </div>
-    </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePreview(relatorio.id.toString())}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Visualizar
+                    </Button>
+                  </div>
+                </div>
                 // <div
                 //   key={relatorio.id}
                 //   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"

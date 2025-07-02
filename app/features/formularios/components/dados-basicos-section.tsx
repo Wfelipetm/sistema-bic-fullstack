@@ -175,28 +175,30 @@ export function DadosBasicosSection({
           />
         </div>
         <div>
-          <Label htmlFor="tecnicoId" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="tecnicoId" className="text-base font-semibold  text-blue-900">
             Técnico Responsável *
           </Label>
-          <select
-            id="tecnicoId"
-            value={formData.tecnicoId || ""}
-            onChange={(e) => {
-              const numericValue = parseInt(e.target.value, 10);
-              handleInputChange("tecnicoId", isNaN(numericValue) ? "" : numericValue.toString());
-            }}
-            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition appearance-none px-4"
-            disabled={loadingTecnicos}
-          >
-            <option value="">
-              {loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}
-            </option>
-            {tecnicos.map((tecnico) => (
-              <option key={tecnico.id} value={tecnico.id}>
-                {tecnico.nome} (ID: {tecnico.id})
+          <div>
+            <select
+              id="tecnicoId"
+              value={formData.tecnicoId || ""}
+              onChange={(e) => {
+                const numericValue = parseInt(e.target.value, 10);
+                handleInputChange("tecnicoId", isNaN(numericValue) ? "" : numericValue.toString());
+              }}
+              className="mt-2 h-12 w-full text-lg rounded-xl border border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition appearance-none px-4"
+              disabled={loadingTecnicos}
+            >
+              <option value="">
+                {loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}
               </option>
-            ))}
-          </select>
+              {tecnicos.map((tecnico) => (
+                <option key={tecnico.id} value={tecnico.id}>
+                  {tecnico.nome} (ID: {tecnico.id})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
           <Label htmlFor="cep" className="text-base font-semibold text-blue-900">
@@ -252,7 +254,7 @@ export function DadosBasicosSection({
         </div>
         <div>
           <Label htmlFor="telefone" className="text-base font-semibold text-blue-900">
-            Tel.: p/Contato
+            Telefone de contato do responsável
           </Label>
           <Input
             id="telefone"

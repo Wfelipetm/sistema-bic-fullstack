@@ -219,7 +219,7 @@ export default function FormularioTecnico() {
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
-      console.error("❌ Erro completo:", e);
+      console.error("Erro completo:", e);
       alert("Erro ao salvar o formulário!")
     }
   }
