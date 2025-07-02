@@ -239,17 +239,12 @@ export default function FormularioTecnico() {
         </div>
 
         <div className="flex justify-between items-center">
-          <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-            Novo Formulário BIC
-          </Badge>
+          <div />
           <div className="flex gap-2">
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              Salvar Rascunho
-            </Button>
-            <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
-              <Save className="h-4 w-4 mr-2" />
-              Salvar BIC
-            </Button>
+        <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
+          <Save className="h-4 w-4 mr-2" />
+          Salvar BIC
+        </Button>
           </div>
         </div>
       </div>

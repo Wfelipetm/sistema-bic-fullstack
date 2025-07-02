@@ -13,16 +13,16 @@ export default function BICApp() {
 
   const renderContent = () => {
     switch (activeView) {
-      case "dashboard":
-        return <Dashboard />
+      // case "dashboard":
+      //   return <Dashboard />
       case "formulario":
         return <FormularioTecnico />
       case "relatorios":
-        return <Relatorios />
+        return <Relatorios setActiveView={setActiveView} />
       case "configuracoes":
         return <Configuracoes />
       default:
-        return <Dashboard />
+        return <FormularioTecnico />
     }
   }
   //  const renderContent = () => <FormularioTecnico />

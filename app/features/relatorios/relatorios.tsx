@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FileText } from "lucide-react"
@@ -8,8 +9,15 @@ import RelatorioPrintTemplate from "./components/relatorio-print-template"
 
 import { mockRelatorios } from "@/app/constants/mock-data"
 import type { FiltrosRelatorio } from "@/app/types/relatorio"
+import type { ViewType } from "@/app/types/navigation"
 
-export default function Relatorios() {
+interface RelatoriosProps {
+  setActiveView: (view: ViewType) => void
+}
+
+export default function Relatorios({ setActiveView }: RelatoriosProps) {
+  const router = useRouter()
+
   const [filtros, setFiltros] = useState<FiltrosRelatorio>({
     dataInicio: "",
     dataFim: "",
@@ -48,7 +56,10 @@ export default function Relatorios() {
             {mockRelatorios.length} Relatórios
           </Badge>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => router.push("/formulario")}
+        >
           <FileText className="h-4 w-4 mr-2" />
           Novo Relatório
         </Button>

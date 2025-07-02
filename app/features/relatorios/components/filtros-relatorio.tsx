@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Filter, Search, X, Eye, Download, Printer, FileText } from "lucide-react"
-import type { FiltrosRelatorio } from "../../../types/relatorio"
+import type { FiltrosRelatorio } from "@/app/types/relatorio"
 import { buscarRelatorios } from "../services/relatorio-service"
 import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf"
+import { Dispatch, SetStateAction } from "react"
 
 interface Tecnico {
   id: number
@@ -30,15 +31,13 @@ interface Relatorio {
   updated_at: string
 }
 
+interface FiltrosRelatorioCardProps {
+  filtros: FiltrosRelatorio
+  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>
+}
+
 // Componente independente (não recebe props)
-export function FiltrosRelatorioCard() {
-  const [filtros, setFiltros] = useState<FiltrosRelatorio>({
-    dataInicio: "",
-    dataFim: "",
-    status: "all",
-    tecnico: "all"
-  })
-  
+export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCardProps) {
   const [tecnicos, setTecnicos] = useState<Tecnico[]>([])
   const [loadingTecnicos, setLoadingTecnicos] = useState(false)
   const [relatorios, setRelatorios] = useState<Relatorio[]>([])
