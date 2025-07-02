@@ -1,4 +1,5 @@
 export interface FormularioData {
+  observacoes: string | number | readonly string[] | undefined
   numeroInscricao: string | number | readonly string[] | undefined
   numeroBote: string | number | readonly string[] | undefined
   numeroQuadra: string | number | readonly string[] | undefined

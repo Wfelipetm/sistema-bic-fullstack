@@ -181,4 +181,5 @@ export const formularioInicial: FormularioData = {
         logradouro_placa: false,
         observacoes: "",
     },
+    observacoes: undefined
 }

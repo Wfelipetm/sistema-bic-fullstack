@@ -46,30 +46,31 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
 
   return (
     <div>
-      <h4 className="font-semibold text-lg mb-4 text-gray-800">Serventias:</h4>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {serventiasItems.map((item) => (
-          <div key={item.id} className="flex flex-col">
-            <label htmlFor={item.id} className="text-sm font-medium text-gray-700">{item.label}</label>
+          <div
+            key={item.id}
+            className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6 flex flex-col items-center transition hover:shadow-lg"
+          >
+            <label htmlFor={item.id} className="text-lg font-bold text-blue-900 mb-3 tracking-wide">{item.label}</label>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               id={item.id}
-              min={0}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              value={
-                formData.serventias[item.id as keyof typeof formData.serventias] === 0
-                  ? ""
-                  : formData.serventias[item.id as keyof typeof formData.serventias]
-              }
+              className="mt-1 block w-24 rounded-xl border-blue-200 shadow text-center text-xl font-bold text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
+              value={formData.serventias[item.id as keyof typeof formData.serventias] || ""}
               onChange={e => {
-                // Sempre salva número no estado, vazio vira 0
                 handleNestedInputChange(
                   "serventias",
                   item.id,
-                  e.target.value === "" ? "0" : e.target.value
+                  e.target.value
                 );
               }}
+              autoComplete="off"
             />
+            <span className="mt-2 text-xs text-blue-700 opacity-80">Informe a quantidade</span>
           </div>
         ))}
       </div>

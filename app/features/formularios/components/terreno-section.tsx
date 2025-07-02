@@ -55,24 +55,21 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
   return (
     <div className="space-y-8">
       {/* 1- Situação */}
-      <div>
-        <h4 className="font-semibold text-lg mb-4 text-gray-800">1- Situação:</h4>
+      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+        <h4 className="font-bold text-lg mb-4 text-blue-900">1- Situação</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          {situacaoOptions.map((item) => {
-            const key = Object.keys(item)[0]
-            return (
-              <CheckboxField
-                key={key}
-                id={key}
-                label={item[key as keyof typeof item] ?? ""}
-                description=""
-                checked={formData.terreno.situacao[key as keyof typeof formData.terreno.situacao]}
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange("terreno", "situacao", key, checked)
-                }
-              />
-            )
-          })}
+          {["encravado", "vila", "meioQuadra", "esquina", "comTresFrente", "todaQuadra"].map((key) => (
+            <CheckboxField
+              key={key}
+              id={key}
+              label={<span className="font-semibold text-blue-800">{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}</span>}
+              description=""
+              checked={formData.terreno.situacao[key as keyof typeof formData.terreno.situacao]}
+              onCheckedChange={(checked) =>
+                handleNestedCheckboxChange("terreno", "situacao", key, checked)
+              }
+            />
+          ))}
         </div>
       </div>
 
@@ -84,7 +81,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
             <CheckboxField
               key={key}
               id={key}
-              label={key.charAt(0).toUpperCase() + key.slice(1)}
+              label={<span className="font-semibold text-blue-800">{key.charAt(0).toUpperCase() + key.slice(1)}</span>}
               description=""
               checked={formData.terreno.caracteristicasSolo[key as keyof typeof formData.terreno.caracteristicasSolo]}
               onCheckedChange={(checked) =>

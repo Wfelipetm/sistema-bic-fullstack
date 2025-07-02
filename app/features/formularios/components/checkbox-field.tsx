@@ -1,11 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { apiUrl } from "@/lib/api"
+import { ReactNode } from "react"
 
-interface CheckboxFieldProps {
+export interface CheckboxFieldProps {
   id: string
-  label: string
-  description: string
+  label: ReactNode // <-- altere aqui
+  description?: string
   checked: boolean
   onCheckedChange: (checked: boolean) => void
 }
