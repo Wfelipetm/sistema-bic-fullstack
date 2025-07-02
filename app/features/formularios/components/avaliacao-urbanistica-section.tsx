@@ -21,7 +21,6 @@ export function AvaliacaoUrbanisticaSection({
   handleNestedCheckboxChange,
   handleInputChange,
 }: AvaliacaoUrbanisticaSectionProps) {
-  // Exemplo: buscar opções de avaliação urbanística da API usando a variável de ambiente
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
     { value: "alta", label: "(A) Alta" },
     { value: "media", label: "(B) Média" },
@@ -47,13 +46,11 @@ export function AvaliacaoUrbanisticaSection({
       .catch(() => {})
   }, [])
 
-  // Você pode fazer o mesmo para calçamento e extensão, se quiser buscar da API
-
   return (
     <div className="space-y-8">
       {/* Avaliação Urbanística do Logradouro */}
-      <div>
-        <h4 className="font-semibold text-lg mb-4 text-gray-800">Avaliação Urbanística do Logradouro:</h4>
+      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+        <h4 className="font-semibold text-lg mb-4 text-blue-900">Avaliação Urbanística do Logradouro:</h4>
         <RadioGroup
           value={formData.avaliacaoUrbanistica}
           onValueChange={(value) => handleInputChange("avaliacaoUrbanistica", value)}
@@ -62,7 +59,7 @@ export function AvaliacaoUrbanisticaSection({
           {avaliacaoOptions.map((item) => (
             <div key={item.value} className="flex items-center space-x-2">
               <RadioGroupItem value={item.value} id={item.value} />
-              <Label htmlFor={item.value} className="font-medium cursor-pointer">
+              <Label htmlFor={item.value} className="font-medium text-blue-800 cursor-pointer">
                 {item.label}
               </Label>
             </div>
@@ -71,11 +68,11 @@ export function AvaliacaoUrbanisticaSection({
       </div>
 
       {/* Calçamento */}
-      <div>
-        <h4 className="font-semibold text-lg mb-4 text-gray-800">Calçamento:</h4>
+      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+        <h4 className="font-semibold text-lg mb-4 text-blue-900">Calçamento:</h4>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <h5 className="font-medium mb-3 text-gray-700">Tipo:</h5>
+            <h5 className="font-medium mb-3 text-blue-800">Tipo:</h5>
             <div className="space-y-3">
               {[
                 { id: "semAsfalto", label: "S/Asfalto" },
@@ -86,7 +83,7 @@ export function AvaliacaoUrbanisticaSection({
                 <CheckboxField
                   key={item.id}
                   id={item.id}
-                  label={item.label}
+                  label={<span className="font-medium text-blue-800">{item.label}</span>}
                   description=""
                   checked={formData.calcamento.tipo[item.id as keyof typeof formData.calcamento.tipo]}
                   onCheckedChange={(checked) => handleNestedCheckboxChange("calcamento", "tipo", item.id, checked)}
@@ -94,9 +91,8 @@ export function AvaliacaoUrbanisticaSection({
               ))}
             </div>
           </div>
-
           <div>
-            <h5 className="font-medium mb-3 text-gray-700">Extensão:</h5>
+            <h5 className="font-medium mb-3 text-blue-800">Extensão:</h5>
             <div className="space-y-3">
               {[
                 { id: "parte", label: "Parte" },
@@ -107,7 +103,7 @@ export function AvaliacaoUrbanisticaSection({
                 <CheckboxField
                   key={item.id}
                   id={item.id}
-                  label={item.label}
+                  label={<span className="font-medium text-blue-800">{item.label}</span>}
                   description=""
                   checked={formData.calcamento.extensao[item.id as keyof typeof formData.calcamento.extensao]}
                   onCheckedChange={(checked) => handleNestedCheckboxChange("calcamento", "extensao", item.id, checked)}
@@ -119,10 +115,10 @@ export function AvaliacaoUrbanisticaSection({
       </div>
 
       {/* Logradouro com Placa */}
-      <div>
+      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6 flex items-center">
         <CheckboxField
           id="logradouroComPlaca"
-          label="Logradouro com Placa?"
+          label={<span className="font-medium text-blue-800">Logradouro com Placa?</span>}
           description="Indica se o logradouro possui placa de identificação"
           checked={formData.logradouroComPlaca}
           onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", checked.toString())}
@@ -130,8 +126,8 @@ export function AvaliacaoUrbanisticaSection({
       </div>
 
       {/* Observações */}
-      <div>
-        <Label htmlFor="observacoes" className="text-sm font-medium">
+      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+        <Label htmlFor="observacoes" className="text-base font-semibold text-blue-900 mb-2">
           Observações:
         </Label>
         <Textarea
@@ -139,7 +135,7 @@ export function AvaliacaoUrbanisticaSection({
           placeholder="Observações adicionais sobre o imóvel, construção ou logradouro..."
           value={formData.observacoes}
           onChange={(e) => handleInputChange("observacoes", e.target.value)}
-          className="mt-1"
+          className="mt-2 rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 text-lg transition placeholder:text-blue-300"
           rows={6}
         />
       </div>

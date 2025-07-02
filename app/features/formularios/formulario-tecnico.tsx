@@ -230,27 +230,20 @@ export default function FormularioTecnico() {
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-lg">
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 bg-white/20 rounded-lg">
-            <FileText className="h-8 w-8" />
+        <FileText className="h-8 w-8" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)</h1>
-            <p className="text-blue-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
+        <h1 className="text-2xl font-bold">BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)</h1>
+        <p className="text-blue-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-            Novo Formulário BIC
-          </Badge>
-          <div className="flex gap-2">
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              Salvar Rascunho
-            </Button>
-            <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
-              <Save className="h-4 w-4 mr-2" />
-              Salvar BIC
-            </Button>
-          </div>
+        <div className="flex items-center justify-between">
+          <div />
+          <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
+        <Save className="h-4 w-4 mr-2" />
+        Salvar BIC
+          </Button>
         </div>
       </div>
 
@@ -272,7 +265,7 @@ export default function FormularioTecnico() {
           />
 
           {/* Campo Responsável Tributário */}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700">
               Responsável Tributário
             </label>
@@ -283,7 +276,7 @@ export default function FormularioTecnico() {
               onChange={e => handleInputChange("responsavel_tributario", e.target.value)}
               placeholder="Digite o responsável tributário"
             />
-          </div>
+          </div> */}
         </FormularioSection>
 
         {/* I - Informações sobre o Logradouro */}
