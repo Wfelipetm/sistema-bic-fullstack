@@ -81,7 +81,7 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
               Desenvolvido por SMCTIC.
             </span>
             <span className="text-[10px] text-blue-400 mt-1">
-              Versão 3.0.0
+              Versão 3.0.0.
             </span>
           </div>
         </div>

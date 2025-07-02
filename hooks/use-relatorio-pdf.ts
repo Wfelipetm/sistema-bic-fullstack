@@ -16,11 +16,11 @@ export async function gerarRelatorioPDF(id: number) {
   let y = 20;
 
   // Cabeçalho cinza
-  doc.setFillColor(0, 102, 175);
-  doc.rect(5, 5, 287, 17, "F");
-
+  // doc.setFillColor(0, 102, 175);
+  // doc.rect(5, 5, 287, 17, "F");
+  doc.setTextColor(0, 0, 0);
   doc.setFontSize(10);
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(0, 0, 0);
   doc.setFont("helvetica", "bold");
   doc.text("PREFEITURA MUNICIPAL DE ITAGUAÍ", 25, 10);
   doc.setFontSize(7);
@@ -30,7 +30,7 @@ export async function gerarRelatorioPDF(id: number) {
   doc.setFont("helvetica", "italic");
   doc.text("Subsecretaria de Arrecadação", 25, 19);
   doc.setFont("helvetica", "normal");
-  doc.setDrawColor(255, 255, 255);
+  doc.setDrawColor(0, 0, 0);
 
   doc.line(210, 15, 285, 15);
   doc.setFont("helvetica", "italic", "bold");
@@ -84,14 +84,14 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text(String(data.endereco ?? ""), 30, y);
 
   doc.setFont("helvetica", "bold");
-  doc.text("CEP:", 120, y);
+  doc.text("CEP:", 160, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.cep ?? ""), 130, y);
+  doc.text(String(data.cep ?? ""), 170, y);
 
   doc.setFont("helvetica", "bold");
-  doc.text("Resp. Tributário:", 160, y); // Posição ajustada para caber ao lado do CEP
+  doc.text("Resp. Tributário:", 86, y); // Posição ajustada para caber ao lado do CEP
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.responsavel_tributario ?? ""), 185, y); // Posição ajustada
+  doc.text(String(data.responsavel_tributario ?? ""), 115, y); // Posição ajustada
 
   doc.line(5, 52, 190, 52);
   y += 4;
@@ -127,7 +127,7 @@ export async function gerarRelatorioPDF(id: number) {
     const x = 10 + i * 35;
     doc.rect(x, y + 3, 4, 4);
     doc.setFontSize(8);
-    doc.text(check, x + 1.5, y + 6);
+    doc.text(check, x + 1, y + 6);
     doc.text(label, x + 5, y + 6);
   });
   doc.line(5, 79, 190, 79);
@@ -452,8 +452,8 @@ export async function gerarRelatorioPDF(id: number) {
 
       grupo.opcoes.forEach(([check, texto]) => {
         doc.rect(x, y - 3.5, 4, 4);
-        doc.text(check, x + 6, y);
-        doc.text(texto, x + 12, y);
+        doc.text(check, x + 1, y-0.5);
+        doc.text(texto, x + 6, y);
         y += 5;
       });
 
