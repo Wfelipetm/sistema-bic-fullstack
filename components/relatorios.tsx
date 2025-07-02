@@ -99,6 +99,8 @@ export default function Relatorios() {
     alert(`Abrindo visualização do relatório ${relatorioId}`)
   }
 
+  const [activeView, setActiveView] = useState<"lista" | "formulario">("lista")
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -107,7 +109,10 @@ export default function Relatorios() {
             {relatorios.length} Relatórios
           </Badge>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setActiveView("formulario")}
+        >
           <FileText className="h-4 w-4 mr-2" />
           Novo Relatório
         </Button>

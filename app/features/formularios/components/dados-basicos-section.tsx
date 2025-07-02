@@ -16,14 +16,25 @@ interface DadosBasicosSectionProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
+// Função utilitária para datas no formato yyyy-mm-dd
+function getPrimeiroDiaMes() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+}
+function getHoje() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
 export function DadosBasicosSection({
   formData,
   handleInputChange,
 }: DadosBasicosSectionProps) {
   const [tecnicos, setTecnicos] = useState<Tecnico[]>([]);
   const [loadingTecnicos, setLoadingTecnicos] = useState(false);
+  const [lancamentoNovo, setLancamentoNovo] = useState(getPrimeiroDiaMes());
+  const [revisao, setRevisao] = useState(getHoje());
 
-  // Buscar técnicos na inicialização
   useEffect(() => {
     const fetchTecnicos = async () => {
       setLoadingTecnicos(true);
@@ -37,11 +48,9 @@ export function DadosBasicosSection({
         setLoadingTecnicos(false);
       }
     };
-
     fetchTecnicos();
   }, []);
 
-  // Exemplo: buscar dados do proprietário ao digitar o CPF
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {
       fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
@@ -56,51 +65,53 @@ export function DadosBasicosSection({
   }, [formData.cpf]);
 
   return (
-    <div className="space-y-6">
+    <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-8 mb-8">
+     
       {/* Primeira linha - Dados principais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <Label htmlFor="inscricaoNumero" className="text-sm font-medium">
+          <Label htmlFor="inscricaoNumero" className="text-base font-semibold text-blue-900">
             Inscrição Nº *
           </Label>
           <Input
             id="inscricaoNumero"
             placeholder="Número da inscrição"
             value={formData.inscricaoNumero}
-            onChange={(e) =>
-              handleInputChange("inscricaoNumero", e.target.value)
-            }
-            className="mt-1"
+            onChange={(e) => handleInputChange("inscricaoNumero", e.target.value)}
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
+            autoFocus
           />
         </div>
-
         <div>
-          <Label className="text-sm font-medium">Lançamento novo em:</Label>
+          <Label className="text-base font-semibold text-blue-900">Lançamento novo em:</Label>
           <Input
             type="date"
-            value={formData.lancamentoNovo}
-            onChange={(e) =>
-              handleInputChange("lancamentoNovo", e.target.value)
-            }
-            className="mt-1"
+            value={lancamentoNovo}
+            onChange={e => {
+              setLancamentoNovo(e.target.value);
+              handleInputChange("lancamentoNovo", e.target.value);
+            }}
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label className="text-sm font-medium">Revisão em:</Label>
+          <Label className="text-base font-semibold text-blue-900">Revisão em:</Label>
           <Input
             type="date"
-            value={formData.revisao}
-            onChange={(e) => handleInputChange("revisao", e.target.value)}
-            className="mt-1"
+            value={revisao}
+            onChange={e => {
+              setRevisao(e.target.value);
+              handleInputChange("revisao", e.target.value);
+            }}
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
       </div>
 
       {/* Segunda linha - Localização */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
         <div>
-          <Label htmlFor="lote" className="text-sm font-medium">
+          <Label htmlFor="lote" className="text-base font-semibold text-blue-900">
             Lote *
           </Label>
           <Input
@@ -108,12 +119,11 @@ export function DadosBasicosSection({
             placeholder="Número do lote"
             value={formData.lote}
             onChange={(e) => handleInputChange("lote", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label htmlFor="quadra" className="text-sm font-medium">
+          <Label htmlFor="quadra" className="text-base font-semibold text-blue-900">
             Quadra *
           </Label>
           <Input
@@ -121,12 +131,11 @@ export function DadosBasicosSection({
             placeholder="Quadra"
             value={formData.quadra}
             onChange={(e) => handleInputChange("quadra", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label htmlFor="loteamento" className="text-sm font-medium">
+          <Label htmlFor="loteamento" className="text-base font-semibold text-blue-900">
             Loteamento
           </Label>
           <Input
@@ -134,12 +143,11 @@ export function DadosBasicosSection({
             placeholder="Nome do loteamento"
             value={formData.loteamento}
             onChange={(e) => handleInputChange("loteamento", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label htmlFor="distrito" className="text-sm font-medium">
+          <Label htmlFor="distrito" className="text-base font-semibold text-blue-900">
             Distrito
           </Label>
           <Input
@@ -147,15 +155,15 @@ export function DadosBasicosSection({
             placeholder="Nome do distrito"
             value={formData.distrito}
             onChange={(e) => handleInputChange("distrito", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
       </div>
 
       {/* Terceira linha - Endereço e Técnico */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div>
-          <Label htmlFor="endereco" className="text-sm font-medium">
+          <Label htmlFor="endereco" className="text-base font-semibold text-blue-900">
             Endereço *
           </Label>
           <Input
@@ -163,23 +171,21 @@ export function DadosBasicosSection({
             placeholder="Endereço completo"
             value={formData.endereco}
             onChange={(e) => handleInputChange("endereco", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label htmlFor="tecnicoId" className="text-sm font-medium">
-            Técnico Responsável * {formData.tecnicoId && `(ID: ${formData.tecnicoId})`}
+          <Label htmlFor="tecnicoId" className="text-base font-semibold text-blue-900">
+            Técnico Responsável *
           </Label>
           <select
             id="tecnicoId"
             value={formData.tecnicoId || ""}
             onChange={(e) => {
               const numericValue = parseInt(e.target.value, 10);
-              console.log("🔧 Técnico selecionado:", numericValue, typeof numericValue);
-              handleInputChange("tecnicoId", numericValue.toString()); // Mantém como string no formData
+              handleInputChange("tecnicoId", isNaN(numericValue) ? "" : numericValue.toString());
             }}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition appearance-none px-4"
             disabled={loadingTecnicos}
           >
             <option value="">
@@ -192,9 +198,8 @@ export function DadosBasicosSection({
             ))}
           </select>
         </div>
-
         <div>
-          <Label htmlFor="cep" className="text-sm font-medium">
+          <Label htmlFor="cep" className="text-base font-semibold text-blue-900">
             CEP
           </Label>
           <Input
@@ -202,15 +207,15 @@ export function DadosBasicosSection({
             placeholder="00000-000"
             value={formData.cep}
             onChange={(e) => handleInputChange("cep", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
       </div>
 
       {/* Quarta linha - Proprietário */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
         <div className="md:col-span-2">
-          <Label htmlFor="proprietario" className="text-sm font-medium">
+          <Label htmlFor="proprietario" className="text-base font-semibold text-blue-900">
             Proprietário (Compromissário)
           </Label>
           <Input
@@ -218,12 +223,23 @@ export function DadosBasicosSection({
             placeholder="Nome completo do proprietário"
             value={formData.proprietario}
             onChange={(e) => handleInputChange("proprietario", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
-
         <div>
-          <Label htmlFor="cpf" className="text-sm font-medium">
+          <Label htmlFor="responsavel_tributario" className="text-base font-semibold text-blue-900">
+            Responsável Tributário
+          </Label>
+          <Input
+            id="responsavel_tributario"
+            placeholder="Nome do responsável tributário"
+            value={formData.responsavel_tributario || ""}
+            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value)}
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+          />
+        </div>
+        <div>
+          <Label htmlFor="cpf" className="text-base font-semibold text-blue-900">
             CPF
           </Label>
           <Input
@@ -231,11 +247,11 @@ export function DadosBasicosSection({
             placeholder="000.000.000-00"
             value={formData.cpf}
             onChange={(e) => handleInputChange("cpf", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
         <div>
-          <Label htmlFor="telefone" className="text-sm font-medium">
+          <Label htmlFor="telefone" className="text-base font-semibold text-blue-900">
             Tel.: p/Contato
           </Label>
           <Input
@@ -243,7 +259,7 @@ export function DadosBasicosSection({
             placeholder="(00) 00000-0000"
             value={formData.telefone}
             onChange={(e) => handleInputChange("telefone", e.target.value)}
-            className="mt-1"
+            className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
           />
         </div>
       </div>

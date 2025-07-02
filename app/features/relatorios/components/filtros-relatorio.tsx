@@ -53,6 +53,11 @@ interface Relatorio {
   status?: string; // Adicionado para evitar erro de propriedade inexistente
 }
 
+interface FiltrosRelatorioCardProps {
+  filtros: FiltrosRelatorio
+  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>
+}
+
 // Componente independente (não recebe props)
 export function FiltrosRelatorioCard() {
   const [filtros, setFiltros] = useState<FiltrosRelatorio>({

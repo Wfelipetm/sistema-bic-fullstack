@@ -77,8 +77,11 @@ export default function FormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...{ ...(prev[section as keyof typeof prev] as object) },
-        [field]: value,
+        ...prev[section as keyof typeof prev],
+        [field]:
+          section === "serventias"
+            ? value === "" ? "" : Number(value)
+            : value,
       },
     }))
   }
@@ -167,7 +170,7 @@ export default function FormularioTecnico() {
         tipoConstrucaoAPI.create(sanitizeBooleans(formData.construcao.tipoConstrucao)),
         tipoAPI.create(sanitizeBooleans(formData.construcao.tipo)),
         situacaoAPI.create(situacaoPayload),
-        serventiasAPI.create(sanitizeBooleans(formData.serventias)),
+        serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
         obsLogradouroAPI.create(formData.obsLogradouro),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
@@ -208,6 +211,12 @@ export default function FormularioTecnico() {
         caracterSoloAPI.create({ ...formData.terreno.caracteristicasSolo, boletim_id: boletim.id }),
       ])
 
+      // Limpar campos da serventia antes de enviar
+      const cleanServentias = Object.fromEntries(
+        Object.entries(formData.serventias).filter(([_, v]) => v !== 0)
+      );
+      await serventiasAPI.create({ serventias: formData.serventias });
+
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
       console.error("❌ Erro completo:", e);
@@ -221,26 +230,21 @@ export default function FormularioTecnico() {
       <div className="bg-blue-800 text-white p-6 rounded-lg shadow-lg">
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 bg-white/20 rounded-lg">
-            <FileText className="h-8 w-8" />
+        <FileText className="h-8 w-8" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)</h1>
-            <p className="text-blue-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
+        <h1 className="text-2xl font-bold">BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)</h1>
+        <p className="text-blue-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
           </div>
         </div>
 
-        <div className="flex justify-end items-center">
-          {/* <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-            Novo Formulário BIC
-          </Badge> */}
+        <div className="flex justify-between items-center">
+          <div />
           <div className="flex gap-2">
-            {/* <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              Salvar Rascunho
-            </Button> */}
-            <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-300">
-              <Save className="h-4 w-4 mr-2" />
-              Salvar BIC
-            </Button>
+        <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
+          <Save className="h-4 w-4 mr-2" />
+          Salvar BIC
+        </Button>
           </div>
         </div>
       </div>
@@ -261,6 +265,20 @@ export default function FormularioTecnico() {
             formData={formData}
             handleInputChange={handleInputChange}
           />
+
+          {/* Campo Responsável Tributário */}
+          {/* <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Responsável Tributário
+            </label>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              value={formData.responsavel_tributario || ""}
+              onChange={e => handleInputChange("responsavel_tributario", e.target.value)}
+              placeholder="Digite o responsável tributário"
+            />
+          </div> */}
         </FormularioSection>
 
         {/* I - Informações sobre o Logradouro */}
@@ -332,9 +350,7 @@ export default function FormularioTecnico() {
         >
           <ServentiasSection
             formData={formData}
-            handleCheckboxChange={handleCheckboxChange}
-            handleNestedCheckboxChange={handleNestedCheckboxChange}
-            handleInputChange={handleInputChange}
+            handleNestedInputChange={handleNestedInputChange}
           />
         </FormularioSection>
 

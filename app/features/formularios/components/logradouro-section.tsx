@@ -27,7 +27,9 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(k => k !== "id" && k !== "boletim_id")
+          const keys = Object.keys(data[0]).filter(
+            k => k !== "id" && k !== "boletim_id" && k !== "created_at" && k !== "updated_at"
+          )
           setLogradouroItems(
             keys.map((key, idx) => ({
               id: key,
@@ -41,16 +43,20 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
   }, [])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
       {logradouroItems.map((item) => (
-        <CheckboxField
+        <div
           key={item.id}
-          id={item.id}
-          label={item.label}
-          description={item.description}
-          checked={formData.logradouro[item.id as keyof typeof formData.logradouro]}
-          onCheckedChange={(checked) => handleCheckboxChange("logradouro", item.id, checked)}
-        />
+          className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6 flex flex-col items-start transition hover:shadow-lg"
+        >
+          <CheckboxField
+            id={item.id}
+            label={<span className="font-semibold text-blue-800">{item.label}</span>}
+            description={item.description || ""}
+            checked={formData.logradouro[item.id as keyof typeof formData.logradouro]}
+            onCheckedChange={(checked) => handleCheckboxChange("logradouro", item.id, checked)}
+          />
+        </div>
       ))}
     </div>
   )

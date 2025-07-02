@@ -107,13 +107,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setTipoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -123,13 +123,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setUsoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -139,13 +139,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setTipoConstrucaoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -155,13 +155,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setEsquadriasOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -171,13 +171,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setPisoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -187,13 +187,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setForroOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -203,13 +203,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setCoberturaOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -219,13 +219,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setAcabamentoInternoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -235,13 +235,13 @@ export function ConstrucaoSection({
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter((k) => k !== "id");
+          const keys = Object.keys(data[0]).filter(
+            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+          );
           setAcabamentoExternoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${
-                key.charAt(0).toUpperCase() + key.slice(1)
-              }`,
+              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
             }))
           );
         }
@@ -251,16 +251,17 @@ export function ConstrucaoSection({
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      {/* Primeira linha de grupos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {/* 1- Tipo */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">1- Tipo:</h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">1- Tipo</h4>
           <div className="space-y-3">
             {tipoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.tipo[
@@ -279,16 +280,15 @@ export function ConstrucaoSection({
             ))}
           </div>
         </div>
-
         {/* 2- Uso */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">2- Uso:</h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">2- Uso</h4>
           <div className="space-y-3">
             {usoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.uso[
@@ -308,16 +308,14 @@ export function ConstrucaoSection({
           </div>
         </div>
         {/* 3- Tipo de Construção */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            3- Tipo de Construção:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">3- Tipo de Construção</h4>
           <div className="space-y-3">
             {tipoConstrucaoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.tipoConstrucao[
@@ -337,16 +335,14 @@ export function ConstrucaoSection({
           </div>
         </div>
         {/* 4- Esquadrias */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            4- Esquadrias:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">4- Esquadrias</h4>
           <div className="space-y-3">
             {esquadriasOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.esquadrias[
@@ -366,14 +362,14 @@ export function ConstrucaoSection({
           </div>
         </div>
         {/* 5- Piso */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">5- Piso:</h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">5- Piso</h4>
           <div className="space-y-3">
             {pisoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.piso[
@@ -392,22 +388,19 @@ export function ConstrucaoSection({
             ))}
           </div>
         </div>
-
-        
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      {/* Segunda linha de grupos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {/* 6- Forro */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            6- Forro:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">6- Forro</h4>
           <div className="space-y-3">
             {forroOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.forro[
@@ -427,16 +420,14 @@ export function ConstrucaoSection({
           </div>
         </div>
         {/* 7- Cobertura */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            7- Cobertura:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">7- Cobertura</h4>
           <div className="space-y-3">
             {coberturaOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.cobertura[
@@ -456,16 +447,14 @@ export function ConstrucaoSection({
           </div>
         </div>
         {/* 8- Acabamento Interno */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            8- Acabamento Interno:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">8- Acabamento Interno</h4>
           <div className="space-y-3">
             {acabamentoInternoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.acabamentoInterno[
@@ -484,18 +473,15 @@ export function ConstrucaoSection({
             ))}
           </div>
         </div>
-
         {/* 9- Acabamento Externo */}
-        <div>
-          <h4 className="font-semibold text-lg mb-4 text-gray-800">
-            9- Acabamento Externo:
-          </h4>
+        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
+          <h4 className="font-bold text-lg mb-4 text-blue-900">9- Acabamento Externo</h4>
           <div className="space-y-3">
             {acabamentoExternoOptions.map((item) => (
               <CheckboxField
                 key={item.id}
                 id={item.id}
-                label={item.label}
+                label={<span className="font-semibold text-blue-800">{item.label}</span>}
                 description=""
                 checked={
                   formData.construcao.acabamentoExterno[
@@ -514,15 +500,6 @@ export function ConstrucaoSection({
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
       </div>
     </div>
   );

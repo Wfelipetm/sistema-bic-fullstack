@@ -1,4 +1,5 @@
 export interface FormularioData {
+  observacoes: string | number | readonly string[] | undefined
   numeroInscricao: string | number | readonly string[] | undefined
   numeroBote: string | number | readonly string[] | undefined
   numeroQuadra: string | number | readonly string[] | undefined
@@ -172,16 +173,16 @@ export interface FormularioData {
 
   // Serventias
   serventias: {
-    sala: boolean
-    quarto: boolean
-    copa: boolean
-    cozinha: boolean
-    banheiro: boolean
-    garagem: boolean
-    varanda: boolean
-    corredor: boolean
-    area: boolean
-    poraoHabital: boolean
+    sala: number
+    quarto: number
+    copa: number
+    cozinha: number
+    banheiro: number
+    garagem: number
+    varanda: number
+    corredor: number
+    area: number
+    porao_habital: number // Corrija o nome para manter igual ao backend, se necessário
   }
 
   // Avaliação Urbanística do Logradouro
@@ -214,6 +215,7 @@ export interface FormularioData {
 
   // Responsável
   responsavel?: string
+  responsavel_tributario?: string // <--- Adicione esta linha
 
   // Técnico responsável
   tecnicoId?: string | number
