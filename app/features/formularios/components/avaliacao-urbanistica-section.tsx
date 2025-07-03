@@ -12,7 +12,7 @@ interface AvaliacaoUrbanisticaSectionProps {
   formData: FormularioData
   handleCheckboxChange: (section: string, field: string, checked: boolean) => void
   handleNestedCheckboxChange: (section: string, subsection: string, field: string, checked: boolean) => void
-  handleInputChange: (field: string, value: string) => void
+  handleInputChange: (field: string, value: string | boolean) => void
 }
 
 export function AvaliacaoUrbanisticaSection({
@@ -121,7 +121,7 @@ export function AvaliacaoUrbanisticaSection({
           label={<span className="font-medium text-blue-800">Logradouro com Placa?</span>}
           description="Indica se o logradouro possui placa de identificação"
           checked={formData.logradouroComPlaca}
-          onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", checked.toString())}
+          onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", !!checked)}
         />
       </div>
 

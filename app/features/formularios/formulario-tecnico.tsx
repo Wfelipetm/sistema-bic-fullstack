@@ -133,7 +133,7 @@ export default function FormularioTecnico() {
     }))
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -214,16 +214,21 @@ export default function FormularioTecnico() {
       const usoPayload = sanitizeBooleans(formData.construcao.uso)
       // Repita para outros objetos booleanos
 
+      const obsLogradouroPayload = {
+        logradouro_placa: !!formData.logradouroComPlaca, // <-- nome igual ao backend!
+        observacoes: formData.observacoes || ""
+      }
+
       const [
         usoRes,
         topografiaRes,
         tipoConstrucaoRes,
         tipoRes,
         situacaoRes,
-        caracterSoloRes, // <-- Adicione aqui
+        caracterSoloRes,
         serventiasRes,
         pisoRes,
-        obsLogradouroRes,
+        obsLogradouroRes, // <- aqui
         nivelamentoRes,
         forroRes,
         esquadrilhaRes,
@@ -233,15 +238,18 @@ export default function FormularioTecnico() {
         acabamentoInternoRes,
         acabamentoExternoRes,
       ] = await Promise.all([
-        usoAPI.create(usoPayload),
+        usoAPI.create(sanitizeBooleans(formData.construcao.uso)),
         topografiaAPI.create(sanitizeBooleans(formData.terreno.topografia)),
         tipoConstrucaoAPI.create(sanitizeBooleans(formData.construcao.tipoConstrucao)),
         tipoAPI.create(sanitizeBooleans(formData.construcao.tipo)),
-        situacaoAPI.create(situacaoPayload),
-        caracterSoloAPI.create(sanitizeBooleans(formData.terreno.caracteristicasSolo)), // <-- Adicione aqui
+        situacaoAPI.create(sanitizeBooleans(formData.terreno.situacao)),
+        caracterSoloAPI.create(sanitizeBooleans(formData.terreno.caracteristicasSolo)),
         serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
-        obsLogradouroAPI.create(formData.obsLogradouro),
+        obsLogradouroAPI.create(obsLogradouroPayload).then(res => {
+          console.log("✅ obsLogradouro enviado:", obsLogradouroPayload, "Resposta:", res);
+          return res;
+        }),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
         forroAPI.create(sanitizeBooleans(formData.construcao.forro)),
         esquadrilhaAPI.create(sanitizeBooleans(formData.construcao.esquadrias)),
@@ -256,7 +264,13 @@ export default function FormularioTecnico() {
           paralelo: !!formData.calcamento.extensao.paralelo,
           bloco: !!formData.calcamento.extensao.bloco,
         }),
-        avaliUrbaLogradouroAPI.create(avaliUrbaPayload),
+        avaliUrbaLogradouroAPI.create({
+          alta: formData.avaliacaoUrbanistica === "alta",
+          media: formData.avaliacaoUrbanistica === "media",
+          media_baixa: formData.avaliacaoUrbanistica === "mediaBaixa",
+          baixa: formData.avaliacaoUrbanistica === "baixa",
+          muito_baixa: formData.avaliacaoUrbanistica === "muitoBaixa",
+        }),
         acabamentoInternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoInterno)),
         acabamentoExternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoExterno)),
       ])

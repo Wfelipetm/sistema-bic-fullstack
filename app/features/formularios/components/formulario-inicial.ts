@@ -46,9 +46,9 @@ export const formularioInicial: FormularioData = {
             horizontal: false,
         },
         nivelamento: {
-            abaixoNivel: false,
-            aoNivel: false,
-            acimaNivel: false,
+            abaixo_nivel: false,
+            ao_nivel: false,
+            acima_nivel: false,
         },
     },
     terrenoCaracteristicas: {
