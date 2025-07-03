@@ -130,7 +130,7 @@ export default function RelatorioPrintTemplate() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 border border-black"></span>
-                    <span className="text-xs">1- Encravado</span>
+                    <span className="text-xs">1- encravamento</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 border border-black"></span>

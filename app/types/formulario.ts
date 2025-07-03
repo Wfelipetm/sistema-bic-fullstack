@@ -38,12 +38,12 @@ export interface FormularioData {
   terreno: {
     // 1- Situação
     situacao: {
-      encravado: boolean
+      encravamento: boolean
       vila: boolean
-      meioQuadra: boolean
+      meio_quadra: boolean
       esquina: boolean
-      comTresFrente: boolean
-      todaQuadra: boolean
+      tres_frentes: boolean
+      toda_quadra: boolean
     }
 
     // 2- Características do Solo
@@ -191,7 +191,7 @@ export interface FormularioData {
   // Calçamento
   calcamento: {
     tipo: {
-      semAsfalto: boolean
+      sem_asfalto: boolean
       asfaltada: boolean
       novo: boolean
       antigo: boolean

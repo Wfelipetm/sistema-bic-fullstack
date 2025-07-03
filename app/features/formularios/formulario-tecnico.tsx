@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FileText, MapPin, Layers, Save, Building, Home, Ruler } from "lucide-react"
@@ -58,6 +58,73 @@ export default function FormularioTecnico() {
     serventias: false,
     avaliacaoUrbanistica: false,
   })
+
+  const [situacaoOptions, setSituacaoOptions] = useState<{ id: string, label: string }[]>([]);
+  const [soloOptions, setSoloOptions] = useState<{ id: string, label: string }[]>([]);
+  const [topografiaOptions, setTopografiaOptions] = useState<{ id: string, label: string }[]>([]);
+  const [nivelamentoOptions, setNivelamentoOptions] = useState<{ id: string, label: string }[]>([]);
+
+  useEffect(() => {
+    situacaoAPI.get().then((data) => {
+      const options = data.map((item: any, idx: number) => ({
+        id: item.id,
+        label:
+          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+            ? item.descricao
+            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+              ? item.nome
+              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+                ? item.label
+                : `Opção ${idx + 1}`,
+      }))
+      setSituacaoOptions(options)
+    })
+
+    caracterSoloAPI.get().then((data) => {
+      const options = data.map((item: any, idx: number) => ({
+        id: item.id,
+        label:
+          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+            ? item.descricao
+            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+              ? item.nome
+              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+                ? item.label
+                : `Opção ${idx + 1}`,
+      }))
+      setSoloOptions(options)
+    })
+
+    topografiaAPI.get().then((data) => {
+      const options = data.map((item: any, idx: number) => ({
+        id: item.id,
+        label:
+          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+            ? item.descricao
+            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+              ? item.nome
+              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+                ? item.label
+                : `Opção ${idx + 1}`,
+      }))
+      setTopografiaOptions(options)
+    })
+
+    nivelamentoAPI.get().then((data) => {
+      const options = data.map((item: any, idx: number) => ({
+        id: item.id,
+        label:
+          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+            ? item.descricao
+            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+              ? item.nome
+              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+                ? item.label
+                : `Opção ${idx + 1}`,
+      }))
+      setNivelamentoOptions(options)
+    })
+  }, [])
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -153,6 +220,7 @@ export default function FormularioTecnico() {
         tipoConstrucaoRes,
         tipoRes,
         situacaoRes,
+        caracterSoloRes, // <-- Adicione aqui
         serventiasRes,
         pisoRes,
         obsLogradouroRes,
@@ -170,6 +238,7 @@ export default function FormularioTecnico() {
         tipoConstrucaoAPI.create(sanitizeBooleans(formData.construcao.tipoConstrucao)),
         tipoAPI.create(sanitizeBooleans(formData.construcao.tipo)),
         situacaoAPI.create(situacaoPayload),
+        caracterSoloAPI.create(sanitizeBooleans(formData.terreno.caracteristicasSolo)), // <-- Adicione aqui
         serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
         obsLogradouroAPI.create(formData.obsLogradouro),
@@ -177,7 +246,16 @@ export default function FormularioTecnico() {
         forroAPI.create(sanitizeBooleans(formData.construcao.forro)),
         esquadrilhaAPI.create(sanitizeBooleans(formData.construcao.esquadrias)),
         coberturaAPI.create(sanitizeBooleans(formData.construcao.cobertura)),
-        calcamentoAPI.create(formData.calcamento),
+        calcamentoAPI.create({
+          sem_asfalto: !!formData.calcamento.tipo.sem_asfalto,
+          asfaltada: !!formData.calcamento.tipo.asfaltada,
+          novo: !!formData.calcamento.tipo.novo,
+          antigo: !!formData.calcamento.tipo.antigo,
+          parte: !!formData.calcamento.extensao.parte,
+          toda: !!formData.calcamento.extensao.toda,
+          paralelo: !!formData.calcamento.extensao.paralelo,
+          bloco: !!formData.calcamento.extensao.bloco,
+        }),
         avaliUrbaLogradouroAPI.create(avaliUrbaPayload),
         acabamentoInternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoInterno)),
         acabamentoExternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoExterno)),
@@ -186,7 +264,13 @@ export default function FormularioTecnico() {
       // 3. Usa os ids para os outros POSTs
       await Promise.all([
         createLogradouro({ ...formData.logradouro, boletim_id: boletim.id }),
-        createTerreno({ ...formData.terreno, boletim_id: boletim.id }),
+        createTerreno({
+          boletim_id: boletim.id,
+          situacao_id: situacaoRes.id,
+          caracter_solo_id: caracterSoloRes.id,
+          topografia_id: topografiaRes.id,
+          nivelamento_id: nivelamentoRes.id,
+        }),
         createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
         createConstrucao({
           ...formData.construcao,
@@ -208,14 +292,13 @@ export default function FormularioTecnico() {
           acabamento_externo_id: acabamentoExternoRes.id,
           boletim_id: boletim.id,
         }),
-        caracterSoloAPI.create({ ...formData.terreno.caracteristicasSolo, boletim_id: boletim.id }),
       ])
 
       // Limpar campos da serventia antes de enviar
       const cleanServentias = Object.fromEntries(
         Object.entries(formData.serventias).filter(([_, v]) => v !== 0)
       );
-      await serventiasAPI.create({ serventias: formData.serventias });
+      await serventiasAPI.create({ ...formData.serventias });
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
@@ -306,7 +389,10 @@ export default function FormularioTecnico() {
           isOpen={openSections.terreno}
           onToggle={() => toggleSection("terreno")}
         >
-          <TerrenoSection formData={formData} handleNestedCheckboxChange={handleNestedCheckboxChange} />
+          <TerrenoSection
+  formData={formData}
+  handleNestedCheckboxChange={handleNestedCheckboxChange}
+/>
         </FormularioSection>
 
         {/* III - Metragens */}
@@ -375,4 +461,10 @@ export default function FormularioTecnico() {
       </div>
     </div>
   )
+}
+
+function getSelectedId(section: Record<string, boolean>, options: { id: number | string }[]) {
+  const selectedKey = Object.keys(section).find((key) => section[key]);
+  const selectedOption = options.find((opt) => String(opt.id) === selectedKey);
+  return selectedOption ? selectedOption.id : null;
 }

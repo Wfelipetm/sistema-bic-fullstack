@@ -26,12 +26,12 @@ export const formularioInicial: FormularioData = {
     },
     terreno: {
         situacao: {
-            encravado: false,
+            encravamento: false,
             vila: false,
-            meioQuadra: false,
+            meio_quadra: false,
             esquina: false,
-            comTresFrente: false,
-            todaQuadra: false,
+            tres_frentes: false,
+            toda_quadra: false,
         },
         caracteristicasSolo: {
             alagadico: false,
@@ -163,7 +163,7 @@ export const formularioInicial: FormularioData = {
     avaliacaoUrbanistica: "",
     calcamento: {
         tipo: {
-            semAsfalto: false,
+            sem_asfalto: false,
             asfaltada: false,
             novo: false,
             antigo: false,

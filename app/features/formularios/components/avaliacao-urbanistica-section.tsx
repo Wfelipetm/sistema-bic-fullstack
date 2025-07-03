@@ -75,7 +75,7 @@ export function AvaliacaoUrbanisticaSection({
             <h5 className="font-medium mb-3 text-blue-800">Tipo:</h5>
             <div className="space-y-3">
               {[
-                { id: "semAsfalto", label: "S/Asfalto" },
+                { id: "sem_asfalto", label: "S/Asfalto" },
                 { id: "asfaltada", label: "Asfaltada" },
                 { id: "novo", label: "Novo" },
                 { id: "antigo", label: "Antigo" },

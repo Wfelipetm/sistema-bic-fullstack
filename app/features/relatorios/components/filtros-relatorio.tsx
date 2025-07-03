@@ -28,7 +28,7 @@ import {
   Printer,
   FileText,
 } from "lucide-react";
-import type { FiltrosRelatorio } from "../../../types/relatorio";
+import type { FiltrosRelatorio } from "@/app/types/relatorio";
 import { buscarRelatorios } from "../services/relatorio-service";
 import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf";
 
@@ -60,14 +60,7 @@ interface FiltrosRelatorioCardProps {
 }
 
 // Componente independente (não recebe props)
-export function FiltrosRelatorioCard() {
-  const [filtros, setFiltros] = useState<FiltrosRelatorio>({
-    dataInicio: "",
-    dataFim: "",
-    status: "all",
-    tecnico: "all",
-  });
-
+export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCardProps) {
   const [tecnicos, setTecnicos] = useState<Tecnico[]>([]);
   const [loadingTecnicos, setLoadingTecnicos] = useState(false);
   const [relatorios, setRelatorios] = useState<Relatorio[]>([]);

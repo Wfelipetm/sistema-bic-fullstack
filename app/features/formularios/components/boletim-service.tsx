@@ -28,6 +28,11 @@ export async function createBoletim(formData: FormularioData) {
     tecnico_id: Number(formData.tecnicoId) // Adicione esta linha!
   }
 
+  if (!formData.tecnicoId) {
+    alert("Selecione um técnico válido!")
+    return
+  }
+
   // Log para depuração
   console.log("Payload enviado para /boletim/:", JSON.stringify(payload, null, 2))
 
@@ -36,6 +41,10 @@ export async function createBoletim(formData: FormularioData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   })
-  if (!res.ok) throw new Error("Erro ao salvar o boletim")
+  if (!res.ok) {
+    const errorText = await res.text()
+    console.error("Erro do backend:", errorText)
+    throw new Error("Erro ao salvar o boletim: " + errorText)
+  }
   return res.json()
 }
