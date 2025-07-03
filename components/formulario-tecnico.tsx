@@ -55,6 +55,20 @@ export default function FormularioTecnico() {
       aoNivel: false,
       acimaNivel: false,
     },
+    calcamento: {
+      tipo: {
+        sem_asfalto: false,
+        asfaltada: false,
+        novo: false,
+        antigo: false,
+      },
+      extensao: {
+        parte: false,
+        toda: false,
+        paralelo: false,
+        bloco: false,
+      },
+    },
     serventias: {
       sala: 0,
       quarto: 0,

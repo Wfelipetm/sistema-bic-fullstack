@@ -1,56 +1,116 @@
-import { useEffect, useState } from "react"
-import { CheckboxField } from "./checkbox-field"
-import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { useEffect, useState } from "react";
+import { CheckboxField } from "./checkbox-field";
+import type { FormularioData } from "@/app/types/formulario";
+import {
+  situacaoAPI,
+  caracterSoloAPI,
+  topografiaAPI,
+  nivelamentoAPI,
+  createTerreno,
+} from "@/lib/api-services";
 
 interface TerrenoSectionProps {
-  formData: FormularioData
-  handleNestedCheckboxChange: (section: string, subsection: string, field: string, checked: boolean) => void
+  formData: FormularioData;
+  handleNestedCheckboxChange: (
+    section: string,
+    subsection: string,
+    field: string,
+    checked: boolean
+  ) => void;
 }
 
-export function TerrenoSection({ formData, handleNestedCheckboxChange }: TerrenoSectionProps) {
-  // Estados para dados dinâmicos da API
-  const [situationOptions, setSituationOptions] = useState<any[]>([])
-  const [soilOptions, setSoilOptions] = useState<any[]>([])
-  const [topographyOptions, setTopographyOptions] = useState<any[]>([])
-  const [levelingOptions, setLevelingOptions] = useState<any[]>([])
+export function TerrenoSection({
+  formData,
+  handleNestedCheckboxChange,
+}: TerrenoSectionProps) {
+  const [situacaoOptions, setSituacaoOptions] = useState([
+  { id: "encravamento", label: "1 - Encravamento" },
+  { id: "vila", label: "2 - Vila" },
+  { id: "meio_quadra", label: "3 - Meio de Quadra" },
+  { id: "esquina", label: "4 - Esquina" },
+  { id: "tres_frentes", label: "5 - Três Frentes" },
+  { id: "toda_quadra", label: "6 - Toda a Quadra" },
+]);
+
+  
+// 2 - Características do Solo
+const [soloOptions, setSoloOptions] = useState([
+  { id: "alagadico", label: "1 - Alagadiço" },
+  { id: "arenoso", label: "2 - Arenoso" },
+  { id: "rochoso", label: "3 - Rochoso" },
+  { id: "normal", label: "4 - Normal" },
+]);
+
+// 3 - Topografia
+const [topografiaOptions, setTopografiaOptions] = useState([
+  { id: "aclive", label: "1 - Aclive" },
+  { id: "declive", label: "2 - Declive" },
+  { id: "encosta", label: "3 - Encosta" },
+  { id: "horizontal", label: "4 - Horizontal" },
+]);
+
+// 4 - Nivelamento
+const [nivelamentoOptions, setNivelamentoOptions] = useState([
+  { id: "abaixoNivel", label: "1 - Abaixo do Nível da Rua" },
+  { id: "aoNivel", label: "2 - Ao Nível da Rua" },
+  { id: "acimaNivel", label: "3 - Acima do Nível da Rua" },
+]);
+
 
   useEffect(() => {
-    fetch(apiUrl("/situacao/")).then(r => r.json()).then(setSituationOptions)
-    fetch(apiUrl("/caracter-solo/")).then(r => r.json()).then(setSoilOptions)
-    fetch(apiUrl("/topografia/")).then(r => r.json()).then(setTopographyOptions)
-    fetch(apiUrl("/nivelamento/")).then(r => r.json()).then(setLevelingOptions)
-  }, [])
-
-  const situacaoOptions = [
-    { encravado: "Encravado" },
-    { vila: "Vila" },
-    { meioQuadra: "Meio Quadra" },
-    { esquina: "Esquina" },
-    { comTresFrente: "Com Três Frentes" },
-    { todaQuadra: "Toda a Quadra" },
-  ]
-
-  const soloOptions = [
-    { alagadico: "Alagadiço" },
-    { arenoso: "Arenoso" },
-    { rochoso: "Rochoso" },
-    { normal: "Normal" },
-  ]
-
-  const topografiaOptions = [
-    { Aclive: "Aclive" },
-    { Declive: "Declive" },
-    { Encosta: "Encosta" },
-    { Horizontal: "Horizontal" },
-  ]
-
-  const nivelamentoOptions = [
-  { "Abaixo do Nível": "Abaixo do Nível" },
-  { "Ao Nível": "Ao Nível" },
-  { "Acima do Nível": "Acima do Nível" },
-];
-
+    situacaoAPI.get().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        const keys = Object.keys(data[0]).filter(
+          (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+        );
+        setSituacaoOptions(
+          keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`,
+          }))
+        );
+      }
+    });
+    caracterSoloAPI.get().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        const keys = Object.keys(data[0]).filter(
+          (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+        );
+        setSoloOptions(
+          keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`,
+          }))
+        );
+      }
+    });
+    topografiaAPI.get().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        const keys = Object.keys(data[0]).filter(
+          (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+        );
+        setTopografiaOptions(
+          keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`,
+          }))
+        );
+      }
+    });
+    nivelamentoAPI.get().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        const keys = Object.keys(data[0]).filter(
+          (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
+        );
+        setNivelamentoOptions(
+          keys.map((key, idx) => ({
+            id: key,
+            label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`,
+          }))
+        );
+      }
+    });
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -58,15 +118,15 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
         <h4 className="font-bold text-lg mb-4 text-blue-900">1- Situação</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          {["encravado", "vila", "meioQuadra", "esquina", "comTresFrente", "todaQuadra"].map((key) => (
+          {situacaoOptions.map((item) => (
             <CheckboxField
-              key={key}
-              id={key}
-              label={<span className="font-semibold text-blue-800">{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}</span>}
+              key={item.id}
+              id={item.id}
+              label={<span className="font-semibold text-blue-800">{item.label}</span>}
               description=""
-              checked={formData.terreno.situacao[key as keyof typeof formData.terreno.situacao]}
+              checked={formData.terreno.situacao[item.id as keyof typeof formData.terreno.situacao]}
               onCheckedChange={(checked) =>
-                handleNestedCheckboxChange("terreno", "situacao", key, checked)
+                handleNestedCheckboxChange("terreno", "situacao", item.id, checked)
               }
             />
           ))}
@@ -77,15 +137,15 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
         <h4 className="font-bold text-lg mb-4 text-blue-900">2- Características do Solo</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {["alagadico", "arenoso", "rochoso", "normal"].map((key) => (
+          {soloOptions.map((item) => (
             <CheckboxField
-              key={key}
-              id={key}
-              label={<span className="font-semibold text-blue-800">{key.charAt(0).toUpperCase() + key.slice(1)}</span>}
+              key={item.id}
+              id={item.id}
+              label={<span className="font-semibold text-blue-800">{item.label}</span>}
               description=""
-              checked={formData.terreno.caracteristicasSolo[key as keyof typeof formData.terreno.caracteristicasSolo]}
+              checked={formData.terreno.caracteristicasSolo[item.id as keyof typeof formData.terreno.caracteristicasSolo]}
               onCheckedChange={(checked) =>
-                handleNestedCheckboxChange("terreno", "caracteristicasSolo", key, checked)
+                handleNestedCheckboxChange("terreno", "caracteristicasSolo", item.id, checked)
               }
             />
           ))}
@@ -96,20 +156,18 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
         <h4 className="font-bold text-lg mb-4 text-blue-900">3- Topografia</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {topografiaOptions.length > 0
-            ? topografiaOptions.map((item, idx) => (
-                <CheckboxField
-                  key={idx}
-                  id={Object.keys(item)[0]}
-                  label={<span className="font-semibold text-blue-800">{Object.keys(item)[0]}</span>}
-                  description=""
-                  checked={formData.terreno.topografia[Object.keys(item)[0] as keyof typeof formData.terreno.topografia]}
-                  onCheckedChange={(checked) =>
-                    handleNestedCheckboxChange("terreno", "topografia", Object.keys(item)[0], checked)
-                  }
-                />
-              ))
-            : null}
+          {topografiaOptions.map((item) => (
+            <CheckboxField
+              key={item.id}
+              id={item.id}
+              label={<span className="font-semibold text-blue-800">{item.label}</span>}
+              description=""
+              checked={formData.terreno.topografia[item.id as keyof typeof formData.terreno.topografia]}
+              onCheckedChange={(checked) =>
+                handleNestedCheckboxChange("terreno", "topografia", item.id, checked)
+              }
+            />
+          ))}
         </div>
       </div>
 
@@ -117,22 +175,20 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
       <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
         <h4 className="font-bold text-lg mb-4 text-blue-900">4- Nivelamento</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {nivelamentoOptions.length > 0
-            ? nivelamentoOptions.map((item, idx) => (
-                <CheckboxField
-                  key={idx}
-                  id={Object.keys(item)[0]}
-                  label={<span className="font-semibold text-blue-800">{Object.keys(item)[0]}</span>}
-                  description=""
-                  checked={formData.terreno.nivelamento[Object.keys(item)[0] as keyof typeof formData.terreno.nivelamento]}
-                  onCheckedChange={(checked) =>
-                    handleNestedCheckboxChange("terreno", "nivelamento", Object.keys(item)[0], checked)
-                  }
-                />
-              ))
-            : null}
+          {nivelamentoOptions.map((item) => (
+            <CheckboxField
+              key={item.id}
+              id={item.id}
+              label={<span className="font-semibold text-blue-800">{item.label}</span>}
+              description=""
+              checked={formData.terreno.nivelamento[item.id as keyof typeof formData.terreno.nivelamento]}
+              onCheckedChange={(checked) =>
+                handleNestedCheckboxChange("terreno", "nivelamento", item.id, checked)
+              }
+            />
+          ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -191,7 +191,7 @@ export interface FormularioData {
   // Calçamento
   calcamento: {
     tipo: {
-      semAsfalto: boolean
+      sem_asfalto: boolean
       asfaltada: boolean
       novo: boolean
       antigo: boolean

@@ -144,7 +144,7 @@ export async function gerarRelatorioPDF(id: number) {
       {
         titulo: "1- Situação:",
         dados: [
-          [data.encravamento === true ? "X" : "", "1- Encravado"],
+          [data.encravamento === true ? "X" : "", "1- encravamento"],
           [data.vila === true ? "X" : "", "2- Vila"],
           [data.meio_quadra === true ? "X" : "", "3- Meio de Quadra"],
           [data.esquina === true ? "X" : "", "4- Esquina"],
