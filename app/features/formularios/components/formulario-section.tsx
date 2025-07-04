@@ -47,7 +47,7 @@ export function FormularioSection({
                   <Icon className={`h-4 w-4 ${iconColor}`} />
                 </div>
                 <div>
-                  <CardTitle className="flex items-center gap-2 text-lg text-blue-900">
+                  <CardTitle className="flex items-center gap-2 text-lg">
                     {isOpen ? (
                       <ChevronDown className="h-4 w-4" />
                     ) : (

@@ -30,15 +30,13 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
         {/* Imagem centralizada */}
         <div className="flex-1 flex justify-center">
           <img
-            src="/images/SMCTIC - Branco.png"
+            src="/images/SMCTIC - azul-marinho.png"
             alt="Logo Prefeitura"
             className="h-20 object-contain"
             style={{
-              height: 80,
+              height: 120,
               width: 600,
-              filter:
-                "brightness(0) saturate(100%) invert(11%) sepia(98%) saturate(7499%) hue-rotate(210deg) brightness(90%) contrast(110%)",
-            }}
+              }}
           />
         </div>
 
