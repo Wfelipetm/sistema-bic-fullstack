@@ -81,12 +81,12 @@ export interface FormularioData {
   construcao: {
     // 1- Tipo
     tipo: {
-      casa: boolean
-      apartamento: boolean
-      sala: boolean
-      loja: boolean
-      galpao: boolean
-      templo: boolean
+      tipo_casa: boolean
+      tipo_apartamento: boolean
+      tipo_sala: boolean
+      tipo_loja: boolean
+      tipo_galpao: boolean
+      tipo_templo: boolean
     }
 
     // 2- Uso
@@ -173,20 +173,20 @@ export interface FormularioData {
 
   // Serventias
   serventias: {
-    sala: number
-    quarto: number
-    copa: number
-    cozinha: number
-    banheiro: number
-    garagem: number
-    varanda: number
-    corredor: number
-    area: number
-    porao_habital: number // Corrija o nome para manter igual ao backend, se necessário
+    serventia_sala: number
+    serventia_quarto: number
+    serventia_copa: number
+    serventia_cozinha: number
+    serventia_banheiro: number
+    serventia_garagem: number
+    serventia_varanda: number
+    serventia_corredor: number
+    serventia_area: number
+    serventia_porao_habital: number // Corrija o nome para manter igual ao backend, se necessário
   }
 
   // Avaliação Urbanística do Logradouro
-  avaliacaoUrbanistica: "alta" | "media" | "mediaBaixa" | "baixa" | "muitoBaixa" | ""
+  avaliacaoUrbanistica: "alta" | "media" | "media_baixa" | "baixa" | "muito_baixa" | ""
 
   // Calçamento
   calcamento: {

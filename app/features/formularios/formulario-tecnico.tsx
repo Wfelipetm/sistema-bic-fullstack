@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { FileText, MapPin, Layers, Save, Building, Home, Ruler } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
+import { FileText, Save } from "lucide-react"
 import { FormularioSection } from "./components/formulario-section"
 import { DadosBasicosSection } from "./components/dados-basicos-section"
 import { LogradouroSection } from "./components/logradouro-section"
@@ -47,8 +47,24 @@ function sanitizeBooleans<T extends Record<string, any>>(obj: T): T {
   return sanitized as T
 }
 
+function deepSanitizeBooleans(obj: any): any {
+  if (typeof obj === "boolean") return obj
+  if (typeof obj === "object" && obj !== null) {
+    const sanitized: any = Array.isArray(obj) ? [] : {}
+    for (const key in obj) {
+      sanitized[key] = deepSanitizeBooleans(obj[key])
+      if ((sanitized[key] === undefined || sanitized[key] === null) && typeof obj[key] !== "object") {
+        sanitized[key] = false
+      }
+    }
+    return sanitized
+  }
+  return obj
+}
+
 export default function FormularioTecnico() {
   const [formData, setFormData] = useState<FormularioData>(formularioInicial)
+  const [isLoading, setIsLoading] = useState(false)
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     dadosBasicos: true,
     logradouro: false,
@@ -59,21 +75,65 @@ export default function FormularioTecnico() {
     avaliacaoUrbanistica: false,
   })
 
-  const [situacaoOptions, setSituacaoOptions] = useState<{ id: string, label: string }[]>([]);
-  const [soloOptions, setSoloOptions] = useState<{ id: string, label: string }[]>([]);
-  const [topografiaOptions, setTopografiaOptions] = useState<{ id: string, label: string }[]>([]);
-  const [nivelamentoOptions, setNivelamentoOptions] = useState<{ id: string, label: string }[]>([]);
+  const [situacaoOptions, setSituacaoOptions] = useState<{ id: string; label: string }[]>([])
+  const [soloOptions, setSoloOptions] = useState<{ id: string; label: string }[]>([])
+  const [topografiaOptions, setTopografiaOptions] = useState<{ id: string; label: string }[]>([])
+  const [nivelamentoOptions, setNivelamentoOptions] = useState<{ id: string; label: string }[]>([])
+
+  // Calcular progresso do formulário
+  const calculateProgress = () => {
+    let totalFields = 0
+    let filledFields = 0
+
+    // Dados básicos
+    if (formData.inscricaoNumero) filledFields++
+    if (formData.lote) filledFields++
+    if (formData.quadra) filledFields++
+    if (formData.endereco) filledFields++
+    if (formData.tecnicoId) filledFields++
+    totalFields += 5
+
+    // Logradouro
+    const logradouroCount = Object.values(formData.logradouro).filter(Boolean).length
+    filledFields += logradouroCount > 0 ? 1 : 0
+    totalFields += 1
+
+    // Terreno
+    const terrenoCount = [
+      Object.values(formData.terreno.situacao).some(Boolean),
+      Object.values(formData.terreno.caracteristicasSolo).some(Boolean),
+      Object.values(formData.terreno.topografia).some(Boolean),
+      Object.values(formData.terreno.nivelamento).some(Boolean),
+    ].filter(Boolean).length
+    filledFields += terrenoCount
+    totalFields += 4
+
+    // Metragens
+    if (formData.metragens.areaTerreno) filledFields++
+    if (formData.metragens.testada) filledFields++
+    if (formData.metragens.areaEdificada) filledFields++
+    totalFields += 3
+
+    // Avaliação
+    if (formData.avaliacaoUrbanistica) filledFields++
+    totalFields += 1
+
+    return Math.round((filledFields / totalFields) * 100)
+  }
+
+  const progress = calculateProgress()
 
   useEffect(() => {
+    // APIs calls mantidas iguais...
     situacaoAPI.get().then((data) => {
       const options = data.map((item: any, idx: number) => ({
         id: item.id,
         label:
-          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+          item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== ""
             ? item.descricao
-            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+            : item.nome && typeof item.nome === "string" && item.nome.trim() !== ""
               ? item.nome
-              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+              : item.label && typeof item.label === "string" && item.label.trim() !== ""
                 ? item.label
                 : `Opção ${idx + 1}`,
       }))
@@ -84,11 +144,11 @@ export default function FormularioTecnico() {
       const options = data.map((item: any, idx: number) => ({
         id: item.id,
         label:
-          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+          item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== ""
             ? item.descricao
-            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+            : item.nome && typeof item.nome === "string" && item.nome.trim() !== ""
               ? item.nome
-              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+              : item.label && typeof item.label === "string" && item.label.trim() !== ""
                 ? item.label
                 : `Opção ${idx + 1}`,
       }))
@@ -99,11 +159,11 @@ export default function FormularioTecnico() {
       const options = data.map((item: any, idx: number) => ({
         id: item.id,
         label:
-          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+          item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== ""
             ? item.descricao
-            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+            : item.nome && typeof item.nome === "string" && item.nome.trim() !== ""
               ? item.nome
-              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+              : item.label && typeof item.label === "string" && item.label.trim() !== ""
                 ? item.label
                 : `Opção ${idx + 1}`,
       }))
@@ -114,11 +174,11 @@ export default function FormularioTecnico() {
       const options = data.map((item: any, idx: number) => ({
         id: item.id,
         label:
-          (item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== "")
+          item.descricao && typeof item.descricao === "string" && item.descricao.trim() !== ""
             ? item.descricao
-            : (item.nome && typeof item.nome === "string" && item.nome.trim() !== "")
+            : item.nome && typeof item.nome === "string" && item.nome.trim() !== ""
               ? item.nome
-              : (item.label && typeof item.label === "string" && item.label.trim() !== "")
+              : item.label && typeof item.label === "string" && item.label.trim() !== ""
                 ? item.label
                 : `Opção ${idx + 1}`,
       }))
@@ -145,10 +205,7 @@ export default function FormularioTecnico() {
       ...prev,
       [section]: {
         ...prev[section as keyof typeof prev],
-        [field]:
-          section === "serventias"
-            ? value === "" ? "" : Number(value)
-            : value,
+        [field]: section === "serventias" ? (value === "" ? "" : Number(value)) : value,
       },
     }))
   }
@@ -163,18 +220,13 @@ export default function FormularioTecnico() {
     }))
   }
 
-  const handleNestedCheckboxChange = (
-    section: string,
-    subsection: string,
-    field: string,
-    checked: boolean
-  ) => {
+  const handleNestedCheckboxChange = (section: string, subsection: string, field: string, checked: boolean) => {
     setFormData((prev) => ({
       ...prev,
       [section]: {
         ...(prev[section as keyof typeof prev] as Record<string, any>),
         [subsection]: {
-          ...((prev[section as keyof typeof prev] as Record<string, any>)[subsection]),
+          ...(prev[section as keyof typeof prev] as Record<string, any>)[subsection],
           [field]: checked,
         },
       },
@@ -182,41 +234,52 @@ export default function FormularioTecnico() {
   }
 
   const handleSave = async () => {
+    setIsLoading(true)
     try {
-      console.log("🚀 FormData completo:", formData);
-      console.log("🎯 tecnicoId:", formData.tecnicoId, "tipo:", typeof formData.tecnicoId);
+      console.log("🚀 FormData completo:", formData)
+      console.log("🎯 tecnicoId:", formData.tecnicoId, "tipo:", typeof formData.tecnicoId)
 
-      // Validar se técnico foi selecionado
       if (!formData.tecnicoId) {
         alert("Por favor, selecione um técnico responsável")
         return
       }
 
-      // 1. Cria o boletim e pega o id
-      console.log("📦 FormData sendo enviado:", formData);
-      console.log("🎯 tecnicoId no formData:", formData.tecnicoId, "tipo:", typeof formData.tecnicoId);
+      // Resto da lógica de salvamento mantida igual...
+      const sanitizedFormData = {
+        ...deepSanitizeBooleans(formData),
+        area_terreno: formData.metragens?.areaTerreno ? Number(formData.metragens.areaTerreno.replace(",", ".")) : null,
+        testada: formData.metragens?.testada ? Number(formData.metragens.testada.replace(",", ".")) : null,
+        area_edificada: formData.metragens?.areaEdificada
+          ? Number(formData.metragens.areaEdificada.replace(",", "."))
+          : null,
+      }
 
-      const boletim = await createBoletim(formData)
-      console.log("✅ Boletim criado:", boletim);
+      const boletim = await createBoletim(sanitizedFormData)
 
-      // 2. Cria todos os registros auxiliares e pega os ids
-      // Monte o payload correto para avaliação urbanística
+      await createMetragens({
+        area_terreno: formData.metragens?.areaTerreno ? Number(formData.metragens.areaTerreno.replace(",", ".")) : null,
+        area_testada: formData.metragens?.testada ? Number(formData.metragens.testada.replace(",", ".")) : null,
+        area_edificada: formData.metragens?.areaEdificada
+          ? Number(formData.metragens.areaEdificada.replace(",", "."))
+          : null,
+        boletim_id: boletim.id,
+      })
+
       const avaliacao = formData.avaliacaoUrbanistica
       const avaliUrbaPayload = {
         alta: avaliacao === "alta",
         media: avaliacao === "media",
-        media_baixa: avaliacao === "mediaBaixa",
+        media_baixa: avaliacao === "media_baixa",
         baixa: avaliacao === "baixa",
-        muito_baixa: avaliacao === "muitoBaixa",
+        muito_baixa: avaliacao === "muito_baixa",
       }
 
       const situacaoPayload = sanitizeBooleans(formData.terreno.situacao)
       const usoPayload = sanitizeBooleans(formData.construcao.uso)
-      // Repita para outros objetos booleanos
 
       const obsLogradouroPayload = {
-        logradouro_placa: !!formData.logradouroComPlaca, // <-- nome igual ao backend!
-        observacoes: formData.observacoes || ""
+        logradouro_placa: !!formData.logradouroComPlaca,
+        observacoes: formData.observacoes || "",
       }
 
       const [
@@ -228,7 +291,7 @@ export default function FormularioTecnico() {
         caracterSoloRes,
         serventiasRes,
         pisoRes,
-        obsLogradouroRes, // <- aqui
+        obsLogradouroRes,
         nivelamentoRes,
         forroRes,
         esquadrilhaRes,
@@ -246,9 +309,9 @@ export default function FormularioTecnico() {
         caracterSoloAPI.create(sanitizeBooleans(formData.terreno.caracteristicasSolo)),
         serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
-        obsLogradouroAPI.create(obsLogradouroPayload).then(res => {
-          console.log("✅ obsLogradouro enviado:", obsLogradouroPayload, "Resposta:", res);
-          return res;
+        obsLogradouroAPI.create(obsLogradouroPayload).then((res) => {
+          console.log("✅ obsLogradouro enviado:", obsLogradouroPayload, "Resposta:", res)
+          return res
         }),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
         forroAPI.create(sanitizeBooleans(formData.construcao.forro)),
@@ -267,15 +330,14 @@ export default function FormularioTecnico() {
         avaliUrbaLogradouroAPI.create({
           alta: formData.avaliacaoUrbanistica === "alta",
           media: formData.avaliacaoUrbanistica === "media",
-          media_baixa: formData.avaliacaoUrbanistica === "mediaBaixa",
+          media_baixa: formData.avaliacaoUrbanistica === "media_baixa",
           baixa: formData.avaliacaoUrbanistica === "baixa",
-          muito_baixa: formData.avaliacaoUrbanistica === "muitoBaixa",
+          muito_baixa: formData.avaliacaoUrbanistica === "muito_baixa",
         }),
         acabamentoInternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoInterno)),
         acabamentoExternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoExterno)),
       ])
 
-      // 3. Usa os ids para os outros POSTs
       await Promise.all([
         createLogradouro({ ...formData.logradouro, boletim_id: boletim.id }),
         createTerreno({
@@ -308,177 +370,169 @@ export default function FormularioTecnico() {
         }),
       ])
 
-      // Limpar campos da serventia antes de enviar
-      const cleanServentias = Object.fromEntries(
-        Object.entries(formData.serventias).filter(([_, v]) => v !== 0)
-      );
-      await serventiasAPI.create({ ...formData.serventias });
+      const cleanServentias = Object.fromEntries(Object.entries(formData.serventias).filter(([_, v]) => v !== 0))
+      await serventiasAPI.create({ ...formData.serventias })
 
       alert("Formulário BIC salvo com sucesso!")
     } catch (e) {
-      console.error("Erro completo:", e);
+      console.error("Erro completo:", e)
       alert("Erro ao salvar o formulário!")
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header com referência ao formulário oficial */}
-      <div className="bg-blue-800 text-white p-6 rounded-lg shadow-lg">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-white/20 rounded-lg">
-        <FileText className="h-8 w-8" />
-          </div>
-          <div>
-        <h1 className="text-2xl font-bold">BOLETIM DE INFORMAÇÃO CADASTRAL - (BIC)</h1>
-        <p className="text-blue-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 p-6">
+      <div className="w-full max-w-none">
+        {/* Header Simples */}
+        <div className="bg-gradient-to-r from-sky-600 to-blue-600 rounded-2xl shadow-lg p-8 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white/20 rounded-xl">
+                <FileText className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Boletim de Informação Cadastral - BIC</h1>
+                <p className="text-sky-100">Prefeitura Municipal de Itaguaí - Secretaria de Fazenda</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <p className="text-sky-100 text-sm mb-1">Progresso</p>
+                <div className="w-32">
+                  <Progress value={progress} className="h-2 bg-white/20" />
+                  <p className="text-white text-sm mt-1">{progress}%</p>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="bg-white text-sky-600 hover:bg-sky-50 px-6 py-3 rounded-xl font-semibold"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-sky-600 mr-2"></div>
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Salvar BIC
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div />
-          <div className="flex gap-2">
-        <Button onClick={handleSave} className="bg-white text-blue-600 hover:bg-gray-100">
-          <Save className="h-4 w-4 mr-2" />
-          Salvar BIC
-        </Button>
-          </div>
-        </div>
-      </div>
+        {/* Seções do Formulário */}
+        <div className="space-y-6">
+          <FormularioSection
+            id="dadosBasicos"
+            title="Dados Básicos do Imóvel"
+            description="Inscrição, lançamento, revisão e dados do proprietário"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.dadosBasicos}
+            onToggle={() => toggleSection("dadosBasicos")}
+          >
+            <DadosBasicosSection formData={formData} handleInputChange={handleInputChange} />
+          </FormularioSection>
 
-      <div className="space-y-4">
-        {/* Dados Básicos */}
-        <FormularioSection
-          id="dadosBasicos"
-          title="Dados Básicos do Imóvel"
-          description="Inscrição, lançamento, revisão e dados do proprietário"
-          icon={FileText}
-          iconColor="text-blue-600"
-          iconBgColor="bg-blue-50"
-          isOpen={openSections.dadosBasicos}
-          onToggle={() => toggleSection("dadosBasicos")}
-        >
-          <DadosBasicosSection
-            formData={formData}
-            handleInputChange={handleInputChange}
-          />
+          <FormularioSection
+            id="logradouro"
+            title="I - Informações sobre o Logradouro"
+            description="Pavimentação, iluminação, rede de esgoto, água e coleta de lixo"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.logradouro}
+            onToggle={() => toggleSection("logradouro")}
+          >
+            <LogradouroSection formData={formData} handleCheckboxChange={handleCheckboxChange} />
+          </FormularioSection>
 
-          {/* Campo Responsável Tributário */}
-          {/* <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Responsável Tributário
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              value={formData.responsavel_tributario || ""}
-              onChange={e => handleInputChange("responsavel_tributario", e.target.value)}
-              placeholder="Digite o responsável tributário"
+          <FormularioSection
+            id="terreno"
+            title="II - Informações sobre o Terreno"
+            description="Situação, características do solo, topografia e nivelamento"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.terreno}
+            onToggle={() => toggleSection("terreno")}
+          >
+            <TerrenoSection formData={formData} handleNestedCheckboxChange={handleNestedCheckboxChange} />
+          </FormularioSection>
+
+          <FormularioSection
+            id="metragens"
+            title="III - Metragens"
+            description="Área do terreno, testada e área edificada"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.metragens}
+            onToggle={() => toggleSection("metragens")}
+          >
+            <MetragensSection formData={formData} handleNestedInputChange={handleNestedInputChange} />
+          </FormularioSection>
+
+          <FormularioSection
+            id="construcao"
+            title="IV - Informações sobre a Construção"
+            description="Tipo, uso, materiais, acabamentos e características construtivas"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.construcao}
+            onToggle={() => toggleSection("construcao")}
+          >
+            <ConstrucaoSection formData={formData} handleNestedCheckboxChange={handleNestedCheckboxChange} />
+          </FormularioSection>
+
+          <FormularioSection
+            id="serventias"
+            title="Serventias e Características Complementares"
+            description="Cômodos, avaliação urbanística e calçamento"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.serventias}
+            onToggle={() => toggleSection("serventias")}
+          >
+            <ServentiasSection formData={formData} handleNestedInputChange={handleNestedInputChange} />
+          </FormularioSection>
+
+          <FormularioSection
+            id="avaliacaoUrbanistica"
+            title="Avaliação Urbanística e Observações"
+            description="Avaliação do logradouro, calçamento e observações gerais"
+            icon={FileText}
+            iconColor="text-sky-600"
+            iconBgColor="bg-sky-50"
+            isOpen={openSections.avaliacaoUrbanistica}
+            onToggle={() => toggleSection("avaliacaoUrbanistica")}
+          >
+            <AvaliacaoUrbanisticaSection
+              formData={formData}
+              handleCheckboxChange={handleCheckboxChange}
+              handleNestedCheckboxChange={handleNestedCheckboxChange}
+              handleInputChange={handleInputChange}
             />
-          </div> */}
-        </FormularioSection>
-
-        {/* I - Informações sobre o Logradouro */}
-        <FormularioSection
-          id="logradouro"
-          title="I - Informações sobre o Logradouro"
-          description="Pavimentação, iluminação, rede de esgoto, água e coleta de lixo"
-          icon={MapPin}
-          iconColor="text-green-600"
-          iconBgColor="bg-green-50"
-          isOpen={openSections.logradouro}
-          onToggle={() => toggleSection("logradouro")}
-        >
-          <LogradouroSection formData={formData} handleCheckboxChange={handleCheckboxChange} />
-        </FormularioSection>
-
-        {/* II - Informações sobre o Terreno */}
-        <FormularioSection
-          id="terreno"
-          title="II - Informações sobre o Terreno"
-          description="Situação, características do solo, topografia e nivelamento"
-          icon={Layers}
-          iconColor="text-orange-600"
-          iconBgColor="bg-orange-50"
-          isOpen={openSections.terreno}
-          onToggle={() => toggleSection("terreno")}
-        >
-          <TerrenoSection
-  formData={formData}
-  handleNestedCheckboxChange={handleNestedCheckboxChange}
-/>
-        </FormularioSection>
-
-        {/* III - Metragens */}
-        <FormularioSection
-          id="metragens"
-          title="III - Metragens"
-          description="Área do terreno, testada e área edificada"
-          icon={Ruler}
-          iconColor="text-purple-600"
-          iconBgColor="bg-purple-50"
-          isOpen={openSections.metragens}
-          onToggle={() => toggleSection("metragens")}
-        >
-          <MetragensSection formData={formData} handleNestedInputChange={handleNestedInputChange} />
-        </FormularioSection>
-
-        {/* IV - Informações sobre a Construção */}
-        <FormularioSection
-          id="construcao"
-          title="IV - Informações sobre a Construção"
-          description="Tipo, uso, materiais, acabamentos e características construtivas"
-          icon={Building}
-          iconColor="text-indigo-600"
-          iconBgColor="bg-indigo-50"
-          isOpen={openSections.construcao}
-          onToggle={() => toggleSection("construcao")}
-        >
-          <ConstrucaoSection formData={formData} handleNestedCheckboxChange={handleNestedCheckboxChange} />
-        </FormularioSection>
-
-        {/* Serventias e Avaliação Urbanística */}
-        <FormularioSection
-          id="serventias"
-          title="Serventias e Características Complementares"
-          description="Cômodos, avaliação urbanística e calçamento"
-          icon={Home}
-          iconColor="text-teal-600"
-          iconBgColor="bg-teal-50"
-          isOpen={openSections.serventias}
-          onToggle={() => toggleSection("serventias")}
-        >
-          <ServentiasSection
-            formData={formData}
-            handleNestedInputChange={handleNestedInputChange}
-          />
-        </FormularioSection>
-
-        {/* Avaliação Urbanística */}
-        <FormularioSection
-          id="avaliacaoUrbanistica"
-          title="Avaliação Urbanística e Observações"
-          description="Avaliação do logradouro, calçamento e observações gerais"
-          icon={MapPin}
-          iconColor="text-emerald-600"
-          iconBgColor="bg-emerald-50"
-          isOpen={openSections.avaliacaoUrbanistica}
-          onToggle={() => toggleSection("avaliacaoUrbanistica")}
-        >
-          <AvaliacaoUrbanisticaSection
-            formData={formData}
-            handleCheckboxChange={handleCheckboxChange}
-            handleNestedCheckboxChange={handleNestedCheckboxChange}
-            handleInputChange={handleInputChange}
-          />
-        </FormularioSection>
+          </FormularioSection>
+        </div>
       </div>
     </div>
   )
 }
 
 function getSelectedId(section: Record<string, boolean>, options: { id: number | string }[]) {
-  const selectedKey = Object.keys(section).find((key) => section[key]);
-  const selectedOption = options.find((opt) => String(opt.id) === selectedKey);
-  return selectedOption ? selectedOption.id : null;
+  const selectedKey = Object.keys(section).find((key) => section[key])
+  const selectedOption = options.find((opt) => String(opt.id) === selectedKey)
+  return selectedOption ? selectedOption.id : null
 }

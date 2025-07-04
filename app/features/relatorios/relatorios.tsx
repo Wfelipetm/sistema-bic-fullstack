@@ -51,33 +51,23 @@ export default function Relatorios({ setActiveView }: RelatoriosProps) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            {mockRelatorios.length} Relatórios
-          </Badge>
-        </div>
-        <Button
-          className="bg-blue-600 hover:bg-blue-700"
-          onClick={() => router.push("/formulario")}
-        >
-          <FileText className="h-4 w-4 mr-2" />
-          Novo Relatório
-        </Button>
+        
+      
       </div>
 
       {/* Filtros */}
       <FiltrosRelatorioCard filtros={filtros} setFiltros={setFiltros} />
 
       {/* Lista de Relatórios */}
-      <RelatoriosList
+      {/* <RelatoriosList
         relatorios={relatorios}
         onPreview={handlePreview}
         onDownload={handleDownload}
         onPrint={handlePrint}
-      />
+      /> */}
 
       {/* Modelo de Relatório para Impressão */}
-      <RelatorioPrintTemplate />
+      {/* <RelatorioPrintTemplate /> */}
     </div>
   )
 }

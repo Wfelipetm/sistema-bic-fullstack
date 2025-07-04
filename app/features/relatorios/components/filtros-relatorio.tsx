@@ -1,108 +1,84 @@
-"use client";
+"use client"
 
-import { useEffect, useState, Dispatch, SetStateAction } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Filter,
-  Search,
-  X,
-  Eye,
-  Download,
-  Printer,
-  FileText,
-} from "lucide-react";
-import type { FiltrosRelatorio } from "@/app/types/relatorio";
-import { buscarRelatorios } from "../services/relatorio-service";
-import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Search, X, Eye, FileText, MapPin, Calendar, User, Phone } from "lucide-react"
+import type { FiltrosRelatorio } from "@/app/types/relatorio"
+import { buscarRelatorios } from "../services/relatorio-service"
+import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf"
 
 interface Tecnico {
-  id: number;
-  nome: string;
+  id: number
+  nome: string
 }
 
 interface Relatorio {
-  id: number;
-  inscricao: string;
-  proprietario: string;
-  endereco: string;
-  lote: string;
-  quadra: string;
-  cpf: string;
-  contato: string;
-  cep?: string; // Adicionado para evitar erro de propriedade inexistente
-  tecnico_id?: number;
-  created_at: string;
-  updated_at: string;
-  tipo?: string; // Adicionado para evitar erro de propriedade inexistente
-  status?: string; // Adicionado para evitar erro de propriedade inexistente
+  id: number
+  inscricao: string
+  proprietario: string
+  endereco: string
+  lote: string
+  quadra: string
+  cpf: string
+  contato: string
+  cep?: string
+  tecnico_id?: number
+  created_at: string
+  updated_at: string
+  tipo?: string
+  status?: string
 }
 
 interface FiltrosRelatorioCardProps {
-  filtros: FiltrosRelatorio;
-  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>;
+  filtros: FiltrosRelatorio
+  setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>
 }
 
-// Componente independente (não recebe props)
 export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCardProps) {
-  const [tecnicos, setTecnicos] = useState<Tecnico[]>([]);
-  const [loadingTecnicos, setLoadingTecnicos] = useState(false);
-  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [tecnicos, setTecnicos] = useState<Tecnico[]>([])
+  const [loadingTecnicos, setLoadingTecnicos] = useState(false)
+  const [relatorios, setRelatorios] = useState<Relatorio[]>([])
+  const [loading, setLoading] = useState(false)
 
   // Carregar técnicos da API
   useEffect(() => {
     const fetchTecnicos = async () => {
-      setLoadingTecnicos(true);
+      setLoadingTecnicos(true)
       try {
-        const response = await fetch("http://10.200.200.187:5001/tecnicos");
-        const data = await response.json();
-        setTecnicos(data);
+        const response = await fetch("http://10.200.200.187:5001/tecnicos")
+        const data = await response.json()
+        setTecnicos(data)
       } catch (error) {
-        console.error("Erro ao buscar técnicos:", error);
+        console.error("Erro ao buscar técnicos:", error)
       } finally {
-        setLoadingTecnicos(false);
+        setLoadingTecnicos(false)
       }
-    };
-
-    fetchTecnicos();
-  }, []);
+    }
+    fetchTecnicos()
+  }, [])
 
   // Buscar relatórios iniciais
   useEffect(() => {
-    handleBuscar();
-  }, []);
+    handleBuscar()
+  }, [])
 
   const handleBuscar = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      console.log("🔍 Buscando com filtros:", filtros);
-      const dados = await buscarRelatorios(filtros);
-      setRelatorios(dados);
-      console.log("Relatórios encontrados:", dados.length);
+      console.log("🔍 Buscando com filtros:", filtros)
+      const dados = await buscarRelatorios(filtros)
+      setRelatorios(dados)
+      console.log("Relatórios encontrados:", dados.length)
     } catch (error) {
-      console.error("Erro ao buscar relatórios:", error);
-      alert("Erro ao buscar relatórios. Verifique o console.");
+      console.error("Erro ao buscar relatórios:", error)
+      alert("Erro ao buscar relatórios. Verifique o console.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleLimparFiltros = () => {
     setFiltros({
@@ -110,111 +86,95 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
       dataFim: "",
       status: "all",
       tecnico: "all",
-    });
-  };
+    })
+  }
 
-  // Preview igual ao RelatorioItem
   const handlePreview = async (id: string) => {
     try {
-      console.log("🔍 Gerando preview para relatório:", id);
-      const blob = await gerarRelatorioPDF(Number(id));
+      console.log("🔍 Gerando preview para relatório:", id)
+      const blob = await gerarRelatorioPDF(Number(id))
       if (!blob) {
-        alert("Erro ao gerar o PDF do relatório");
-        return;
+        alert("Erro ao gerar o PDF do relatório")
+        return
       }
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
+      const url = URL.createObjectURL(blob)
+      window.open(url, "_blank")
     } catch (error) {
-      console.error("Erro ao gerar preview:", error);
-      alert("Erro ao gerar preview do relatório");
+      console.error("Erro ao gerar preview:", error)
+      alert("Erro ao gerar preview do relatório")
     }
-  };
+  }
 
-  const handleDownload = async (id: string) => {
-    try {
-      console.log("Baixando relatório:", id);
-      const blob = await gerarRelatorioPDF(Number(id));
-      if (!blob) {
-        alert("Erro ao gerar o PDF do relatório");
-        return;
-      }
+  // Classes padronizadas
+  const inputClassName = `
+    h-11 rounded-xl border-slate-200 bg-white text-slate-700
+    focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
+    hover:border-sky-200 transition-all duration-200
+    placeholder:text-slate-400
+  `
 
-      // Criar link para download
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `relatorio-${id}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      console.log("Download concluído");
-    } catch (error) {
-      console.error("Erro ao baixar relatório:", error);
-      alert("Erro ao baixar relatório");
-    }
-  };
-
-  const handlePrint = (id: string) => {
-    console.log("Imprimindo relatório:", id);
-    window.print();
-  };
+  const selectClassName = `
+    h-11 rounded-xl border-slate-200 bg-white text-slate-700
+    focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
+    hover:border-sky-200 transition-all duration-200
+  `
 
   return (
-    <div className="space-y-6">
-      {/* Card de Filtros */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-gray-600" />
-            <CardTitle className="text-lg">Filtros de Busca</CardTitle>
-          </div>
-          <CardDescription>
-            Filtre os relatórios por data, status ou técnico responsável
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 p-6">
+      <div className="w-full max-w-none space-y-8">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-sky-600 to-blue-600 rounded-2xl shadow-lg p-8">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-white/20 rounded-xl">
+              <FileText className="h-8 w-8 text-white" />
+            </div>
             <div>
-              <Label htmlFor="dataInicio" className="text-sm font-medium">
+              <h1 className="text-3xl font-bold text-white">Relatórios Técnicos</h1>
+              <p className="text-sky-100">Consulta e visualização de boletins cadastrais</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Filtros */}
+        <div className="bg-white rounded-2xl shadow-lg border border-sky-100 p-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-sky-800 mb-2">Filtros de Busca</h2>
+            <p className="text-sky-600">Filtre os relatórios por data, status ou técnico responsável</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div className="space-y-2">
+              <Label htmlFor="dataInicio" className="text-sm font-medium text-sky-700">
                 Data Início
               </Label>
               <Input
                 id="dataInicio"
                 type="date"
                 value={filtros.dataInicio}
-                onChange={(e) =>
-                  setFiltros({ ...filtros, dataInicio: e.target.value })
-                }
-                className="mt-1"
+                onChange={(e) => setFiltros({ ...filtros, dataInicio: e.target.value })}
+                className={inputClassName}
               />
             </div>
-            <div>
-              <Label htmlFor="dataFim" className="text-sm font-medium">
+
+            <div className="space-y-2">
+              <Label htmlFor="dataFim" className="text-sm font-medium text-sky-700">
                 Data Fim
               </Label>
               <Input
                 id="dataFim"
                 type="date"
                 value={filtros.dataFim}
-                onChange={(e) =>
-                  setFiltros({ ...filtros, dataFim: e.target.value })
-                }
-                className="mt-1"
+                onChange={(e) => setFiltros({ ...filtros, dataFim: e.target.value })}
+                className={inputClassName}
               />
             </div>
-            <div>
-              <Label htmlFor="status" className="text-sm font-medium">
+
+            <div className="space-y-2">
+              <Label htmlFor="status" className="text-sm font-medium text-sky-700">
                 Status
               </Label>
-              <Select
-                value={filtros.status}
-                onValueChange={(value) =>
-                  setFiltros({ ...filtros, status: value })
-                }
-              >
-                <SelectTrigger className="mt-1">
+              <Select value={filtros.status} onValueChange={(value) => setFiltros({ ...filtros, status: value })}>
+                <SelectTrigger className={selectClassName}>
                   <SelectValue placeholder="Todos os status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -227,23 +187,18 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="tecnico" className="text-sm font-medium">
+
+            <div className="space-y-2">
+              <Label htmlFor="tecnico" className="text-sm font-medium text-sky-700">
                 Técnico
               </Label>
               <Select
                 value={filtros.tecnico}
-                onValueChange={(value) =>
-                  setFiltros({ ...filtros, tecnico: value })
-                }
+                onValueChange={(value) => setFiltros({ ...filtros, tecnico: value })}
                 disabled={loadingTecnicos}
               >
-                <SelectTrigger className="mt-1">
-                  <SelectValue
-                    placeholder={
-                      loadingTecnicos ? "Carregando..." : "Todos os técnicos"
-                    }
-                  />
+                <SelectTrigger className={selectClassName}>
+                  <SelectValue placeholder={loadingTecnicos ? "Carregando..." : "Todos os técnicos"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos os técnicos</SelectItem>
@@ -256,184 +211,150 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
               </Select>
             </div>
           </div>
-          <div className="mt-4 flex gap-2">
+
+          <div className="flex gap-4">
             <Button
               onClick={handleBuscar}
-              className="bg-blue-600 hover:bg-blue-700"
+              disabled={loading}
+              className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-3 rounded-xl font-semibold"
             >
-              <Search className="h-4 w-4 mr-2" />
-              Buscar Relatórios
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Buscando...
+                </>
+              ) : (
+                <>
+                  <Search className="h-4 w-4 mr-2" />
+                  Buscar Relatórios
+                </>
+              )}
             </Button>
-            <Button variant="outline" onClick={handleLimparFiltros}>
+
+            <Button
+              variant="outline"
+              onClick={handleLimparFiltros}
+              className="border-sky-200 text-sky-700 hover:bg-sky-50 px-6 py-3 rounded-xl font-semibold bg-transparent"
+            >
               <X className="h-4 w-4 mr-2" />
               Limpar Filtros
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Card de Resultados */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-lg">Relatórios Encontrados</CardTitle>
-          <CardDescription>
-            {loading
-              ? "Carregando relatórios..."
-              : `${relatorios.length} relatório(s) encontrado(s)`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+        {/* Resultados */}
+        <div className="bg-white rounded-2xl shadow-lg border border-sky-100 p-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-sky-800 mb-2">Relatórios Encontrados</h2>
+            <p className="text-sky-600">
+              {loading ? "Carregando relatórios..." : `${relatorios.length} relatório(s) encontrado(s)`}
+            </p>
+          </div>
+
           {loading && (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-lg">🔄 Carregando relatórios...</div>
+            <div className="flex justify-center items-center py-16">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"></div>
+                <p className="text-sky-600 text-lg">Carregando relatórios...</p>
+              </div>
             </div>
           )}
 
           {!loading && relatorios.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-4">
               {relatorios.map((relatorio) => (
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-blue-50 rounded-lg">
-                        <FileText className="h-4 w-4 text-blue-600" />
+                <div
+                  key={relatorio.id ?? Math.random()}
+                  className="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border border-sky-100 p-6 
+                             hover:shadow-md hover:border-sky-200 transition-all duration-200"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      {/* Header do relatório */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="p-3 bg-sky-500 rounded-xl">
+                          <FileText className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-sky-800">Relatório Técnico Nº {relatorio.inscricao}</h3>
+                          <div className="flex items-center gap-2 text-sky-600">
+                            <MapPin className="h-4 w-4" />
+                            <span>{relatorio.endereco}</span>
+                            {relatorio.cep && (
+                              <>
+                                <span>•</span>
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                    relatorio.cep,
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:text-sky-800 transition-colors"
+                                >
+                                  CEP: {relatorio.cep}
+                                </a>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          Relatório técnico Nº.: {relatorio.inscricao}
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-gray-500">
-                            Endereço: {relatorio.endereco}
-                          </p>
-                          <a
-                            className="text-sm text-gray-500 cursor-pointer"
-                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                              relatorio.cep ?? ""
-                            )}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            CEP: {relatorio.cep}
-                          </a>
+
+                      {/* Informações do relatório */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <Calendar className="h-4 w-4 text-sky-500" />
+                          <span className="font-medium">Data:</span>
+                          <span>{new Date(relatorio.created_at).toLocaleDateString("pt-BR")}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <User className="h-4 w-4 text-sky-500" />
+                          <span className="font-medium">Proprietário:</span>
+                          <span>{relatorio.proprietario || "Não informado"}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <Phone className="h-4 w-4 text-sky-500" />
+                          <span className="font-medium">Contato:</span>
+                          <span>{relatorio.contato || "Não informado"}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <span className="font-medium">Lote/Quadra:</span>
+                          <span>
+                            {relatorio.lote}/{relatorio.quadra}
+                          </span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex mx-1.5 items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center gap-x-5">
-                        <span>📅</span>
-                        <span>
-                          {new Date(relatorio.created_at).toLocaleDateString(
-                            "pt-BR"
-                          )}
-                        </span>
-                      </span>
-                      <span>
-                        Proprietário: {relatorio.proprietario || "Proprietário não informado"}
-                        <span className="mx-2"></span>
-                        Contato: {relatorio.contato || "Contato não informado"}
-                      </span>
 
-                      {/* <Badge variant="outline" >
-            {relatorio.tipo}
-          </Badge>
-          <Badge >
-            {relatorio.status}
-          </Badge> */}
+                    {/* Botão de ação */}
+                    <div className="ml-6">
+                      <Button
+                        onClick={() => handlePreview(relatorio.id.toString())}
+                        className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-3 rounded-xl font-semibold"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        Visualizar
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePreview(relatorio.id.toString())}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      Visualizar
-                    </Button>
-                  </div>
                 </div>
-                // <div
-                //   key={relatorio.id}
-                //   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
-                // >
-                //   <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-                //     <div className="flex flex-col items-center justify-between gap-2">
-                //       <div>
-                //         <div className="flex items-center gap-2 mb-1">
-                //           <div className="p-2 bg-blue-50 rounded-lg">
-                //             <FileText className="h-4 w-4 text-blue-600" />
-                //           </div>
-                //           <p className="font-medium text-lg text-black">
-                //             Relatório Técnico -
-                //           </p>
-                //           <p>{relatorio.endereco}</p>
-                //         </div>
-                //         <div className="flex items-center gap-2 mt-1 px-10">
-                //           <h3 className="text-sm text-gray-600">Inscrição:</h3>
-                //           <div>{relatorio.inscricao}</div>
-                //         </div>
-                //       </div>
-                //       <div className="flex items-center text-sm text-gray-600">
-                //         <p className="text-sm text-gray-500">
-                //           {new Date(relatorio.created_at).toLocaleDateString(
-                //             "pt-BR"
-                //           )}
-                //         </p>
-                //         <p>👤 {relatorio.proprietario}</p>
-                //       </div>
-                //     </div>
-
-                //     <p>
-                //       <strong>📞 Contato:</strong> {relatorio.contato}
-                //     </p>
-
-                //     <div>
-                //       <p>
-                //         <strong>🏠 Lote:</strong> {relatorio.lote}
-                //       </p>
-                //       <p>
-                //         <strong>🏘️ Quadra:</strong> {relatorio.quadra}
-                //       </p>
-                //     </div>
-                //     <div className="flex flex-col gap-2">
-                //       {relatorio.tecnico_id && (
-                //         <p className="text-sm">
-                //           <strong>👨‍💼 Técnico:</strong> {relatorio.tecnico_id}
-                //         </p>
-                //       )}
-                //       <div className="flex justify-end gap-2 mt-2"></div>
-                //     </div>
-                //     <div className="flex justify-end gap-2 mt-2">
-                //       <Button
-                //         onClick={() => handlePreview(relatorio.id.toString())}
-                //         size="sm"
-                //         variant="outline"
-                //         className="text-black hover:text-blue-700 hover:bg-blue-50"
-                //       >
-                //         <Eye className="h-4 w-4 mr-1" />
-                //         Visualizar
-                //       </Button>
-                //     </div>
-                //   </div>
-                // </div>
               ))}
             </div>
           )}
 
           {!loading && relatorios.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              <Filter className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium mb-2">
-                Nenhum relatório encontrado
-              </h3>
-              <p>
-                Tente ajustar os filtros para encontrar os relatórios desejados.
-              </p>
+            <div className="text-center py-16">
+              <div className="p-4 bg-sky-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <Search className="h-10 w-10 text-sky-600" />
+              </div>
+              <h3 className="text-xl font-bold text-sky-800 mb-2">Nenhum relatório encontrado</h3>
+              <p className="text-sky-600">Tente ajustar os filtros para encontrar os relatórios desejados.</p>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

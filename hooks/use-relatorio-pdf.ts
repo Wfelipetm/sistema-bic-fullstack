@@ -209,6 +209,11 @@ export async function gerarRelatorioPDF(id: number) {
   doc.line(5, 124, 190, 124);
 
   // METRAGENS
+  const formatNum = (v: any, sufixo: string) =>
+    v !== undefined && v !== null && v !== "" && !isNaN(Number(v))
+      ? Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + sufixo
+      : "0,00" + sufixo;
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("III - METRAGENS:", 85, 128);
@@ -216,15 +221,15 @@ export async function gerarRelatorioPDF(id: number) {
   doc.setFont("helvetica", "bold");
   doc.text("Área do Terreno:", 10, (y += 3));
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.area_terreno ?? "450,00 m²"), 40, y);
+  doc.text(formatNum(String(data.area_terreno), " m²"), 40, y);
   doc.setFont("helvetica", "bold");
   doc.text("Testada:", 79, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.testada ?? "15,00 m"), 95, y);
+  doc.text(formatNum(String(data.area_testada), " m"), 95, y);
   doc.setFont("helvetica", "bold");
   doc.text("Área Edificada:", 127, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.area_edificada ?? "120,00 m²"), 155, y);
+  doc.text(formatNum(String(data.area_edificada), " m²"), 155, y);
   doc.line(5, 137, 190, 137);
   y -= 3;
 
@@ -233,16 +238,16 @@ export async function gerarRelatorioPDF(id: number) {
       {
         titulo: "Serventias:",
         dados: [
-          [data.sala === true ? "X" : "", "1-Sala"],
-          [data.quarto === true ? "X" : "", "2-Quarto"],
-          [data.copa === true ? "X" : "", "3-Copa"],
-          [data.cozinha === true ? "X" : "", "4-Cozinha"],
-          [data.banheiro === true ? "X" : "", "5- Banheiro"],
-          [data.garagem === true ? "X" : "", "6-Garagem"],
-          [data.varanda === true ? "X" : "", "7-Varanda"],
-          [data.corredor === true ? "X" : "", "8-Corredor"],
-          [data.area === true ? "X" : "", "9-Área"],
-          [data.porao_habital === true ? "X" : "", "10-Porão Habital"],
+          [`${data.serventia_sala ?? 0}`, "1-Sala"],
+          [`${data.serventia_quarto ?? 0}`, "2-Quarto"],
+          [`${data.serventia_copa ?? 0}`, "3-Copa"],
+          [`${data.serventia_cozinha ?? 0}`, "4-Cozinha"],
+          [`${data.serventia_banheiro ?? 0}`, "5- Banheiro"],
+          [`${data.serventia_garagem ?? 0}`, "6-Garagem"],
+          [`${data.serventia_varanda ?? 0}`, "7-Varanda"],
+          [`${data.serventia_corredor ?? 0}`, "8-Corredor"],
+          [`${data.serventia_area ?? 0}`, "9-Área"],
+          [`${data.serventia_porao_habital ?? 0}`, "10-Porão Habital"],
         ],
       },
       {
@@ -281,12 +286,12 @@ export async function gerarRelatorioPDF(id: number) {
       doc.setFontSize(9);
       doc.text(grupo.titulo, x, startY);
 
-      grupo.dados.forEach(([check, label], idx) => {
+      grupo.dados.forEach(([valor, label], idx) => {
         const itemY = startY + 5 + idx * 5;
         doc.rect(x, itemY - 3, 4, 4);
         doc.setFontSize(8);
         doc.setFont("helvetica", "normal");
-        doc.text(check, x + 1, itemY);
+        doc.text(valor, x + 1, itemY); // Mostra o número
         doc.text(label, x + 6, itemY);
         offsetY = itemY;
       });
@@ -305,12 +310,12 @@ export async function gerarRelatorioPDF(id: number) {
       {
         titulo: "1- Tipo:",
         opcoes: [
-          [data.casa === true ? "X" : "", "1- Casa"],
-          [data.apartamento === true ? "X" : "", "2- Apartamento"],
-          [data.sala === true ? "X" : "", "3- Sala"],
-          [data.loja === true ? "X" : "", "4- Loja"],
-          [data.galpao === true ? "X" : "", "5- Galpão"],
-          [data.templo === true ? "X" : "", "6- Templo"],
+          [data.tipo_casa === true ? "X" : "", "1- Casa"],
+          [data.tipo_apartamento === true ? "X" : "", "2- Apartamento"],
+          [data.tipo_sala === true ? "X" : "", "3- Sala"],
+          [data.tipo_loja === true ? "X" : "", "4- Loja"],
+          [data.tipo_galpao === true ? "X" : "", "5- Galpão"],
+          [data.tipo_templo === true ? "X" : "", "6- Templo"],
         ] as [string, string][],
         espacoApos: 2,
       },
@@ -452,7 +457,7 @@ export async function gerarRelatorioPDF(id: number) {
 
       grupo.opcoes.forEach(([check, texto]) => {
         doc.rect(x, y - 3.5, 4, 4);
-        doc.text(check, x + 1, y-0.5);
+        doc.text(check, x + 1, y - 0.5);
         doc.text(texto, x + 6, y);
         y += 5;
       });
@@ -484,7 +489,7 @@ export async function gerarRelatorioPDF(id: number) {
     doc.setFontSize(9);
     doc.text("Observações:", startX, startY);
 
-    startY += 3;
+    startY += 8; // Espaço maior após o título
     const largura = 93;
     const alturaLinha = 5;
     const linhas = 6;
@@ -492,6 +497,19 @@ export async function gerarRelatorioPDF(id: number) {
     doc.setDrawColor(0);
     doc.rect(startX, startY, largura, linhas * alturaLinha);
 
+    // Ajuste: cada linha do texto fica exatamente sobre cada linha do quadro
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    const obs = String(data.obs_logradouro_observacoes ?? "");
+    const obsLines = doc.splitTextToSize(obs, largura - 4);
+
+    // Escreve cada linha exatamente sobre cada linha do quadro
+    for (let i = 0; i < linhas; i++) {
+      const lineText = obsLines[i] || "";
+      doc.text(lineText, startX + 2, startY + alturaLinha * i + 4);
+    }
+
+    // Desenha as linhas internas
     for (let i = 1; i < linhas; i++) {
       doc.line(startX, startY + i * alturaLinha, startX + largura, startY + i * alturaLinha);
     }
@@ -510,8 +528,21 @@ export async function gerarRelatorioPDF(id: number) {
     doc.setFont("helvetica", "normal");
     doc.rect(x + 38, yBox - 3.5, 4, 4);
 
+    // Adicione o "X" se for true:
+    if (data.obs_logradouro_placa === true) {
+      doc.setFont("helvetica", "bold");
+      doc.text("X", x + 39, yBox);
+    }
+
     y += 10;
   };
+
+  console.log("DEBUG PDF:", {
+    area_terreno: data.area_terreno,
+    area_testada: data.area_testada,
+    area_edificada: data.area_edificada,
+  });
+  console.log("Dados recebidos no PDF:", data);
 
   opcoesServentia();
   renderInfoConstrucao();

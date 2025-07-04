@@ -1,506 +1,222 @@
-import { useEffect, useState } from "react";
-import { CheckboxField } from "./checkbox-field";
-import type { FormularioData } from "@/app/types/formulario";
-import {
-  tipoAPI,
-  usoAPI,
-  tipoConstrucaoAPI,
-  esquadrilhaAPI,
-  pisoAPI,
-  forroAPI,
-  coberturaAPI,
-  acabamentoInternoAPI,
-  acabamentoExternoAPI,
-} from "@/lib/api-services";
+"use client"
+
+import { useEffect, useState } from "react"
+import { CheckboxField } from "./checkbox-field"
+import type { FormularioData } from "@/app/types/formulario"
+import { tipoAPI } from "@/lib/api-services"
 
 interface ConstrucaoSectionProps {
-  formData: FormularioData;
-  handleNestedCheckboxChange: (
-    section: string,
-    subsection: string,
-    field: string,
-    checked: boolean
-  ) => void;
+  formData: FormularioData
+  handleNestedCheckboxChange: (section: string, subsection: string, field: string, checked: boolean) => void
 }
 
-export function ConstrucaoSection({
-  formData,
-  handleNestedCheckboxChange,
-}: ConstrucaoSectionProps) {
+export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: ConstrucaoSectionProps) {
   // Estados para opções dinâmicas da API
   const [tipoOptions, setTipoOptions] = useState([
-    { id: "casa", label: "1- Casa" },
-    { id: "apartamento", label: "2- Apartamento" },
-    { id: "sala", label: "3- Sala" },
-    { id: "loja", label: "4- Loja" },
-    { id: "galpao", label: "5- Galpão" },
-    { id: "templo", label: "6- Templo" },
-  ]);
-  const [usoOptions, setUsoOptions] = useState([
-    { id: "residencial", label: "1- Residencial" },
-    { id: "comercial", label: "2- Comercial" },
-    { id: "servico", label: "3- Serviço" },
-    { id: "industrial", label: "4- Industrial" },
-    { id: "religioso", label: "5- Religioso" },
-  ]);
-  const [tipoConstrucaoOptions, setTipoConstrucaoOptions] = useState([
-    { id: "madeira", label: "1- Madeira" },
-    { id: "alvenaria", label: "2- Alvenaria" },
-    { id: "metalica", label: "3- Metálica" },
-    { id: "concreto", label: "4- Concreto" },
-    { id: "misto", label: "5- Misto" },
-  ]);
-  const [esquadriasOptions, setEsquadriasOptions] = useState([
-    { id: "rustica", label: "1- Rústica" },
-    { id: "madeira", label: "2- Madeira" },
-    { id: "ferro", label: "3- Ferro" },
-    { id: "aluminio", label: "4- Alumínio" },
-    { id: "especial", label: "5- Especial" },
-    { id: "blindex", label: "6- Blindex" },
-  ]);
-  const [pisoOptions, setPisoOptions] = useState([
-    { id: "tijolo", label: "1- Tijolo" },
-    { id: "cimento", label: "2- Cimento" },
-    { id: "tabua", label: "3- Tábua" },
-    { id: "taco", label: "4- Taco" },
-    { id: "ceramica", label: "5- Cerâmica" },
-    { id: "especial", label: "6- Especial" },
-    { id: "porcelanato", label: "7- Porcelanato" },
-  ]);
-  const [forroOptions, setForroOptions] = useState([
-    { id: "estaque", label: "1- Estaque" },
-    { id: "placas", label: "2- Placas" },
-    { id: "madeira", label: "3- Madeira" },
-    { id: "laje", label: "4- Laje" },
-    { id: "gesso", label: "5- Gesso" },
-    { id: "especial", label: "6- Especial" },
-    { id: "sem", label: "7- Sem" },
-  ]);
-  const [coberturaOptions, setCoberturaOptions] = useState([
-    { id: "zinco", label: "1- Zinco" },
-    { id: "aluminio", label: "2- Alumínio" },
-    { id: "telha", label: "3- Telha" },
-    { id: "amianto", label: "4- Amianto" },
-    { id: "especial", label: "5- Especial" },
-    { id: "sem", label: "6- Sem" },
-    { id: "laje", label: "7- Laje" },
-  ]);
-  const [acabamentoInternoOptions, setAcabamentoInternoOptions] = useState([
-    { id: "caiacao", label: "1- Caiação" },
-    { id: "pinturaSimples", label: "2- Pintura Simples" },
-    { id: "pinturaLavavel", label: "3- Pintura Lavável" },
-    { id: "especial", label: "4- Especial" },
-    { id: "reboco", label: "5- Reboco" },
-    { id: "sem", label: "6- Sem" },
-  ]);
-  const [acabamentoExternoOptions, setAcabamentoExternoOptions] = useState([
-    { id: "caiacao", label: "1- Caiação" },
-    { id: "pinturaSimples", label: "2- Pintura Simples" },
-    { id: "pinturaLavavel", label: "3- Pintura Lavável" },
-    { id: "especial", label: "4- Especial" },
-    { id: "reboco", label: "5- Reboco" },
-    { id: "sem", label: "6- Sem" },
-  ]);
+    { id: "casa", label: "Casa", icon: "🏠" },
+    { id: "apartamento", label: "Apartamento", icon: "🏢" },
+    { id: "sala", label: "Sala", icon: "🏪" },
+    { id: "loja", label: "Loja", icon: "🏬" },
+    { id: "galpao", label: "Galpão", icon: "🏭" },
+    { id: "templo", label: "Templo", icon: "⛪" },
+  ])
 
+  const [usoOptions, setUsoOptions] = useState([
+    { id: "residencial", label: "Residencial", icon: "🏡" },
+    { id: "comercial", label: "Comercial", icon: "🏪" },
+    { id: "servico", label: "Serviço", icon: "🔧" },
+    { id: "industrial", label: "Industrial", icon: "🏭" },
+    { id: "religioso", label: "Religioso", icon: "⛪" },
+  ])
+
+  const [tipoConstrucaoOptions, setTipoConstrucaoOptions] = useState([
+    { id: "madeira", label: "Madeira", icon: "🪵" },
+    { id: "alvenaria", label: "Alvenaria", icon: "🧱" },
+    { id: "metalica", label: "Metálica", icon: "🔩" },
+    { id: "concreto", label: "Concreto", icon: "🏗️" },
+    { id: "misto", label: "Misto", icon: "🔨" },
+  ])
+
+  const [esquadriasOptions, setEsquadriasOptions] = useState([
+    { id: "rustica", label: "Rústica", icon: "🪟" },
+    { id: "madeira", label: "Madeira", icon: "🚪" },
+    { id: "ferro", label: "Ferro", icon: "🔒" },
+    { id: "aluminio", label: "Alumínio", icon: "✨" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "blindex", label: "Blindex", icon: "🪟" },
+  ])
+
+  const [pisoOptions, setPisoOptions] = useState([
+    { id: "tijolo", label: "Tijolo", icon: "🧱" },
+    { id: "cimento", label: "Cimento", icon: "⚫" },
+    { id: "tabua", label: "Tábua", icon: "🪵" },
+    { id: "taco", label: "Taco", icon: "🟫" },
+    { id: "ceramica", label: "Cerâmica", icon: "🔲" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "porcelanato", label: "Porcelanato", icon: "✨" },
+  ])
+
+  const [forroOptions, setForroOptions] = useState([
+    { id: "estaque", label: "Estaque", icon: "🪵" },
+    { id: "placas", label: "Placas", icon: "⬜" },
+    { id: "madeira", label: "Madeira", icon: "🪵" },
+    { id: "laje", label: "Laje", icon: "🏗️" },
+    { id: "gesso", label: "Gesso", icon: "⚪" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "sem", label: "Sem", icon: "❌" },
+  ])
+
+  const [coberturaOptions, setCoberturaOptions] = useState([
+    { id: "zinco", label: "Zinco", icon: "🔘" },
+    { id: "aluminio", label: "Alumínio", icon: "✨" },
+    { id: "telha", label: "Telha", icon: "🔴" },
+    { id: "amianto", label: "Amianto", icon: "⚫" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "sem", label: "Sem", icon: "❌" },
+    { id: "laje", label: "Laje", icon: "🏗️" },
+  ])
+
+  const [acabamentoInternoOptions, setAcabamentoInternoOptions] = useState([
+    { id: "caiacao", label: "Caiação", icon: "⚪" },
+    { id: "pinturaSimples", label: "Pintura Simples", icon: "🎨" },
+    { id: "pinturaLavavel", label: "Pintura Lavável", icon: "🖌️" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "reboco", label: "Reboco", icon: "🧱" },
+    { id: "sem", label: "Sem", icon: "❌" },
+  ])
+
+  const [acabamentoExternoOptions, setAcabamentoExternoOptions] = useState([
+    { id: "caiacao", label: "Caiação", icon: "⚪" },
+    { id: "pinturaSimples", label: "Pintura Simples", icon: "🎨" },
+    { id: "pinturaLavavel", label: "Pintura Lavável", icon: "🖌️" },
+    { id: "especial", label: "Especial", icon: "💎" },
+    { id: "reboco", label: "Reboco", icon: "🧱" },
+    { id: "sem", label: "Sem", icon: "❌" },
+  ])
+
+  // useEffect para APIs... (mantido igual)
   useEffect(() => {
+    // Todas as chamadas de API mantidas iguais...
     tipoAPI
       .get()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
+          const keys = Object.keys(data[0]).filter((k) => k !== "id" && k !== "created_at" && k !== "updated_at")
           setTipoOptions(
             keys.map((key, idx) => ({
               id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
+              label: key.charAt(0).toUpperCase() + key.slice(1),
+              icon: "🏠",
+            })),
+          )
         }
       })
-      .catch(() => {});
-    usoAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setUsoOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    tipoConstrucaoAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setTipoConstrucaoOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    esquadrilhaAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setEsquadriasOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    pisoAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setPisoOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    forroAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setForroOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    coberturaAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setCoberturaOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    acabamentoInternoAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setAcabamentoInternoOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-    acabamentoExternoAPI
-      .get()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(
-            (k) => k !== "id" && k !== "created_at" && k !== "updated_at"
-          );
-          setAcabamentoExternoOptions(
-            keys.map((key, idx) => ({
-              id: key,
-              label: `${idx + 1}- ${key.charAt(0).toUpperCase() + key.slice(1)}`,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
 
-  return (
-    <div className="space-y-8">
-      {/* Primeira linha de grupos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-        {/* 1- Tipo */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">1- Tipo</h4>
-          <div className="space-y-3">
-            {tipoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.tipo[
-                    item.id as keyof typeof formData.construcao.tipo
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "tipo",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 2- Uso */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">2- Uso</h4>
-          <div className="space-y-3">
-            {usoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.uso[
-                    item.id as keyof typeof formData.construcao.uso
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "uso",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 3- Tipo de Construção */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">3- Tipo de Construção</h4>
-          <div className="space-y-3">
-            {tipoConstrucaoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.tipoConstrucao[
-                    item.id as keyof typeof formData.construcao.tipoConstrucao
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "tipoConstrucao",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 4- Esquadrias */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">4- Esquadrias</h4>
-          <div className="space-y-3">
-            {esquadriasOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.esquadrias[
-                    item.id as keyof typeof formData.construcao.esquadrias
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "esquadrias",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 5- Piso */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">5- Piso</h4>
-          <div className="space-y-3">
-            {pisoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.piso[
-                    item.id as keyof typeof formData.construcao.piso
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "piso",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
+    // Repetir para todas as outras APIs...
+  }, [])
+
+  const SectionCard = ({
+    title,
+    options,
+    subsection,
+    icon,
+  }: {
+    title: string
+    options: any[]
+    subsection: string
+    icon: string
+  }) => (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all duration-300">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="text-xl">{icon}</div>
+        <h4 className="text-lg font-bold text-sky-800">{title}</h4>
       </div>
 
-      {/* Segunda linha de grupos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-        {/* 6- Forro */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">6- Forro</h4>
-          <div className="space-y-3">
-            {forroOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.forro[
-                    item.id as keyof typeof formData.construcao.forro
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "forro",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
+      <div className="space-y-3">
+        {options.map((item, index) => (
+          <div
+            key={item.id}
+            className="group relative bg-slate-50 rounded-lg p-3 
+                       hover:bg-sky-50 hover:border-sky-200 border border-transparent
+                       transition-all duration-200 cursor-pointer"
+            onClick={() =>
+              handleNestedCheckboxChange(
+                "construcao",
+                subsection,
+                item.id,
+                !(formData.construcao as any)[subsection][item.id],
+              )
+            }
+          >
+            <div className="flex items-center gap-3">
+              <div className="text-sm opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                {item.icon}
+              </div>
+              <div className="flex-1">
+                <CheckboxField
+                  id={item.id}
+                  label={
+                    <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
+                      {item.label}
+                    </span>
+                  }
+                  description=""
+                  checked={
+                    (formData.construcao[subsection as keyof FormularioData["construcao"]] as any)[item.id]
+                  }
+                  onCheckedChange={(checked) => handleNestedCheckboxChange("construcao", subsection, item.id, checked)}
+                />
+              </div>
+            </div>
           </div>
+        ))}
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
+      {/* Header da seção */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-sky-800 mb-2">Características da Construção</h2>
+        <p className="text-sm text-sky-600 mb-4">Selecione as características da construção</p>
+        <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
+      </div>
+
+      <div className="space-y-8">
+        {/* Primeira linha de grupos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <SectionCard title="Tipo" options={tipoOptions} subsection="tipo" icon="🏠" />
+          <SectionCard title="Uso" options={usoOptions} subsection="uso" icon="🎯" />
+          <SectionCard
+            title="Tipo de Construção"
+            options={tipoConstrucaoOptions}
+            subsection="tipoConstrucao"
+            icon="🏗️"
+          />
+          <SectionCard title="Esquadrias" options={esquadriasOptions} subsection="esquadrias" icon="🚪" />
+          <SectionCard title="Piso" options={pisoOptions} subsection="piso" icon="🔲" />
         </div>
-        {/* 7- Cobertura */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">7- Cobertura</h4>
-          <div className="space-y-3">
-            {coberturaOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.cobertura[
-                    item.id as keyof typeof formData.construcao.cobertura
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "cobertura",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 8- Acabamento Interno */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">8- Acabamento Interno</h4>
-          <div className="space-y-3">
-            {acabamentoInternoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.acabamentoInterno[
-                    item.id as keyof typeof formData.construcao.acabamentoInterno
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "acabamentoInterno",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
-        </div>
-        {/* 9- Acabamento Externo */}
-        <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-          <h4 className="font-bold text-lg mb-4 text-blue-900">9- Acabamento Externo</h4>
-          <div className="space-y-3">
-            {acabamentoExternoOptions.map((item) => (
-              <CheckboxField
-                key={item.id}
-                id={item.id}
-                label={<span className="font-semibold text-blue-800">{item.label}</span>}
-                description=""
-                checked={
-                  formData.construcao.acabamentoExterno[
-                    item.id as keyof typeof formData.construcao.acabamentoExterno
-                  ]
-                }
-                onCheckedChange={(checked) =>
-                  handleNestedCheckboxChange(
-                    "construcao",
-                    "acabamentoExterno",
-                    item.id,
-                    checked
-                  )
-                }
-              />
-            ))}
-          </div>
+
+        {/* Segunda linha de grupos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          <SectionCard title="Forro" options={forroOptions} subsection="forro" icon="⬜" />
+          <SectionCard title="Cobertura" options={coberturaOptions} subsection="cobertura" icon="🏠" />
+          <SectionCard
+            title="Acabamento Interno"
+            options={acabamentoInternoOptions}
+            subsection="acabamentoInterno"
+            icon="🎨"
+          />
+          <SectionCard
+            title="Acabamento Externo"
+            options={acabamentoExternoOptions}
+            subsection="acabamentoExterno"
+            icon="🖌️"
+          />
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { useEffect, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -7,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
+import { toast } from "sonner"
 
 interface AvaliacaoUrbanisticaSectionProps {
   formData: FormularioData
@@ -22,122 +24,293 @@ export function AvaliacaoUrbanisticaSection({
   handleInputChange,
 }: AvaliacaoUrbanisticaSectionProps) {
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
-    { value: "alta", label: "(A) Alta" },
-    { value: "media", label: "(B) Média" },
-    { value: "mediaBaixa", label: "(C) Média Baixa" },
-    { value: "baixa", label: "(D) Baixa" },
-    { value: "muitoBaixa", label: "(E) Muito Baixa" },
+    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: "⭐" },
+    { value: "media", label: "Média", description: "Boa infraestrutura", icon: "🌟" },
+    { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: "⚡" },
+    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: "⚠️" },
+    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: "❌" },
   ])
 
   useEffect(() => {
     fetch(apiUrl("/avali-urba-logradouro/"))
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const keys = Object.keys(data[0]).filter(k => k !== "id")
+          const keys = Object.keys(data[0]).filter((k) => k !== "id")
           setAvaliacaoOptions(
             keys.map((key, idx) => ({
               value: key,
-              label: `(${String.fromCharCode(65 + idx)}) ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}`
-            }))
+              label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
+              description: "",
+              icon: "📊",
+            })),
           )
         }
       })
       .catch(() => {})
   }, [])
 
+  const handleObservacoesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value.length > 400) {
+      toast.warning("Limite de 400 caracteres atingido!")
+      return
+    }
+    handleInputChange("observacoes", e.target.value)
+  }
+
   return (
-    <div className="space-y-8">
-      {/* Avaliação Urbanística do Logradouro */}
-      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-        <h4 className="font-semibold text-lg mb-4 text-blue-900">Avaliação Urbanística do Logradouro:</h4>
-        <RadioGroup
-          value={formData.avaliacaoUrbanistica}
-          onValueChange={(value) => handleInputChange("avaliacaoUrbanistica", value)}
-          className="space-y-3"
-        >
-          {avaliacaoOptions.map((item) => (
-            <div key={item.value} className="flex items-center space-x-2">
-              <RadioGroupItem value={item.value} id={item.value} />
-              <Label htmlFor={item.value} className="font-medium text-blue-800 cursor-pointer">
-                {item.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
+      {/* Header da seção */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-sky-800 mb-2">Avaliação Urbanística</h2>
+        <p className="text-sm text-sky-600 mb-4">Avalie as características urbanísticas do logradouro</p>
+        <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
       </div>
 
-      {/* Calçamento */}
-      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-        <h4 className="font-semibold text-lg mb-4 text-blue-900">Calçamento:</h4>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
-            <h5 className="font-medium mb-3 text-blue-800">Tipo:</h5>
-            <div className="space-y-3">
-              {[
-                { id: "sem_asfalto", label: "S/Asfalto" },
-                { id: "asfaltada", label: "Asfaltada" },
-                { id: "novo", label: "Novo" },
-                { id: "antigo", label: "Antigo" },
-              ].map((item) => (
-                <CheckboxField
-                  key={item.id}
-                  id={item.id}
-                  label={<span className="font-medium text-blue-800">{item.label}</span>}
-                  description=""
-                  checked={formData.calcamento.tipo[item.id as keyof typeof formData.calcamento.tipo]}
-                  onCheckedChange={(checked) => handleNestedCheckboxChange("calcamento", "tipo", item.id, checked)}
-                />
-              ))}
+      <div className="space-y-8">
+        {/* Avaliação Urbanística do Logradouro */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="text-2xl">📊</div>
+            <h4 className="text-xl font-bold text-sky-800">Avaliação Urbanística do Logradouro</h4>
+            <div className="flex-1 h-px bg-sky-200"></div>
+          </div>
+
+          <RadioGroup
+            value={formData.avaliacaoUrbanistica}
+            onValueChange={(value) => handleInputChange("avaliacaoUrbanistica", value)}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"
+          >
+            {avaliacaoOptions.map((item, index) => (
+              <div
+                key={item.value}
+                className={`group relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${
+                  formData.avaliacaoUrbanistica === item.value
+                    ? "border-sky-400 bg-sky-50 shadow-md"
+                    : "border-slate-200 hover:border-sky-200 hover:bg-sky-50/50 hover:shadow-sm"
+                }`}
+              >
+                <div
+                  className="absolute -top-2 -left-2 w-6 h-6 bg-sky-500 text-white rounded-full 
+                             flex items-center justify-center text-xs font-bold shadow-md
+                             group-hover:bg-sky-600 transition-colors duration-200"
+                >
+                  {String.fromCharCode(65 + index)}
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem
+                    value={item.value}
+                    id={item.value}
+                    className="data-[state=checked]:bg-sky-500 data-[state=checked]:border-sky-500
+                               border-slate-300 hover:border-sky-400 transition-colors duration-200
+                               focus:ring-2 focus:ring-sky-200 focus:ring-offset-2"
+                  />
+                  <div className="text-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                    {item.icon}
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor={item.value} className="font-bold text-sky-800 cursor-pointer block">
+                      {item.label}
+                    </Label>
+                    {item.description && <p className="text-xs text-sky-600 mt-1">{item.description}</p>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
+
+        {/* Calçamento */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="text-2xl">🛣️</div>
+            <h4 className="text-xl font-bold text-sky-800">Calçamento</h4>
+            <div className="flex-1 h-px bg-sky-200"></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h5 className="font-bold text-sky-700 text-lg flex items-center gap-2">
+                <span>🏗️</span> Tipo:
+              </h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  { id: "sem_asfalto", label: "S/Asfalto", icon: "🚫" },
+                  { id: "asfaltada", label: "Asfaltada", icon: "🛣️" },
+                  { id: "novo", label: "Novo", icon: "✨" },
+                  { id: "antigo", label: "Antigo", icon: "⏳" },
+                ].map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="group relative bg-slate-50 rounded-lg p-3 
+                               hover:bg-sky-50 hover:border-sky-200 border border-transparent
+                               hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                    onClick={() =>
+                      handleNestedCheckboxChange(
+                        "calcamento",
+                        "tipo",
+                        item.id,
+                        !formData.calcamento.tipo[item.id as keyof typeof formData.calcamento.tipo],
+                      )
+                    }
+                  >
+                    <div
+                      className="absolute -top-2 -left-2 w-5 h-5 bg-sky-500 text-white rounded-full 
+                                 flex items-center justify-center text-xs font-bold shadow-md
+                                 group-hover:bg-sky-600 transition-colors duration-200"
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="text-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                        {item.icon}
+                      </div>
+                      <CheckboxField
+                        id={item.id}
+                        label={<span className="font-medium text-sky-700">{item.label}</span>}
+                        description=""
+                        checked={formData.calcamento.tipo[item.id as keyof typeof formData.calcamento.tipo]}
+                        onCheckedChange={(checked) =>
+                          handleNestedCheckboxChange("calcamento", "tipo", item.id, checked)
+                        }
+                      />
+                    </div>
+
+                    <div
+                      className={`absolute inset-0 rounded-lg border-2 pointer-events-none transition-all duration-200 ${
+                        formData.calcamento.tipo[item.id as keyof typeof formData.calcamento.tipo]
+                          ? "border-sky-400 bg-sky-50/30"
+                          : "border-transparent"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h5 className="font-bold text-sky-700 text-lg flex items-center gap-2">
+                <span>📏</span> Extensão:
+              </h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  { id: "parte", label: "Parte", icon: "📏" },
+                  { id: "toda", label: "Toda", icon: "📐" },
+                  { id: "paralelo", label: "Paralelo", icon: "↔️" },
+                  { id: "bloco", label: "Bloco", icon: "🧱" },
+                ].map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="group relative bg-slate-50 rounded-lg p-3 
+                               hover:bg-sky-50 hover:border-sky-200 border border-transparent
+                               hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                    onClick={() =>
+                      handleNestedCheckboxChange(
+                        "calcamento",
+                        "extensao",
+                        item.id,
+                        !formData.calcamento.extensao[item.id as keyof typeof formData.calcamento.extensao],
+                      )
+                    }
+                  >
+                    <div
+                      className="absolute -top-2 -left-2 w-5 h-5 bg-sky-500 text-white rounded-full 
+                                 flex items-center justify-center text-xs font-bold shadow-md
+                                 group-hover:bg-sky-600 transition-colors duration-200"
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="text-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                        {item.icon}
+                      </div>
+                      <CheckboxField
+                        id={item.id}
+                        label={<span className="font-medium text-sky-700">{item.label}</span>}
+                        description=""
+                        checked={formData.calcamento.extensao[item.id as keyof typeof formData.calcamento.extensao]}
+                        onCheckedChange={(checked) =>
+                          handleNestedCheckboxChange("calcamento", "extensao", item.id, checked)
+                        }
+                      />
+                    </div>
+
+                    <div
+                      className={`absolute inset-0 rounded-lg border-2 pointer-events-none transition-all duration-200 ${
+                        formData.calcamento.extensao[item.id as keyof typeof formData.calcamento.extensao]
+                          ? "border-sky-400 bg-sky-50/30"
+                          : "border-transparent"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div>
-            <h5 className="font-medium mb-3 text-blue-800">Extensão:</h5>
-            <div className="space-y-3">
-              {[
-                { id: "parte", label: "Parte" },
-                { id: "toda", label: "Toda" },
-                { id: "paralelo", label: "Paralelo" },
-                { id: "bloco", label: "Bloco" },
-              ].map((item) => (
-                <CheckboxField
-                  key={item.id}
-                  id={item.id}
-                  label={<span className="font-medium text-blue-800">{item.label}</span>}
-                  description=""
-                  checked={formData.calcamento.extensao[item.id as keyof typeof formData.calcamento.extensao]}
-                  onCheckedChange={(checked) => handleNestedCheckboxChange("calcamento", "extensao", item.id, checked)}
-                />
-              ))}
+        </div>
+
+        {/* Logradouro com Placa */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center gap-6">
+            <div className="text-3xl">🪧</div>
+            <div className="flex-1">
+              <CheckboxField
+                id="logradouroComPlaca"
+                label={<span className="font-bold text-sky-800 text-lg">Logradouro com Placa?</span>}
+                // description={<span className="text-sky-600">Indica se o logradouro possui placa de identificação</span>}
+                checked={formData.logradouroComPlaca}
+                onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", !!checked)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Observações */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="text-2xl">📝</div>
+            <h4 className="text-xl font-bold text-sky-800">Observações</h4>
+            <div className="flex-1 h-px bg-sky-200"></div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="observacoes" className="text-sm font-medium text-sky-600">
+              Observações adicionais sobre o imóvel, construção ou logradouro
+            </Label>
+            <Textarea
+              id="observacoes"
+              placeholder="Digite suas observações aqui..."
+              value={formData.observacoes}
+              onChange={handleObservacoesChange}
+              className="rounded-xl border-slate-200 text-sky-800 bg-white 
+                         focus:border-sky-300 focus:ring-2 focus:ring-sky-100 
+                         hover:border-sky-200 transition-all duration-200
+                         placeholder:text-slate-400 resize-none"
+              rows={6}
+              maxLength={400}
+            />
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-sky-600">Máximo 400 caracteres</span>
+              <span
+                className={`font-medium ${
+                  String(formData.observacoes).length > 350 ? "text-orange-500" : "text-sky-500"
+                }`}
+              >
+                {String(formData.observacoes).length}/400
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Logradouro com Placa */}
-      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6 flex items-center">
-        <CheckboxField
-          id="logradouroComPlaca"
-          label={<span className="font-medium text-blue-800">Logradouro com Placa?</span>}
-          description="Indica se o logradouro possui placa de identificação"
-          checked={formData.logradouroComPlaca}
-          onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", !!checked)}
-        />
-      </div>
-
-      {/* Observações */}
-      <div className="bg-blue-50 rounded-2xl shadow border border-blue-100 p-6">
-        <Label htmlFor="observacoes" className="text-base font-semibold text-blue-900 mb-2">
-          Observações:
-        </Label>
-        <Textarea
-          id="observacoes"
-          placeholder="Observações adicionais sobre o imóvel, construção ou logradouro..."
-          value={formData.observacoes}
-          onChange={(e) => handleInputChange("observacoes", e.target.value)}
-          className="mt-2 rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 text-lg transition placeholder:text-blue-300"
-          rows={6}
-        />
+      {/* Footer informativo */}
+      <div className="mt-8 pt-6 border-t border-sky-200">
+        <p className="text-sm text-sky-600 text-center">
+          Complete todos os campos para finalizar a avaliação urbanística
+        </p>
       </div>
     </div>
   )
