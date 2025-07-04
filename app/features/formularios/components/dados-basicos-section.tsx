@@ -16,7 +16,6 @@ interface DadosBasicosSectionProps {
   handleInputChange: (field: string, value: string) => void
 }
 
-// Função utilitária para datas no formato yyyy-mm-dd
 function getPrimeiroDiaMes() {
   const now = new Date()
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`
@@ -46,7 +45,6 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         setLoadingTecnicos(false)
       }
     }
-
     fetchTecnicos()
   }, [])
 
@@ -63,46 +61,39 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
     }
   }, [formData.cpf])
 
-  // Classe padronizada para todos os inputs
   const inputClassName = `
-    mt-2 h-12 w-full text-base rounded-xl 
+    h-10 w-full text-sm rounded-lg 
     border border-slate-200 bg-white text-slate-700
     placeholder:text-slate-400
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
-    px-4
+    px-3
   `
 
-  // Classe padronizada para todos os labels
   const labelClassName = "text-sm font-medium text-sky-600 mb-1 block"
 
-  // Classe para o select
   const selectClassName = `
-    mt-2 h-12 w-full text-base rounded-xl 
+    h-10 w-full text-sm rounded-lg 
     border border-slate-200 bg-white text-slate-700
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
-    px-4 appearance-none cursor-pointer
+    px-3 appearance-none cursor-pointer
     bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")] 
-    bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat
+    bg-[length:1.2em_1.2em] bg-[right_0.5rem_center] bg-no-repeat
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
-      {/* Header da seção */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-sky-800 mb-2">Dados Básicos</h2>
-        <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl shadow-md border border-sky-100 p-3 mb-2">
+      <div className="mb-3">
+        <h2 className="text-xl font-semibold text-sky-800 mb-1">Dados Básicos</h2>
+        <div className="w-12 h-1 bg-sky-300 rounded-full" />
       </div>
 
-      {/* Primeira linha - Dados principais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="space-y-1">
-          <Label htmlFor="inscricaoNumero" className={labelClassName}>
-            Inscrição Nº *
-          </Label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+        <div>
+          <Label htmlFor="inscricaoNumero" className={labelClassName}>Inscrição Nº *</Label>
           <Input
             id="inscricaoNumero"
             placeholder="Número da inscrição"
@@ -113,7 +104,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           />
         </div>
 
-        <div className="space-y-1">
+        <div>
           <Label className={labelClassName}>Lançamento novo em:</Label>
           <Input
             type="date"
@@ -126,7 +117,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           />
         </div>
 
-        <div className="space-y-1">
+        <div>
           <Label className={labelClassName}>Revisão em:</Label>
           <Input
             type="date"
@@ -138,14 +129,19 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
-      </div>
 
-      {/* Segunda linha - Localização */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="space-y-1">
-          <Label htmlFor="lote" className={labelClassName}>
-            Lote *
-          </Label>
+        <div>
+          <Label htmlFor="cep" className={labelClassName}>CEP</Label>
+          <Input
+            id="cep"
+            placeholder="00000-000"
+            value={formData.cep}
+            onChange={(e) => handleInputChange("cep", e.target.value)}
+            className={inputClassName}
+          />
+        </div>
+        <div>
+          <Label htmlFor="lote" className={labelClassName}>Lote *</Label>
           <Input
             id="lote"
             placeholder="Número do lote"
@@ -154,11 +150,12 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
+      </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="quadra" className={labelClassName}>
-            Quadra *
-          </Label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+
+        <div>
+          <Label htmlFor="quadra" className={labelClassName}>Quadra *</Label>
           <Input
             id="quadra"
             placeholder="Quadra"
@@ -168,10 +165,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           />
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="loteamento" className={labelClassName}>
-            Loteamento
-          </Label>
+        <div>
+          <Label htmlFor="loteamento" className={labelClassName}>Loteamento</Label>
           <Input
             id="loteamento"
             placeholder="Nome do loteamento"
@@ -181,10 +176,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           />
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="distrito" className={labelClassName}>
-            Distrito
-          </Label>
+        <div>
+          <Label htmlFor="distrito" className={labelClassName}>Distrito</Label>
           <Input
             id="distrito"
             placeholder="Nome do distrito"
@@ -193,14 +186,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
-      </div>
-
-      {/* Terceira linha - Endereço e Técnico */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="space-y-1">
-          <Label htmlFor="endereco" className={labelClassName}>
-            Endereço *
-          </Label>
+        <div>
+          <Label htmlFor="endereco" className={labelClassName}>Endereço *</Label>
           <Input
             id="endereco"
             placeholder="Endereço completo"
@@ -209,11 +196,11 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
+      </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="tecnicoId" className={labelClassName}>
-            Técnico Responsável *
-          </Label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+        <div>
+          <Label htmlFor="tecnicoId" className={labelClassName}>Técnico Responsável *</Label>
           <select
             id="tecnicoId"
             value={formData.tecnicoId || ""}
@@ -233,52 +220,28 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           </select>
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="cep" className={labelClassName}>
-            CEP
-          </Label>
-          <Input
-            id="cep"
-            placeholder="00000-000"
-            value={formData.cep}
-            onChange={(e) => handleInputChange("cep", e.target.value)}
-            className={inputClassName}
-          />
-        </div>
-      </div>
-
-      {/* Quarta linha - Proprietário */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="space-y-1 md:col-span-2 lg:col-span-1">
-          <Label htmlFor="proprietario" className={labelClassName}>
-            Proprietário (Compromissário)
-          </Label>
+        <div>
+          <Label htmlFor="proprietario" className={labelClassName}>Proprietário (Compromissário)</Label>
           <Input
             id="proprietario"
-            placeholder="Nome completo do proprietário"
+            placeholder="Nome completo"
             value={formData.proprietario}
             onChange={(e) => handleInputChange("proprietario", e.target.value)}
             className={inputClassName}
           />
         </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="responsavel_tributario" className={labelClassName}>
-            Responsável Tributário
-          </Label>
+        <div>
+          <Label htmlFor="responsavel_tributario" className={labelClassName}>Responsável Tributário</Label>
           <Input
             id="responsavel_tributario"
-            placeholder="Nome do responsável tributário"
+            placeholder="Nome"
             value={formData.responsavel_tributario || ""}
             onChange={(e) => handleInputChange("responsavel_tributario", e.target.value)}
             className={inputClassName}
           />
         </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="cpf" className={labelClassName}>
-            CPF
-          </Label>
+        <div>
+          <Label htmlFor="cpf" className={labelClassName}>CPF</Label>
           <Input
             id="cpf"
             placeholder="000.000.000-00"
@@ -287,11 +250,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="telefone" className={labelClassName}>
-            Telefone de contato
-          </Label>
+        <div>
+          <Label htmlFor="telefone" className={labelClassName}>Telefone de contato</Label>
           <Input
             id="telefone"
             placeholder="(00) 00000-0000"
@@ -302,8 +262,13 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      {/* Indicador de campos obrigatórios */}
-      <div className="mt-6 pt-4 border-t border-sky-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+
+
+
+      </div>
+
+      <div className="mt-2 pt-3 border-t border-sky-200">
         <p className="text-xs text-sky-600 flex items-center gap-1">
           <span className="text-red-400">*</span>
           Campos obrigatórios
