@@ -233,7 +233,28 @@ export async function gerarRelatorioPDF(id: number) {
   doc.line(5, 137, 190, 137);
   y -= 3;
 
-  const opcoesServentia = () => {
+  // CHAMAR AS SEÇÕES RESTANTES PARA APARECEREM NO PDF (após as declarações)
+
+  // As funções são declaradas abaixo, então as chamadas devem ser movidas para depois das declarações
+
+  // ...existing code...
+
+  // ...existing code...
+
+  // ...existing code...
+
+  // CHAMADAS DAS SEÇÕES RESTANTES (após as declarações)
+  // (Essas funções precisam ser chamadas após serem declaradas)
+  // Mover para antes do return:
+
+  opcoesServentia();
+  renderInfoConstrucao();
+  renderObservacoes();
+  renderLogradouroComPlaca();
+
+  return doc.output("blob");
+
+  function opcoesServentia() {
     const opcoesServentia = [
       {
         titulo: "Serventias:",
@@ -302,7 +323,7 @@ export async function gerarRelatorioPDF(id: number) {
     y += 10;
   };
 
-  const renderInfoConstrucao = () => {
+  function renderInfoConstrucao() {
     const colX = [195, 225, 258];
     let colY = [35, 35, 35];
 
@@ -481,7 +502,7 @@ export async function gerarRelatorioPDF(id: number) {
   doc.setDrawColor(0, 0, 0);
   doc.rect(190, 24, 102, 180);
 
-  const renderObservacoes = () => {
+  function renderObservacoes() {
     const startX = 195;
     let startY = y - 3;
 
@@ -517,7 +538,7 @@ export async function gerarRelatorioPDF(id: number) {
     y = startY + linhas * alturaLinha + 5;
   };
 
-  const renderLogradouroComPlaca = () => {
+  function renderLogradouroComPlaca() {
     const x = 195;
     const yBox = y + 0.5;
 
