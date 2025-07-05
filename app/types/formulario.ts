@@ -130,7 +130,7 @@ export interface FormularioData {
 
     // 6- Forro
     forro: {
-      estaque: boolean
+      estuque: boolean
       placas: boolean
       madeira: boolean
       laje: boolean
@@ -153,8 +153,8 @@ export interface FormularioData {
     // 8- Acabamento Interno
     acabamentoInterno: {
       caiacao: boolean
-      pinturaSimples: boolean
-      pinturaLavavel: boolean
+      pintura_simples: boolean
+      pintura_lavavel: boolean
       especial: boolean
       reboco: boolean
       sem: boolean
@@ -163,8 +163,8 @@ export interface FormularioData {
     // 9- Acabamento Externo
     acabamentoExterno: {
       caiacao: boolean
-      pinturaSimples: boolean
-      pinturaLavavel: boolean
+      pintura_simples_externo: boolean
+      pintura_lavavel_externo: boolean
       especial: boolean
       reboco: boolean
       sem: boolean

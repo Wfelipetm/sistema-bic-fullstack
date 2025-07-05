@@ -57,7 +57,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
   ])
 
   const [forroOptions, setForroOptions] = useState([
-    { id: "estaque", label: "Estaque", icon: "🪵" },
+    { id: "estuque", label: "estuque", icon: "🪵" },
     { id: "placas", label: "Placas", icon: "⬜" },
     { id: "madeira", label: "Madeira", icon: "🪵" },
     { id: "laje", label: "Laje", icon: "🏗️" },
@@ -78,8 +78,8 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
 
   const [acabamentoInternoOptions, setAcabamentoInternoOptions] = useState([
     { id: "caiacao", label: "Caiação", icon: "⚪" },
-    { id: "pinturaSimples", label: "Pintura Simples", icon: "🎨" },
-    { id: "pinturaLavavel", label: "Pintura Lavável", icon: "🖌️" },
+    { id: "pintura_simples", label: "Pintura Simples", icon: "🎨" },
+    { id: "pintura_lavavel", label: "Pintura Lavável", icon: "🖌️" },
     { id: "especial", label: "Especial", icon: "💎" },
     { id: "reboco", label: "Reboco", icon: "🧱" },
     { id: "sem", label: "Sem", icon: "❌" },

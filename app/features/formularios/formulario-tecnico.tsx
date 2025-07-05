@@ -24,6 +24,7 @@ import {
   topografiaAPI,
   tipoConstrucaoAPI,
   tipoAPI,
+  infoConstrucaoAPI,
   situacaoAPI,
   serventiasAPI,
   pisoAPI,
@@ -60,6 +61,40 @@ function deepSanitizeBooleans(obj: any): any {
     return sanitized
   }
   return obj
+}
+
+function sanitizeForro(forro: any) {
+  return {
+    estuque: !!forro.estuque,
+    placas: !!forro.placas,
+    madeira: !!forro.madeira,
+    laje: !!forro.laje,
+    gesso: !!forro.gesso,
+    especial: !!forro.especial,
+    sem: !!forro.sem,
+  }
+}
+
+function sanitizeAcabamentoInterno(data: any) {
+  return {
+    caiacao: !!data.caiacao,
+    pintura_simples: !!data.pintura_simples,
+    pintura_lavavel: !!data.pintura_lavavel,
+    especial: !!data.especial,
+    reboco: !!data.reboco,
+    sem: !!data.sem,
+  }
+}
+
+function sanitizeAcabamentoExterno(data: any) {
+  return {
+    caiacao: !!data.caiacao,
+    pintura_simples: !!data.pinturaSimples,
+    pintura_lavavel: !!data.pinturaLavavel,
+    especial: !!data.especial,
+    reboco: !!data.reboco,
+    sem: !!data.sem,
+  }
 }
 
 export default function FormularioTecnico() {
@@ -293,7 +328,7 @@ export default function FormularioTecnico() {
         pisoRes,
         obsLogradouroRes,
         nivelamentoRes,
-        forroRes,
+        forroRes, // <-- aqui!
         esquadrilhaRes,
         coberturaRes,
         calcamentoRes,
@@ -314,7 +349,10 @@ export default function FormularioTecnico() {
           return res
         }),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
-        forroAPI.create(sanitizeBooleans(formData.construcao.forro)),
+        forroAPI.create({ forro: sanitizeForro(formData.construcao.forro) }).then(res => {
+          console.log('✅ ✅ ✅ ✅ forroAPI response:', res);
+          return res;
+        }),
         esquadrilhaAPI.create(sanitizeBooleans(formData.construcao.esquadrias)),
         coberturaAPI.create(sanitizeBooleans(formData.construcao.cobertura)),
         calcamentoAPI.create({
@@ -334,8 +372,8 @@ export default function FormularioTecnico() {
           baixa: formData.avaliacaoUrbanistica === "baixa",
           muito_baixa: formData.avaliacaoUrbanistica === "muito_baixa",
         }),
-        acabamentoInternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoInterno)),
-        acabamentoExternoAPI.create(sanitizeBooleans(formData.construcao.acabamentoExterno)),
+        acabamentoInternoAPI.create({ acabamentoInterno: sanitizeAcabamentoInterno(formData.construcao.acabamentoInterno) }),
+        acabamentoExternoAPI.create({ acabamentoExterno: sanitizeAcabamentoExterno(formData.construcao.acabamentoExterno) }),
       ])
 
       await Promise.all([
@@ -348,26 +386,48 @@ export default function FormularioTecnico() {
           nivelamento_id: nivelamentoRes.id,
         }),
         createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
-        createConstrucao({
-          ...formData.construcao,
-          uso_id: usoRes.id,
-          topografia_id: topografiaRes.id,
-          tipo_construcao_id: tipoConstrucaoRes.id,
-          tipo_id: tipoRes.id,
-          situacao_id: situacaoRes.id,
-          serventias_id: serventiasRes.id,
-          piso_id: pisoRes.id,
-          obs_logradouro_id: obsLogradouroRes.id,
-          nivelamento_id: nivelamentoRes.id,
-          forro_id: forroRes.id,
-          esquadrilha_id: esquadrilhaRes.id,
-          cobertura_id: coberturaRes.id,
-          calcamento_id: calcamentoRes.id,
-          avali_urba_logradouro_id: avaliUrbaLogradouroRes.id,
-          acabamento_interno_id: acabamentoInternoRes.id,
-          acabamento_externo_id: acabamentoExternoRes.id,
-          boletim_id: boletim.id,
-        }),
+        (async () => {
+          const construcaoPayload = {
+            ...formData.construcao,
+            uso_id: usoRes.id,
+            topografia_id: topografiaRes.id,
+            tipo_construcao_id: tipoConstrucaoRes.id,
+            tipo_id: tipoRes.id,
+            situacao_id: situacaoRes.id,
+            serventias_id: serventiasRes.id,
+            piso_id: pisoRes.id,
+            obs_logradouro_id: obsLogradouroRes.id,
+            nivelamento_id: nivelamentoRes.id,
+            forro_id: forroRes.id,
+            esquadrilha_id: esquadrilhaRes.id,
+            cobertura_id: coberturaRes.id,
+            calcamento_id: calcamentoRes.id,
+            avali_urba_logradouro_id: avaliUrbaLogradouroRes.id,
+            acabamento_interno_id: acabamentoInternoRes.id,
+            acabamento_externo_id: acabamentoExternoRes.id,
+            boletim_id: boletim.id,
+          }
+
+          // Remover os objetos completos do payload
+          const construcaoPayloadAny: any = construcaoPayload;
+          delete construcaoPayloadAny.uso
+          delete construcaoPayloadAny.topografia
+          delete construcaoPayloadAny.tipoConstrucao
+          delete construcaoPayloadAny.tipo
+          delete construcaoPayloadAny.situacao
+          delete construcaoPayloadAny.serventias
+          delete construcaoPayloadAny.piso
+          delete construcaoPayloadAny.obs_logradouro
+          delete construcaoPayloadAny.nivelamento
+          delete construcaoPayloadAny.forro
+          delete construcaoPayloadAny.esquadrias
+          delete construcaoPayloadAny.cobertura
+          delete construcaoPayloadAny.calcamento
+          delete construcaoPayloadAny.acabamento_interno
+          delete construcaoPayloadAny.acabamento_externo
+
+          await createConstrucao(construcaoPayload)
+        })(),
       ])
 
       const cleanServentias = Object.fromEntries(Object.entries(formData.serventias).filter(([_, v]) => v !== 0))

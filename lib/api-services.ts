@@ -39,13 +39,29 @@ export const infoTerrenoAPI = {
 // INFO_CONSTRUCAO
 export const infoConstrucaoAPI = {
     get: () => fetch(apiUrl("/info-construcao/")).then(r => r.json()),
-    create: (data: any) => fetch(apiUrl("/info-construcao/"), {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    update: (id: number, data: any) => fetch(apiUrl(`/info-construcao/${id}`), {
-        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    delete: (id: number) => fetch(apiUrl(`/info-construcao/${id}`), { method: "DELETE" }),
+    create: (data: any) => {
+        console.log("===================================:", data);
+        return fetch(apiUrl("/info-construcao/"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+            .then(async r => {
+                const res = await r.json().catch(() => ({}));
+                console.log("Resposta do backend:", res);
+                return res;
+            });
+    },
+    update: (id: number, data: any) => {
+        console.log(`Updating info-construcao/${id} with data:`, data);
+        return fetch(apiUrl(`/info-construcao/${id}`), {
+            method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
+        }).then(r => r.json())
+    },
+    delete: (id: number) => {
+        console.log(`Deleting info-construcao/${id}`);
+        return fetch(apiUrl(`/info-construcao/${id}`), { method: "DELETE" })
+    },
 }
 
 // METRAGEM
@@ -210,13 +226,22 @@ export const pisoAPI = {
 // FORRO
 export const forroAPI = {
     get: () => fetch(apiUrl("/forro/")).then(r => r.json()),
-    create: (data: any) => fetch(apiUrl("/forro/"), {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    update: (id: number, data: any) => fetch(apiUrl(`/forro/${id}`), {
-        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    delete: (id: number) => fetch(apiUrl(`/forro/${id}`), { method: "DELETE" }),
+    create: (data: any) => {
+        console.log("Creating /forro/ with data:", data);
+        return fetch(apiUrl("/forro/"), {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
+        }).then(r => r.json());
+    },
+    update: (id: number, data: any) => {
+        console.log(`Updating /forro/${id} with data:`, data);
+        return fetch(apiUrl(`/forro/${id}`), {
+            method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
+        }).then(r => r.json());
+    },
+    delete: (id: number) => {
+        console.log(`Deleting /forro/${id}`);
+        return fetch(apiUrl(`/forro/${id}`), { method: "DELETE" });
+    },
 }
 
 // COBERTURA
@@ -234,13 +259,22 @@ export const coberturaAPI = {
 // ACABAMENTO_INTERNO
 export const acabamentoInternoAPI = {
     get: () => fetch(apiUrl("/acabamento-interno/")).then(r => r.json()),
-    create: (data: any) => fetch(apiUrl("/acabamento-interno/"), {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    update: (id: number, data: any) => fetch(apiUrl(`/acabamento-interno/${id}`), {
-        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-    }).then(r => r.json()),
-    delete: (id: number) => fetch(apiUrl(`/acabamento-interno/${id}`), { method: "DELETE" }),
+    create: (data: any) => {
+        console.log("==========eee============/acabamento-interno/ with data:", data);
+        return fetch(apiUrl("/acabamento-interno/"), {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
+        }).then(r => r.json());
+    },
+    update: (id: number, data: any) => {
+        console.log(`Updating /acabamento-interno/${id} with data:`, data);
+        return fetch(apiUrl(`/acabamento-interno/${id}`), {
+            method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
+        }).then(r => r.json());
+    },
+    delete: (id: number) => {
+        console.log(`Deleting /acabamento-interno/${id}`);
+        return fetch(apiUrl(`/acabamento-interno/${id}`), { method: "DELETE" });
+    },
 }
 
 // ACABAMENTO_EXTERNO
