@@ -38,46 +38,25 @@ export function FormularioSection({
 
   return (
     <Card className="border-0 shadow-sm">
-      <Collapsible open={isOpen} onOpenChange={onToggle}>
-        <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer hover:bg-gray-50/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${iconBgColor}`}>
-                  <Icon className={`h-4 w-4 ${iconColor}`} />
-                </div>
-                <div>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    {isOpen ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
-                    {title}
-                  </CardTitle>
-                  <p className="text-sm text-gray-500 mt-1">{description}</p>
-                </div>
-              </div>
-              <Badge variant={isOpen ? "default" : "secondary"}>
-                {isOpen ? "Aberto" : "Fechado"}
-              </Badge>
+      <CardHeader className="transition-colors">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg ${iconBgColor}`}>
+              <Icon className={`h-4 w-4 ${iconColor}`} />
             </div>
-          </CardHeader>
-        </CollapsibleTrigger>
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div
-              key="content"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              <CardContent className="space-y-6 pt-0">{children}</CardContent>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Collapsible>
+            <div>
+              <CardTitle className="flex items-center gap-2 text-lg text-blue-900">
+                {title}
+              </CardTitle>
+              <p className="text-sm text-gray-500 mt-1">{description}</p>
+            </div>
+          </div>
+          <Badge variant={isOpen ? "default" : "secondary"}>
+            {isOpen ? "Aberto" : "Fechado"}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6 pt-0">{children}</CardContent>
     </Card>
   );
 }

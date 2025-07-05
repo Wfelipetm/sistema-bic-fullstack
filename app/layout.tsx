@@ -4,11 +4,13 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
+import { Open_Sans } from 'next/font/google'
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 })
+const openSans = Open_Sans({ subsets: ['latin'], weight: ['400', '700'] })
 
 export const metadata: Metadata = {
   title: "BIC - Sistema de Informação Cadastral",
