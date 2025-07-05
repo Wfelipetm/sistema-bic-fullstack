@@ -48,12 +48,12 @@ export function FormularioSection({
               <CardTitle className="flex items-center gap-2 text-lg text-blue-900">
                 {title}
               </CardTitle>
-              <p className="text-sm text-gray-500 mt-1">{description}</p>
+              <p className="text-sm text-sky-500 mt-1">{description}</p>
             </div>
           </div>
-          <Badge variant={isOpen ? "default" : "secondary"}>
+          {/* <Badge variant={isOpen ? "default" : "secondary"}>
             {isOpen ? "Aberto" : "Fechado"}
-          </Badge>
+          </Badge> */}
         </div>
       </CardHeader>
       <CardContent className="space-y-6 pt-0">{children}</CardContent>

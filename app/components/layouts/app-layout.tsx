@@ -36,7 +36,7 @@ const AppLayout = ({ children, activeView, setActiveView }: AppLayoutProps) => {
           <AppSidebar activeView={activeView} setActiveView={setActiveView} />
           <SidebarInset>
             {/* Sub-header com breadcrumbs e trigger do sidebar */}
-            <div className="flex h-12 shrink-0 items-center gap-2 border-b border-blue-100 bg-white/80 backdrop-blur-sm px-4">
+            {/* <div className="flex h-12 shrink-0 items-center gap-2 border-b border-blue-100 bg-white/80 backdrop-blur-sm px-4">
               <SidebarTrigger className="-ml-1 text-blue-700 hover:text-blue-900 hover:bg-blue-50" />
               <Separator orientation="vertical" className="mr-2 h-4 bg-blue-200" />
               <Breadcrumb>
@@ -52,7 +52,7 @@ const AppLayout = ({ children, activeView, setActiveView }: AppLayoutProps) => {
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
-            </div>
+            </div> */}
 
             {/* Conteúdo principal */}
             <div className="flex flex-1 flex-col gap-4 p-6">

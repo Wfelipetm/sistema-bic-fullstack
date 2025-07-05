@@ -186,7 +186,7 @@ export interface FormularioData {
   }
 
   // Avaliação Urbanística do Logradouro
-  avaliacaoUrbanistica: "alta" | "media" | "media_baixa" | "baixa" | "muito_baixa" | ""
+  avaliacaoUrbanistica: "alta" | "media" | "media_baixa" | "baixa" | "muito_baixa"
 
   // Calçamento
   calcamento: {

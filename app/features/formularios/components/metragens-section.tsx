@@ -60,11 +60,11 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
   return (
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
       {/* Header da seção */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Metragens</h2>
         <p className="text-sm text-sky-600 mb-4">Informe as medidas do imóvel</p>
         <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {metragemItems.map((item, index) => (

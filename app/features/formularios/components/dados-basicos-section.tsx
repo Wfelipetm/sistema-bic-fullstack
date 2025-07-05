@@ -86,10 +86,10 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
 
   return (
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl shadow-md border border-sky-100 p-3 mb-2">
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <h2 className="text-xl font-semibold text-sky-800 mb-1">Dados Básicos</h2>
         <div className="w-12 h-1 bg-sky-300 rounded-full" />
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-4">
         <div>

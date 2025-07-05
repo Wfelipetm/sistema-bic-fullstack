@@ -175,11 +175,11 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
   return (
     <div className="space-y-8">
       {/* Header da seção */}
-      <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+      {/* <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Características do Terreno</h2>
         <p className="text-sm text-sky-600 mb-4">Selecione as características que descrevem o terreno</p>
         <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
-      </div>
+      </div> */}
 
       <SectionCard
         title="Situação"

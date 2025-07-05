@@ -59,11 +59,11 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
   return (
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
       {/* Header da seção */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Serventias</h2>
         <p className="text-sm text-sky-600 mb-4">Informe a quantidade de cada cômodo</p>
         <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {serventiasItems.map((item, index) => (

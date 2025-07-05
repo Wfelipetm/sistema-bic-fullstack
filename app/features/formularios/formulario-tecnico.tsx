@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { FileText, Save } from "lucide-react";
+import { FileText, Save, ChevronLeft, ChevronRight } from "lucide-react";
 import { FormularioSection } from "./components/formulario-section";
 import { DadosBasicosSection } from "./components/dados-basicos-section";
 import { LogradouroSection } from "./components/logradouro-section";
@@ -611,7 +611,7 @@ export default function FormularioTecnico() {
     {
       id: "dadosBasicos",
       title: "Dados Básicos do Imóvel",
-      description: "Inscrição, lançamento, revisão e dados do proprietário",
+      description: "Preencha as informações básicas do imóvel",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -626,7 +626,7 @@ export default function FormularioTecnico() {
       id: "logradouro",
       title: "I - Informações sobre o Logradouro",
       description:
-        "Pavimentação, iluminação, rede de esgoto, água e coleta de lixo",
+        "Selecione os itens de infraestrutura disponíveis no local",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -641,7 +641,7 @@ export default function FormularioTecnico() {
       id: "terreno",
       title: "II - Informações sobre o Terreno",
       description:
-        "Situação, características do solo, topografia e nivelamento",
+        "Selecione as características que descrevem o terreno",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -655,7 +655,7 @@ export default function FormularioTecnico() {
     {
       id: "metragens",
       title: "III - Metragens",
-      description: "Área do terreno, testada e área edificada",
+      description: "Informe as medidas do imóvel",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -670,7 +670,7 @@ export default function FormularioTecnico() {
       id: "construcao",
       title: "IV - Informações sobre a Construção",
       description:
-        "Tipo, uso, materiais, acabamentos e características construtivas",
+        "Selecione as características da construção",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -684,7 +684,7 @@ export default function FormularioTecnico() {
     {
       id: "serventias",
       title: "Serventias e Características Complementares",
-      description: "Cômodos, avaliação urbanística e calçamento",
+      description: "Informe a quantidade de cada cômodo",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -698,7 +698,7 @@ export default function FormularioTecnico() {
     {
       id: "avaliacaoUrbanistica",
       title: "Avaliação Urbanística e Observações",
-      description: "Avaliação do logradouro, calçamento e observações gerais",
+      description: "Avalie as características urbanísticas do logradouro",
       icon: FileText,
       iconColor: "text-sky-600",
       iconBgColor: "bg-sky-50",
@@ -715,6 +715,20 @@ export default function FormularioTecnico() {
 
   // Progresso baseado no step atual
   const stepProgress = Math.round(((currentStep + 1) / steps.length) * 100);
+
+  // Adicione este useEffect para navegação por teclado
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      }
+      if (e.key === "ArrowLeft") {
+        setCurrentStep((prev) => Math.max(prev - 1, 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <div >
@@ -774,7 +788,34 @@ export default function FormularioTecnico() {
         </div>
 
         {/* Seções do Formulário - apenas uma por vez */}
-        <div className="space-y-6">
+        <div className="space-y-6 relative">
+          {/* Seta esquerda clicável */}
+          {currentStep > 0 && (
+            <button
+              type="button"
+              onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
+              className="absolute left-[-20px] top-1/2 -translate-y-1/2 text-sky-400 hover:text-sky-600 transition-colors z-20 bg-transparent p-0 border-0"
+              aria-label="Voltar etapa"
+              tabIndex={0}
+              style={{ boxShadow: "none" }}
+            >
+              <ChevronLeft size={28} strokeWidth={2.5} />
+            </button>
+          )}
+          {/* Seta direita clicável */}
+          {currentStep < steps.length - 1 && (
+            <button
+              type="button"
+              onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
+              className="absolute right-[-20px] top-1/2 -translate-y-1/2 text-sky-400 hover:text-sky-600 transition-colors z-20 bg-transparent p-0 border-0"
+              aria-label="Avançar etapa"
+              tabIndex={0}
+              style={{ boxShadow: "none" }}
+            >
+              <ChevronRight size={28} strokeWidth={2.5} />
+            </button>
+          )}
+
           <FormularioSection
             id={steps[currentStep].id}
             title={steps[currentStep].title}
@@ -788,29 +829,13 @@ export default function FormularioTecnico() {
             {steps[currentStep].content}
           </FormularioSection>
 
-          <div className="flex justify-between mt-4">
-            <Button
-              onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
-              disabled={currentStep === 0}
-              variant="outline"
-            >
-              Voltar
-            </Button>
-            {currentStep < steps.length - 1 ? (
-              <Button
-                onClick={() =>
-                  setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
-                }
-                // Aqui você pode adicionar validação para só avançar se os campos estiverem preenchidos
-              >
-                Avançar
-              </Button>
-            ) : (
+          {currentStep === steps.length - 1 && (
+            <div className="flex justify-end mt-4">
               <Button onClick={handleSave} disabled={isLoading}>
                 {isLoading ? "Salvando..." : "Salvar BIC"}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

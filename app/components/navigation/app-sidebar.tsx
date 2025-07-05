@@ -24,10 +24,14 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
-  const { state } = useSidebar(); // 'expanded' ou 'collapsed'
+  const { state, toggleSidebar } = useSidebar(); // adicione toggleSidebar
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar
+      collapsible="icon"
+      onClick={toggleSidebar} // <-- Adicione isso!
+      {...props}
+    >
       <SidebarHeader className="pt-24 -mt-1.5">
         <SidebarMenu>
           <SidebarMenuItem>

@@ -1,30 +1,13 @@
 import type { FormularioData } from "@/app/types/formulario"
 
 export const formularioInicial: FormularioData = {
-    inscricaoNumero: "",
-    numeroInscricao: "",
-    numeroBote: "",
-    numeroQuadra: "",
-    nomeLogradouro: "",
-    lancamentoNovo: "",
-    revisao: "",
-    lote: "",
-    quadra: "",
-    loteamento: "",
-    distrito: "",
-    endereco: "",
-    cep: "",
-    proprietario: "",
-    cpf: "",
-    telefone: "",
-    logradouro: {
+    inscricaoNumero: "", numeroInscricao: "", numeroBote: "", numeroQuadra: "", nomeLogradouro: "", lancamentoNovo: "", revisao: "", lote: "", quadra: "", loteamento: "", distrito: "", endereco: "", cep: "", proprietario: "", cpf: "", telefone: "", logradouro: {
         pavimentacao: false,
         iluminacaoPublica: false,
         redeEsgoto: false,
         redeAgua: false,
         coletaLixo: false,
-    },
-    terreno: {
+    }, terreno: {
         situacao: {
             encravamento: false,
             vila: false,
@@ -50,30 +33,25 @@ export const formularioInicial: FormularioData = {
             ao_nivel: false,
             acima_nivel: false,
         },
-    },
-    terrenoCaracteristicas: {
+    }, terrenoCaracteristicas: {
         alagadico: false,
         arenoso: false,
         rochoso: false,
         normal: false,
-    },
-    terrenoNivelamento: {
+    }, terrenoNivelamento: {
         abaixoNivel: false,
         aoNivel: false,
         acimaNivel: false,
-    },
-    terrenoTopografia: {
+    }, terrenoTopografia: {
         aclive: false,
         declive: false,
         encosta: false,
         horizontal: false,
-    },
-    metragens: {
+    }, metragens: {
         areaTerreno: "",
         testada: "",
         areaEdificada: "",
-    },
-    construcao: {
+    }, construcao: {
         tipo: {
             tipo_casa: false,
             tipo_apartamento: false,
@@ -147,8 +125,7 @@ export const formularioInicial: FormularioData = {
             reboco: false,
             sem: false,
         },
-    },
-    serventias: {
+    }, serventias: {
         serventia_sala: 0,
         serventia_quarto: 0,
         serventia_copa: 0,
@@ -160,8 +137,7 @@ export const formularioInicial: FormularioData = {
         serventia_area: 0,
         serventia_porao_habital: 0,
     },
-    avaliacaoUrbanistica: "",
-    calcamento: {
+    avaliacaoUrbanistica: "alta", calcamento: {
         tipo: {
             sem_asfalto: false,
             asfaltada: false,
@@ -174,12 +150,8 @@ export const formularioInicial: FormularioData = {
             paralelo: false,
             bloco: false,
         },
-    },
-    logradouroComPlaca: false,
-    responsavel: "",
-    obsLogradouro: {
+    }, logradouroComPlaca: false, responsavel: "", obsLogradouro: {
         logradouro_placa: false,
         observacoes: "",
-    },
-    observacoes: undefined
+    }, observacoes: undefined
 }
