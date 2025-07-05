@@ -449,6 +449,28 @@ export default function FormularioTecnico() {
         observacoes: formData.observacoes || "",
       };
 
+      // Funções de sanitização para acabamento interno/externo
+      function sanitizeAcabamentoInterno(data: any) {
+        return {
+          caiacao: !!data.caiacao,
+          pintura_simples: !!data.pintura_simples,
+          pintura_lavavel: !!data.pintura_lavavel,
+          especial: !!data.especial,
+          reboco: !!data.reboco,
+          sem: !!data.sem,
+        };
+      }
+      function sanitizeAcabamentoExterno(data: any) {
+        return {
+          caiacao: !!data.caiacao,
+          pintura_simples: !!data.pintura_simples,
+          pintura_lavavel: !!data.pintura_lavavel,
+          especial: !!data.especial,
+          reboco: !!data.reboco,
+          sem: !!data.sem,
+        };
+      }
+
       const [
         usoRes,
         topografiaRes,
@@ -460,7 +482,7 @@ export default function FormularioTecnico() {
         pisoRes,
         obsLogradouroRes,
         nivelamentoRes,
-        forroRes, // <-- aqui!
+        forroRes,
         esquadrilhaRes,
         coberturaRes,
         calcamentoRes,
@@ -490,7 +512,7 @@ export default function FormularioTecnico() {
           return res;
         }),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
-        forroAPI.create({ forro: sanitizeForro(formData.construcao.forro) }).then(res => {
+        forroAPI.create({ forro: sanitizeBooleans(formData.construcao.forro) }).then(res => {
           console.log('✅ ✅ ✅ ✅ forroAPI response:', res);
           return res;
         }),
@@ -515,13 +537,6 @@ export default function FormularioTecnico() {
         }),
         acabamentoInternoAPI.create({ acabamentoInterno: sanitizeAcabamentoInterno(formData.construcao.acabamentoInterno) }),
         acabamentoExternoAPI.create({ acabamentoExterno: sanitizeAcabamentoExterno(formData.construcao.acabamentoExterno) }),
-      ])
-        acabamentoInternoAPI.create(
-          sanitizeBooleans(formData.construcao.acabamentoInterno)
-        ),
-        acabamentoExternoAPI.create(
-          sanitizeBooleans(formData.construcao.acabamentoExterno)
-        ),
       ]);
 
       await Promise.all([
@@ -576,27 +591,6 @@ export default function FormularioTecnico() {
 
           await createConstrucao(construcaoPayload)
         })(),
-      ])
-        createConstrucao({
-          ...formData.construcao,
-          uso_id: usoRes.id,
-          topografia_id: topografiaRes.id,
-          tipo_construcao_id: tipoConstrucaoRes.id,
-          tipo_id: tipoRes.id,
-          situacao_id: situacaoRes.id,
-          serventias_id: serventiasRes.id,
-          piso_id: pisoRes.id,
-          obs_logradouro_id: obsLogradouroRes.id,
-          nivelamento_id: nivelamentoRes.id,
-          forro_id: forroRes.id,
-          esquadrilha_id: esquadrilhaRes.id,
-          cobertura_id: coberturaRes.id,
-          calcamento_id: calcamentoRes.id,
-          avali_urba_logradouro_id: avaliUrbaLogradouroRes.id,
-          acabamento_interno_id: acabamentoInternoRes.id,
-          acabamento_externo_id: acabamentoExternoRes.id,
-          boletim_id: boletim.id,
-        }),
       ]);
 
       const cleanServentias = Object.fromEntries(

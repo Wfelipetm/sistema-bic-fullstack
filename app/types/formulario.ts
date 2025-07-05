@@ -163,8 +163,8 @@ export interface FormularioData {
     // 9- Acabamento Externo
     acabamentoExterno: {
       caiacao: boolean
-      pintura_simples_externo: boolean
-      pintura_lavavel_externo: boolean
+      pintura_simples: boolean
+      pintura_lavavel: boolean
       especial: boolean
       reboco: boolean
       sem: boolean

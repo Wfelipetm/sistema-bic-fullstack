@@ -87,8 +87,8 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
 
   const [acabamentoExternoOptions, setAcabamentoExternoOptions] = useState([
     { id: "caiacao", label: "Caiação", icon: "⚪" },
-    { id: "pinturaSimples", label: "Pintura Simples", icon: "🎨" },
-    { id: "pinturaLavavel", label: "Pintura Lavável", icon: "🖌️" },
+    { id: "pintura_simples", label: "Pintura Simples", icon: "🎨" },
+    { id: "pintura_lavavel", label: "Pintura Lavável", icon: "🖌️" },
     { id: "especial", label: "Especial", icon: "💎" },
     { id: "reboco", label: "Reboco", icon: "🧱" },
     { id: "sem", label: "Sem", icon: "❌" },

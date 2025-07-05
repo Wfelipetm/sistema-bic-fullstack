@@ -141,8 +141,8 @@ export const formularioInicial: FormularioData = {
         },
         acabamentoExterno: {
             caiacao: false,
-            pintura_simples_externo: false,
-            pintura_lavavel_externo: false,
+            pintura_simples: false,
+            pintura_lavavel: false,
             especial: false,
             reboco: false,
             sem: false,
