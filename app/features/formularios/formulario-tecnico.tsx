@@ -773,7 +773,7 @@ export default function FormularioTecnico() {
               className="h-2 fill-white bg-slate-300 w-full"
             />
             <p
-              className={`${openSans.className} text-black font-bold text-sm ml-2`}
+              className={`${openSans.className} text-sky-600 font-bold text-sm ml-2`}
             >
               {stepProgress}%
             </p>
@@ -782,33 +782,6 @@ export default function FormularioTecnico() {
 
         {/* Seções do Formulário - apenas uma por vez */}
         <div className="space-y-6 relative">
-          {/* Seta esquerda clicável */}
-          {currentStep > 0 && (
-            <button
-              type="button"
-              onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
-              className="absolute left-[-20px] top-1/2 -translate-y-1/2 text-sky-400 hover:text-sky-600 transition-colors z-20 bg-transparent p-0 border-0"
-              aria-label="Voltar etapa"
-              tabIndex={0}
-              style={{ boxShadow: "none" }}
-            >
-              <ChevronLeft size={28} strokeWidth={2.5} />
-            </button>
-          )}
-          {/* Seta direita clicável */}
-          {currentStep < steps.length - 1 && (
-            <button
-              type="button"
-              onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
-              className="absolute right-[-20px] top-1/2 -translate-y-1/2 text-sky-400 hover:text-sky-600 transition-colors z-20 bg-transparent p-0 border-0"
-              aria-label="Avançar etapa"
-              tabIndex={0}
-              style={{ boxShadow: "none" }}
-            >
-              <ChevronRight size={28} strokeWidth={2.5} />
-            </button>
-          )}
-
           <FormularioSection
             id={steps[currentStep].id}
             title={steps[currentStep].title}
@@ -822,13 +795,45 @@ export default function FormularioTecnico() {
             {steps[currentStep].content}
           </FormularioSection>
 
-          {currentStep === steps.length - 1 && (
-            <div className="flex justify-end mt-4">
-              <Button onClick={handleSave} disabled={isLoading}>
-                {isLoading ? "Salvando..." : "Salvar BIC"}
-              </Button>
+          {/* Botões de navegação abaixo do formulário */}
+          <div
+            className="mt-8 w-full flex flex-col gap-4 md:flex-row md:gap-0 md:justify-between"
+          >
+            {currentStep > 0 && (
+              <div className="w-full md:w-auto md:flex-1 md:flex md:justify-start">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
+                  className="w-full md:w-auto px-6 py-2 rounded-xl border border-sky-200 bg-white text-sky-700 font-semibold shadow-md hover:bg-sky-100 hover:text-sky-900 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Voltar etapa"
+                  tabIndex={0}
+                >
+                  Anterior
+                </button>
+              </div>
+            )}
+            <div className="w-full md:w-auto md:flex-1 md:flex md:justify-end">
+              {currentStep < steps.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
+                  className="w-full md:w-auto px-6 py-2 rounded-xl border border-sky-200 bg-white text-sky-700 font-semibold shadow-md hover:bg-sky-100 hover:text-sky-900 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Avançar etapa"
+                  tabIndex={0}
+                >
+                  Próxima
+                </button>
+              ) : (
+                <Button
+                  onClick={handleSave}
+                  disabled={isLoading}
+                  className="w-full md:w-auto bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-md border border-sky-700 transition-all duration-150"
+                >
+                  {isLoading ? "Salvando..." : "Salvar BIC"}
+                </Button>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -63,8 +63,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
 
   const inputClassName = `
     h-10 w-full text-sm rounded-lg 
-    border border-slate-200 bg-white text-slate-700
-    placeholder:text-slate-400
+    border border-slate-200 bg-white text-sky-700
+    placeholder:text-sky-400
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
@@ -75,23 +75,32 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
 
   const selectClassName = `
     h-10 w-full text-sm rounded-lg 
-    border border-slate-200 bg-white text-slate-700
+    border border-slate-200 bg-white text-sky-700
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
     px-3 appearance-none cursor-pointer
+    placeholder:text-sky-400
     bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")] 
     bg-[length:1.2em_1.2em] bg-[right_0.5rem_center] bg-no-repeat
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl shadow-md border border-sky-100 p-3 mb-2">
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl shadow-md border border-sky-100 px-3 py-8 min-h-[320px] md:min-h-[360px] xl:min-h-[400px]">
+      <style>{`
+        .dados-basicos-section-grid > div {
+          display: flex;
+          flex-direction: column;
+          justify-content: stretch;
+          height: 100%;
+        }
+      `}</style>
       {/* <div className="mb-3">
         <h2 className="text-xl font-semibold text-sky-800 mb-1">Dados Básicos</h2>
         <div className="w-12 h-1 bg-sky-300 rounded-full" />
       </div> */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
         <div>
           <Label htmlFor="inscricaoNumero" className={labelClassName}>Inscrição Nº *</Label>
           <Input
@@ -152,7 +161,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6 mb-8 dados-basicos-section-grid">
 
         <div>
           <Label htmlFor="quadra" className={labelClassName}>Quadra *</Label>
@@ -198,7 +207,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
         <div>
           <Label htmlFor="tecnicoId" className={labelClassName}>Técnico Responsável *</Label>
           <select
@@ -210,10 +219,11 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             }}
             className={selectClassName}
             disabled={loadingTecnicos}
+            style={{ color: formData.tecnicoId ? '#0369a1' : '#38bdf8' }}
           >
-            <option value="">{loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}</option>
+            <option value="" style={{ color: '#38bdf8' }}>{loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}</option>
             {tecnicos.map((tecnico) => (
-              <option key={tecnico.id} value={tecnico.id}>
+              <option key={tecnico.id} value={tecnico.id} style={{ color: '#0369a1' }}>
                 {tecnico.nome} (ID: {tecnico.id})
               </option>
             ))}
@@ -262,7 +272,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6 mb-8 dados-basicos-section-grid">
 
 
 
