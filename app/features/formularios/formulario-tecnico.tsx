@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Save, ChevronLeft, ChevronRight } from "lucide-react";
@@ -392,11 +392,7 @@ export default function FormularioTecnico() {
     setIsLoading(true);
     try {
       if (!formData.tecnicoId) {
-        toast({
-          title: "Atenção",
-          description: "Por favor, selecione um técnico responsável.",
-          variant: "destructive"
-        });
+        toast.error("Por favor, selecione um técnico responsável.");
         return;
       }
 
@@ -584,17 +580,9 @@ export default function FormularioTecnico() {
       );
       await serventiasAPI.create({ ...formData.serventias });
 
-      toast({
-        title: "Sucesso",
-        description: "Formulário BIC salvo com sucesso!",
-        variant: "default"
-      });
+      toast.success("Formulário BIC salvo com sucesso!");
     } catch (e) {
-      toast({
-        title: "Erro",
-        description: "Erro ao salvar o formulário!",
-        variant: "destructive"
-      });
+      toast.error("Erro ao salvar o formulário!");
     } finally {
       setIsLoading(false);
     }

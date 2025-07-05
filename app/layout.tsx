@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   description: "Sistema de Boletim de Informações Cadastrais para técnicos em edificações",
     generator: 'Prefeitura Municipal de Itaguaí',
     icons: {
-		icon: [			
-			{ url: "/favicon/building.png" },
-		],
-	}
+    icon: [			
+      { url: "/favicon/building.png" },
+    ],
+  }
 }
 
 export default function RootLayout({
@@ -34,7 +34,18 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <AuthProvider>
-            <Toaster />
+            <Toaster
+              position="top-center"
+              richColors
+              toastOptions={{
+                className: "text-lg font-bold px-8 py-6 rounded-2xl shadow-2xl border-2 border-opacity-80",
+                style: { minWidth: 420, maxWidth: 700 },
+                classNames: {
+                  success: "bg-green-600 text-white border-green-700",
+                  error: "bg-red-600 text-white border-red-700",
+                },
+              }}
+            />
             {children}
           </AuthProvider>
         </ThemeProvider>
