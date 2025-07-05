@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/contexts/auth-context"
 import { Toaster } from "sonner"
 import { Open_Sans } from 'next/font/google'
 
@@ -32,8 +33,10 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <Toaster />
-          {children}
+          <AuthProvider>
+            <Toaster />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
