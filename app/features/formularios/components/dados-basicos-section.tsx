@@ -36,7 +36,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
     const fetchTecnicos = async () => {
       setLoadingTecnicos(true)
       try {
-        const response = await fetch("http://10.200.200.187:5001/tecnicos")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tecnicos`)
         const data = await response.json()
         setTecnicos(data)
       } catch (error) {
@@ -98,7 +98,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="inscricaoNumero"
             placeholder="Número da inscrição"
             value={formData.inscricaoNumero}
-            onChange={(e) => handleInputChange("inscricaoNumero", e.target.value)}
+            onChange={(e) => handleInputChange("inscricaoNumero", e.target.value.toUpperCase())}
             className={inputClassName}
             autoFocus
           />
@@ -146,7 +146,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="lote"
             placeholder="Número do lote"
             value={formData.lote}
-            onChange={(e) => handleInputChange("lote", e.target.value)}
+            onChange={(e) => handleInputChange("lote", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -160,7 +160,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="quadra"
             placeholder="Quadra"
             value={formData.quadra}
-            onChange={(e) => handleInputChange("quadra", e.target.value)}
+            onChange={(e) => handleInputChange("quadra", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -171,7 +171,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="loteamento"
             placeholder="Nome do loteamento"
             value={formData.loteamento}
-            onChange={(e) => handleInputChange("loteamento", e.target.value)}
+            onChange={(e) => handleInputChange("loteamento", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -182,7 +182,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="distrito"
             placeholder="Nome do distrito"
             value={formData.distrito}
-            onChange={(e) => handleInputChange("distrito", e.target.value)}
+            onChange={(e) => handleInputChange("distrito", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -192,7 +192,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="endereco"
             placeholder="Endereço completo"
             value={formData.endereco}
-            onChange={(e) => handleInputChange("endereco", e.target.value)}
+            onChange={(e) => handleInputChange("endereco", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -226,7 +226,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="proprietario"
             placeholder="Nome completo"
             value={formData.proprietario}
-            onChange={(e) => handleInputChange("proprietario", e.target.value)}
+            onChange={(e) => handleInputChange("proprietario", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>
@@ -236,7 +236,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             id="responsavel_tributario"
             placeholder="Nome"
             value={formData.responsavel_tributario || ""}
-            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value)}
+            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value.toUpperCase())}
             className={inputClassName}
           />
         </div>

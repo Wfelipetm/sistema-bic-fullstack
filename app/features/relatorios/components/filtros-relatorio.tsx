@@ -48,7 +48,7 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
     const fetchTecnicos = async () => {
       setLoadingTecnicos(true)
       try {
-        const response = await fetch("http://10.200.200.187:5001/tecnicos")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tecnicos`)
         const data = await response.json()
         setTecnicos(data)
       } catch (error) {
@@ -68,10 +68,8 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
   const handleBuscar = async () => {
     setLoading(true)
     try {
-      console.log("🔍 Buscando com filtros:", filtros)
       const dados = await buscarRelatorios(filtros)
       setRelatorios(dados)
-      console.log("Relatórios encontrados:", dados.length)
     } catch (error) {
       console.error("Erro ao buscar relatórios:", error)
       alert("Erro ao buscar relatórios. Verifique o console.")
@@ -91,7 +89,6 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
 
   const handlePreview = async (id: string) => {
     try {
-      console.log("🔍 Gerando preview para relatório:", id)
       const blob = await gerarRelatorioPDF(Number(id))
       if (!blob) {
         alert("Erro ao gerar o PDF do relatório")

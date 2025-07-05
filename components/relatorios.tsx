@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Printer, Download, Eye, Search, Filter, FileText } from "lucide-react"
+import { Printer, Download, Eye, Search, Filter, FileText, CheckCircle2, User, File } from "lucide-react"
 
 export default function Relatorios() {
   const [filtros, setFiltros] = useState({
@@ -86,17 +86,23 @@ export default function Relatorios() {
 
   const handlePrint = (relatorioId: string) => {
     window.print()
-    console.log(`Imprimindo relatório ${relatorioId}`)
   }
 
+  const { toast } = require("@/hooks/use-toast")
   const handleDownload = (relatorioId: string) => {
-    console.log(`Baixando relatório ${relatorioId}`)
-    alert(`Relatório ${relatorioId} baixado com sucesso!`)
+    toast({
+      title: "Download realizado",
+      description: `Relatório ${relatorioId} baixado com sucesso!`,
+      variant: "default"
+    })
   }
 
   const handlePreview = (relatorioId: string) => {
-    console.log(`Visualizando relatório ${relatorioId}`)
-    alert(`Abrindo visualização do relatório ${relatorioId}`)
+    toast({
+      title: "Visualização",
+      description: `Abrindo visualização do relatório ${relatorioId}`,
+      variant: "default"
+    })
   }
 
   const [activeView, setActiveView] = useState<"lista" | "formulario">("lista")
@@ -227,9 +233,9 @@ export default function Relatorios() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>📅 {relatorio.data}</span>
-                    <span>👤 {relatorio.tecnico}</span>
-                    <span>📁 {relatorio.tamanho}</span>
+                    <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-sky-600 inline" /> {relatorio.data}</span>
+                    <span className="inline-flex items-center gap-1"><User className="w-4 h-4 text-sky-600 inline" /> {relatorio.tecnico}</span>
+                    <span className="inline-flex items-center gap-1"><File className="w-4 h-4 text-sky-600 inline" /> {relatorio.tamanho}</span>
                     <Badge variant="outline" className={getTipoColor(relatorio.tipo)}>
                       {relatorio.tipo}
                     </Badge>

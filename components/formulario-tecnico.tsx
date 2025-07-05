@@ -108,7 +108,6 @@ export default function FormularioTecnico() {
   }
 
   const handleSave = () => {
-    console.log("Payload enviado:", { serventias: formData.serventias })
     alert("Formulário salvo com sucesso!")
   }
 

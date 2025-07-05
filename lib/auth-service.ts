@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://10.200.200.187:5001/auth'
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/auth`
 
 export interface LoginRequest {
     email: string

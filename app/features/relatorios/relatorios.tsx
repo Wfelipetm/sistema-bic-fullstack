@@ -7,7 +7,6 @@ import { FiltrosRelatorioCard } from "./components/filtros-relatorio"
 import { RelatoriosList } from "./components/relatorios-list"
 import RelatorioPrintTemplate from "./components/relatorio-print-template"
 
-import { mockRelatorios } from "@/app/constants/mock-data"
 import type { FiltrosRelatorio } from "@/app/types/relatorio"
 import type { ViewType } from "@/app/types/navigation"
 
@@ -28,7 +27,7 @@ export default function Relatorios({ setActiveView }: RelatoriosProps) {
   const [relatorios, setRelatorios] = useState([])
 
   useEffect(() => {
-    fetch("http://10.200.200.187:5001/relatorios")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/relatorios`)
       .then((res) => res.json())
       .then((data) => setRelatorios(data))
   }, [])
@@ -39,13 +38,11 @@ export default function Relatorios({ setActiveView }: RelatoriosProps) {
   }
 
   const handleDownload = (relatorioId: string) => {
-    console.log(`Baixando relatório ${relatorioId}`)
     alert(`Relatório ${relatorioId} baixado com sucesso!`)
   }
 
   const handlePrint = (relatorioId: string) => {
     window.print()
-    console.log(`Imprimindo relatório ${relatorioId}`)
   }
 
   return (

@@ -8,9 +8,9 @@ export async function gerarRelatorioPDF(id: number) {
   }
 
   // 1. Buscar dados da API
-  const response = await fetch(`http://10.200.200.187:5001/boletim/${id}/completo`);
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+  const response = await fetch(`${apiBaseUrl}/boletim/${id}/completo`);
   const data = await response.json();
-  console.log("DADOS DO ENDPOINT:", data);
 
   const doc = new jsPDF({ orientation: "landscape" });
   let y = 20;
@@ -537,17 +537,6 @@ export async function gerarRelatorioPDF(id: number) {
     y += 10;
   };
 
-  console.log("DEBUG PDF:", {
-    area_terreno: data.area_terreno,
-    area_testada: data.area_testada,
-    area_edificada: data.area_edificada,
-  });
-  console.log("Dados recebidos no PDF:", data);
-
-  opcoesServentia();
-  renderInfoConstrucao();
-  renderObservacoes();
-  renderLogradouroComPlaca();
-
+  // Removido bloco de debug e chamadas inválidas
   return doc.output("blob");
 }

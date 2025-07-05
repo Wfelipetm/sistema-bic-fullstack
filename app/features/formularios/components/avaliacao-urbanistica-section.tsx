@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
+import { Star, Sparkles, Zap, AlertTriangle, X, BarChart, Ban, Clock, Ruler, Square, Signpost, Pencil } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -24,11 +25,11 @@ export function AvaliacaoUrbanisticaSection({
   handleInputChange,
 }: AvaliacaoUrbanisticaSectionProps) {
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
-    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: "⭐" },
-    { value: "media", label: "Média", description: "Boa infraestrutura", icon: "🌟" },
-    { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: "⚡" },
-    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: "⚠️" },
-    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: "❌" },
+    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-yellow-400" /> },
+    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-yellow-300" /> },
+    { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: <Zap className="w-6 h-6 text-sky-400" /> },
+    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-orange-400" /> },
+    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-red-400" /> },
   ])
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export function AvaliacaoUrbanisticaSection({
               value: key,
               label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
               description: "",
-              icon: "📊",
+              icon: <BarChart className="w-6 h-6 text-sky-500" />,
             })),
           )
         }
@@ -66,7 +67,7 @@ export function AvaliacaoUrbanisticaSection({
         {/* Avaliação Urbanística do Logradouro */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl">📊</div>
+            <div className="text-2xl"><BarChart className="w-7 h-7 text-sky-500" /></div>
             <h4 className="text-xl font-bold text-sky-800">Avaliação Urbanística do Logradouro</h4>
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>
@@ -116,21 +117,21 @@ export function AvaliacaoUrbanisticaSection({
         {/* Calçamento */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl">🛣️</div>
+            <div className="text-2xl"><Square className="w-7 h-7 text-sky-500" /></div>
             <h4 className="text-xl font-bold text-sky-800">Calçamento</h4>
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             {[
-              { id: "sem_asfalto", label: "S/Asfalto", icon: "🚫", group: "tipo" },
-              { id: "asfaltada", label: "Asfaltada", icon: "🛣️", group: "tipo" },
-              { id: "novo", label: "Novo", icon: "✨", group: "tipo" },
-              { id: "antigo", label: "Antigo", icon: "⏳", group: "tipo" },
-              { id: "parte", label: "Parte", icon: "📏", group: "extensao" },
-              { id: "toda", label: "Toda", icon: "📐", group: "extensao" },
-              { id: "paralelo", label: "Paralelo", icon: "↔️", group: "extensao" },
-              { id: "bloco", label: "Bloco", icon: "🧱", group: "extensao" },
+              { id: "sem_asfalto", label: "S/Asfalto", icon: <Ban className="w-5 h-5 text-slate-400" />, group: "tipo" },
+              { id: "asfaltada", label: "Asfaltada", icon: <Square className="w-5 h-5 text-sky-500" />, group: "tipo" },
+              { id: "novo", label: "Novo", icon: <Sparkles className="w-5 h-5 text-yellow-400" />, group: "tipo" },
+              { id: "antigo", label: "Antigo", icon: <Clock className="w-5 h-5 text-orange-400" />, group: "tipo" },
+              { id: "parte", label: "Parte", icon: <Ruler className="w-5 h-5 text-sky-400" />, group: "extensao" },
+              { id: "toda", label: "Toda", icon: <Square className="w-5 h-5 text-sky-400" />, group: "extensao" },
+              { id: "paralelo", label: "Paralelo", icon: <Ruler className="w-5 h-5 text-sky-400 rotate-90" />, group: "extensao" },
+              { id: "bloco", label: "Bloco", icon: <Square className="w-5 h-5 text-orange-700" />, group: "extensao" },
             ].map((item, idx) => {
               const checked =
                 item.group === "tipo"
@@ -180,7 +181,7 @@ export function AvaliacaoUrbanisticaSection({
         {/* Logradouro com Placa */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-6">
-            <div className="text-3xl">🪧</div>
+            <div className="text-3xl"><Signpost className="w-8 h-8 text-sky-500" /></div>
             <div className="flex-1">
               <CheckboxField
                 id="logradouroComPlaca"
@@ -195,7 +196,7 @@ export function AvaliacaoUrbanisticaSection({
         {/* Observações */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl">📝</div>
+            <div className="text-2xl"><Pencil className="w-7 h-7 text-sky-500" /></div>
             <h4 className="text-xl font-bold text-sky-800">Observações</h4>
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>

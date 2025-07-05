@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
 import { situacaoAPI, caracterSoloAPI, topografiaAPI, nivelamentoAPI } from "@/lib/api-services"
+import { Landmark, Leaf, Mountain, Ruler } from "lucide-react"
 
 interface TerrenoSectionProps {
   formData: FormularioData
@@ -12,32 +13,32 @@ interface TerrenoSectionProps {
 
 export function TerrenoSection({ formData, handleNestedCheckboxChange }: TerrenoSectionProps) {
   const [situacaoOptions, setSituacaoOptions] = useState([
-    { id: "encravamento", label: "Encravamento", icon: "🏘️" },
-    { id: "vila", label: "Vila", icon: "🏡" },
-    { id: "meio_quadra", label: "Meio de Quadra", icon: "🏠" },
-    { id: "esquina", label: "Esquina", icon: "🔄" },
-    { id: "tres_frentes", label: "Três Frentes", icon: "🏢" },
-    { id: "toda_quadra", label: "Toda a Quadra", icon: "🏬" },
+    { id: "encravamento", label: "Encravamento", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
+    { id: "vila", label: "Vila", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
+    { id: "meio_quadra", label: "Meio de Quadra", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
+    { id: "esquina", label: "Esquina", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
+    { id: "tres_frentes", label: "Três Frentes", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
+    { id: "toda_quadra", label: "Toda a Quadra", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
   ])
 
   const [soloOptions, setSoloOptions] = useState([
-    { id: "alagadico", label: "Alagadiço", icon: "💧" },
-    { id: "arenoso", label: "Arenoso", icon: "🏖️" },
-    { id: "rochoso", label: "Rochoso", icon: "🪨" },
-    { id: "normal", label: "Normal", icon: "🌱" },
+    { id: "alagadico", label: "Alagadiço", icon: <Leaf className="w-6 h-6 text-sky-500" /> },
+    { id: "arenoso", label: "Arenoso", icon: <Leaf className="w-6 h-6 text-sky-500" /> },
+    { id: "rochoso", label: "Rochoso", icon: <Leaf className="w-6 h-6 text-sky-500" /> },
+    { id: "normal", label: "Normal", icon: <Leaf className="w-6 h-6 text-sky-500" /> },
   ])
 
   const [topografiaOptions, setTopografiaOptions] = useState([
-    { id: "aclive", label: "Aclive", icon: "⬆️" },
-    { id: "declive", label: "Declive", icon: "⬇️" },
-    { id: "encosta", label: "Encosta", icon: "🏔️" },
-    { id: "horizontal", label: "Horizontal", icon: "➡️" },
+    { id: "aclive", label: "Aclive", icon: <Mountain className="w-6 h-6 text-sky-500" /> },
+    { id: "declive", label: "Declive", icon: <Mountain className="w-6 h-6 text-sky-500" /> },
+    { id: "encosta", label: "Encosta", icon: <Mountain className="w-6 h-6 text-sky-500" /> },
+    { id: "horizontal", label: "Horizontal", icon: <Mountain className="w-6 h-6 text-sky-500" /> },
   ])
 
   const [nivelamentoOptions, setNivelamentoOptions] = useState([
-    { id: "abaixoNivel", label: "Abaixo do Nível da Rua", icon: "⬇️" },
-    { id: "aoNivel", label: "Ao Nível da Rua", icon: "➡️" },
-    { id: "acimaNivel", label: "Acima do Nível da Rua", icon: "⬆️" },
+    { id: "abaixoNivel", label: "Abaixo do Nível da Rua", icon: <Ruler className="w-6 h-6 text-sky-500" /> },
+    { id: "aoNivel", label: "Ao Nível da Rua", icon: <Ruler className="w-6 h-6 text-sky-500" /> },
+    { id: "acimaNivel", label: "Acima do Nível da Rua", icon: <Ruler className="w-6 h-6 text-sky-500" /> },
   ])
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
           keys.map((key, idx) => ({
             id: key,
             label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-            icon: "📍",
+            icon: <Landmark className="w-6 h-6 text-sky-500" />,
           })),
         )
       }
@@ -61,7 +62,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
           keys.map((key, idx) => ({
             id: key,
             label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-            icon: "🌍",
+            icon: <Leaf className="w-6 h-6 text-sky-500" />,
           })),
         )
       }
@@ -74,7 +75,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
           keys.map((key, idx) => ({
             id: key,
             label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-            icon: "🗻",
+            icon: <Mountain className="w-6 h-6 text-sky-500" />,
           })),
         )
       }
@@ -87,7 +88,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
           keys.map((key, idx) => ({
             id: key,
             label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-            icon: "📏",
+            icon: <Ruler className="w-6 h-6 text-sky-500" />,
           })),
         )
       }
@@ -105,7 +106,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
     options: any[]
     subsection: string
     gridCols?: string
-    icon: string
+    icon: React.ReactNode
   }) => (
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
       <div className="flex items-center gap-3 mb-6">
@@ -186,7 +187,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         options={situacaoOptions}
         subsection="situacao"
         gridCols="lg:grid-cols-3 xl:grid-cols-6"
-        icon="📍"
+        icon={<Landmark className="w-6 h-6 text-sky-500" />}
       />
 
       <SectionCard
@@ -194,7 +195,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         options={soloOptions}
         subsection="caracteristicasSolo"
         gridCols="lg:grid-cols-4"
-        icon="🌍"
+        icon={<Leaf className="w-6 h-6 text-sky-500" />}
       />
 
       <SectionCard
@@ -202,7 +203,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         options={topografiaOptions}
         subsection="topografia"
         gridCols="lg:grid-cols-4"
-        icon="🗻"
+        icon={<Mountain className="w-6 h-6 text-sky-500" />}
       />
 
       <SectionCard
@@ -210,7 +211,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         options={nivelamentoOptions}
         subsection="nivelamento"
         gridCols="lg:grid-cols-3"
-        icon="📏"
+        icon={<Ruler className="w-6 h-6 text-sky-500" />}
       />
     </div>
   )

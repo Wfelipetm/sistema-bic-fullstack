@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Save, ChevronLeft, ChevronRight } from "lucide-react";
@@ -390,16 +391,12 @@ export default function FormularioTecnico() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      console.log("🚀 FormData completo:", formData);
-      console.log(
-        "🎯 tecnicoId:",
-        formData.tecnicoId,
-        "tipo:",
-        typeof formData.tecnicoId
-      );
-
       if (!formData.tecnicoId) {
-        alert("Por favor, selecione um técnico responsável");
+        toast({
+          title: "Atenção",
+          description: "Por favor, selecione um técnico responsável.",
+          variant: "destructive"
+        });
         return;
       }
 
@@ -502,20 +499,9 @@ export default function FormularioTecnico() {
         ),
         serventiasAPI.create(formData.serventias),
         pisoAPI.create(sanitizeBooleans(formData.construcao.piso)),
-        obsLogradouroAPI.create(obsLogradouroPayload).then((res) => {
-          console.log(
-            "✅ obsLogradouro enviado:",
-            obsLogradouroPayload,
-            "Resposta:",
-            res
-          );
-          return res;
-        }),
+        obsLogradouroAPI.create(obsLogradouroPayload),
         nivelamentoAPI.create(sanitizeBooleans(formData.terreno.nivelamento)),
-        forroAPI.create({ forro: sanitizeBooleans(formData.construcao.forro) }).then(res => {
-          console.log('✅ ✅ ✅ ✅ forroAPI response:', res);
-          return res;
-        }),
+        forroAPI.create({ forro: sanitizeBooleans(formData.construcao.forro) }),
         esquadrilhaAPI.create(sanitizeBooleans(formData.construcao.esquadrias)),
         coberturaAPI.create(sanitizeBooleans(formData.construcao.cobertura)),
         calcamentoAPI.create({
@@ -598,10 +584,17 @@ export default function FormularioTecnico() {
       );
       await serventiasAPI.create({ ...formData.serventias });
 
-      alert("Formulário BIC salvo com sucesso!");
+      toast({
+        title: "Sucesso",
+        description: "Formulário BIC salvo com sucesso!",
+        variant: "default"
+      });
     } catch (e) {
-      console.error("Erro completo:", e);
-      alert("Erro ao salvar o formulário!");
+      toast({
+        title: "Erro",
+        description: "Erro ao salvar o formulário!",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }

@@ -1,17 +1,4 @@
-import type { UserProfile } from "@/types/user"
-import type { Relatorio } from "@/types/relatorio"
 
-export const currentUser: UserProfile = {
-  id: "1",
-  name: "João Silva",
-  email: "joao.silva@bic.com",
-  role: "Técnico em Edificações",
-  crea: "12345",
-}
-
-export const mockRelatorios: Relatorio[] = [
-
-]
 
 export const dashboardStats = [
   {

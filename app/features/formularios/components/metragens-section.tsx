@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
+import { Ruler, Home, Mountain } from "lucide-react"
 
 interface MetragensSectionProps {
   formData: FormularioData
@@ -27,7 +28,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
       label: "Área do Terreno",
       placeholder: "0,00",
       unit: "m²",
-      icon: "🏞️",
+      icon: <Mountain className="w-7 h-7" />,
       description: "Área total do terreno",
     },
     {
@@ -35,7 +36,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
       label: "Testada",
       placeholder: "0,00",
       unit: "m",
-      icon: "📏",
+      icon: <Ruler className="w-7 h-7" />,
       description: "Frente do terreno",
     },
     {
@@ -43,7 +44,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
       label: "Área Edificada",
       placeholder: "0,00",
       unit: "m²",
-      icon: "🏠",
+      icon: <Home className="w-7 h-7" />,
       description: "Área construída",
     },
   ]
@@ -84,7 +85,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
             </div>
 
             {/* Ícone */}
-            <div className="text-3xl mb-4 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="mb-4 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
               {item.icon}
             </div>
 

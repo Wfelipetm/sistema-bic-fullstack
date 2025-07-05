@@ -1,6 +1,6 @@
 import type { FiltrosRelatorio } from "@/app/types/relatorio"
 
-const API_BASE_URL = "http://10.200.200.187:5001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"
 
 export async function buscarRelatorios(filtros: FiltrosRelatorio) {
   try {
@@ -20,19 +20,16 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
       url += `?${params.toString()}`
     }
 
-    console.log("🔍 Buscando relatórios:", url)
-    
+
     let response = await fetch(url)
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.status}`)
     }
-    
+
     let boletins = await response.json()
-    console.log("📊 Boletins recebidos:", boletins.length)
 
     // Filtrar por status se não for "all"
     if (filtros.status && filtros.status !== "all") {
-      console.log("🎯 Filtrando por status:", filtros.status)
       try {
         const statusResponse = await fetch(`${API_BASE_URL}/relatorios/status/${filtros.status}`)
         if (statusResponse.ok) {
@@ -47,7 +44,6 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
 
     // Filtrar por técnico se não for "all"
     if (filtros.tecnico && filtros.tecnico !== "all") {
-      console.log("👨‍💼 Filtrando por técnico:", filtros.tecnico)
       try {
         const tecnicoResponse = await fetch(`${API_BASE_URL}/tecnicos/${filtros.tecnico}/boletins`)
         if (tecnicoResponse.ok) {
@@ -60,7 +56,6 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
       }
     }
 
-    console.log("✅ Relatórios filtrados:", boletins.length)
     return boletins
 
   } catch (error) {

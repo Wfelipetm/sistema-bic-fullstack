@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
+import { Sofa, Bed, Utensils, ChefHat, ShowerHead, Car, Home, DoorOpen, Building2, Warehouse } from "lucide-react"
 
 interface ServentiasSectionProps {
   formData: FormularioData
@@ -10,16 +11,16 @@ interface ServentiasSectionProps {
 }
 
 const defaultServentias = [
-  { id: "sala", label: "Sala", icon: "🛋️" },
-  { id: "quarto", label: "Quarto", icon: "🛏️" },
-  { id: "copa", label: "Copa", icon: "🍽️" },
-  { id: "cozinha", label: "Cozinha", icon: "👩‍🍳" },
-  { id: "banheiro", label: "Banheiro", icon: "🚿" },
-  { id: "garagem", label: "Garagem", icon: "🚗" },
-  { id: "varanda", label: "Varanda", icon: "🏡" },
-  { id: "corredor", label: "Corredor", icon: "🚪" },
-  { id: "area", label: "Área", icon: "🏠" },
-  { id: "porao_habital", label: "Porão Habital", icon: "🏠" },
+  { id: "sala", label: "Sala", icon: Sofa },
+  { id: "quarto", label: "Quarto", icon: Bed },
+  { id: "copa", label: "Copa", icon: Utensils },
+  { id: "cozinha", label: "Cozinha", icon: ChefHat },
+  { id: "banheiro", label: "Banheiro", icon: ShowerHead },
+  { id: "garagem", label: "Garagem", icon: Car },
+  { id: "varanda", label: "Varanda", icon: Home },
+  { id: "corredor", label: "Corredor", icon: DoorOpen },
+  { id: "area", label: "Área", icon: Building2 },
+  { id: "porao_habital", label: "Porão Habital", icon: Warehouse },
 ]
 
 export function ServentiasSection({ formData, handleNestedInputChange }: ServentiasSectionProps) {
@@ -37,7 +38,7 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
             keys.map((key, idx) => ({
               id: key,
               label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-              icon: "🏠",
+              icon: Building2,
             })),
           )
         } else {
@@ -84,7 +85,9 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
 
             {/* Ícone */}
             <div className="text-3xl mb-4 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
-              {item.icon}
+              {item.icon && typeof item.icon === 'function' ? (
+                <item.icon className="w-8 h-8 mx-auto text-sky-500" />
+              ) : null}
             </div>
 
             {/* Label */}

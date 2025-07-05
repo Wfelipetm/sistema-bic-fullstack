@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
+import { Car, Lightbulb, Droplet, Trash2, Clipboard } from "lucide-react"
 
 interface LogradouroSectionProps {
   formData: FormularioData
@@ -13,7 +14,6 @@ interface LogradouroSectionProps {
 export function LogradouroSection({ formData, handleCheckboxChange }: LogradouroSectionProps) {
   // Depuração: veja o estado do formulário sempre que ele mudar
   useEffect(() => {
-    console.log("formData (LogradouroSection):", formData)
   }, [formData])
 
   const [logradouroItems, setLogradouroItems] = useState([
@@ -21,31 +21,31 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
       id: "pavimentacao",
       label: "Pavimentação",
       description: "Via pavimentada com asfalto ou concreto",
-      icon: "🛣️",
+      icon: <Car className="w-7 h-7" />, // Carro como alternativa para "pavimentação"
     },
     {
       id: "iluminacaoPublica",
       label: "Iluminação Pública",
       description: "Sistema de iluminação adequado",
-      icon: "💡",
+      icon: <Lightbulb className="w-7 h-7" />,
     },
     {
       id: "redeEsgoto",
       label: "Rede de Esgoto",
       description: "Sistema de esgotamento sanitário",
-      icon: "🚰",
+      icon: <Droplet className="w-7 h-7" />,
     },
     {
       id: "redeAgua",
       label: "Rede de Água",
       description: "Abastecimento de água tratada",
-      icon: "💧",
+      icon: <Droplet className="w-7 h-7" />,
     },
     {
       id: "coletaLixo",
       label: "Coleta de Lixo",
       description: "Serviço regular de coleta",
-      icon: "🗑️",
+      icon: <Trash2 className="w-7 h-7" />,
     },
   ])
 
@@ -62,7 +62,7 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
               id: key,
               label: key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
               description: "",
-              icon: "📋",
+              icon: <Clipboard className="w-7 h-7" />,
             })),
           )
         }
@@ -106,7 +106,7 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
             </div>
 
             {/* Ícone */}
-            <div className="text-2xl mb-3 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="mb-3 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
               {item.icon}
             </div>
 
