@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
 import { situacaoAPI, caracterSoloAPI, topografiaAPI, nivelamentoAPI } from "@/lib/api-services"
@@ -12,6 +12,73 @@ interface TerrenoSectionProps {
 }
 
 export function TerrenoSection({ formData, handleNestedCheckboxChange }: TerrenoSectionProps) {
+  // Ref para drag-scroll do carrossel
+  const dragScrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  useEffect(() => {
+    const slider = dragScrollRef.current;
+    if (!slider) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isDragging.current = true;
+      slider.classList.add('scrolling');
+      startX.current = e.pageX - slider.offsetLeft;
+      scrollLeft.current = slider.scrollLeft;
+    };
+    const handleMouseLeave = () => {
+      isDragging.current = false;
+      slider.classList.remove('scrolling');
+    };
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      slider.classList.remove('scrolling');
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX.current) * 1.2;
+      slider.scrollLeft = scrollLeft.current - walk;
+    };
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mousemove', handleMouseMove);
+
+    // Touch events
+    let touchStartX = 0;
+    let touchScrollLeft = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      isDragging.current = true;
+      touchStartX = e.touches[0].pageX - slider.offsetLeft;
+      touchScrollLeft = slider.scrollLeft;
+    };
+    const handleTouchEnd = () => {
+      isDragging.current = false;
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging.current) return;
+      const x = e.touches[0].pageX - slider.offsetLeft;
+      const walk = (x - touchStartX) * 1.2;
+      slider.scrollLeft = touchScrollLeft - walk;
+    };
+    slider.addEventListener('touchstart', handleTouchStart);
+    slider.addEventListener('touchend', handleTouchEnd);
+    slider.addEventListener('touchmove', handleTouchMove);
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mousemove', handleMouseMove);
+      slider.removeEventListener('touchstart', handleTouchStart);
+      slider.removeEventListener('touchend', handleTouchEnd);
+      slider.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
   const [situacaoOptions, setSituacaoOptions] = useState([
     { id: "encravamento", label: "Encravamento", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
     { id: "vila", label: "Vila", icon: <Landmark className="w-6 h-6 text-sky-500" /> },
@@ -95,33 +162,81 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
     })
   }, [])
 
-  const SectionCard = ({
-    title,
-    options,
-    subsection,
-    gridCols = "lg:grid-cols-3",
-    icon,
-  }: {
-    title: string
-    options: any[]
-    subsection: string
-    gridCols?: string
-    icon: React.ReactNode
-  }) => (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="text-2xl">{icon}</div>
-        <h4 className="text-xl font-bold text-sky-800">{title}</h4>
-        <div className="flex-1 h-px bg-sky-200"></div>
-      </div>
+  // Carrossel horizontal para opções dentro de cada card
+  function OptionsCarousel({ options, subsection }: { options: any[]; subsection: string }) {
+    const optionsRef = useRef<HTMLDivElement>(null);
+    const isDragging = useRef(false);
+    const startX = useRef(0);
+    const scrollLeft = useRef(0);
 
-      <div className={`grid grid-cols-1 md:grid-cols-2 ${gridCols} gap-4`}>
+    useEffect(() => {
+      const slider = optionsRef.current;
+      if (!slider) return;
+      const handleMouseDown = (e: MouseEvent) => {
+        isDragging.current = true;
+        slider.classList.add('scrolling');
+        startX.current = e.pageX - slider.offsetLeft;
+        scrollLeft.current = slider.scrollLeft;
+      };
+      const handleMouseLeave = () => {
+        isDragging.current = false;
+        slider.classList.remove('scrolling');
+      };
+      const handleMouseUp = () => {
+        isDragging.current = false;
+        slider.classList.remove('scrolling');
+      };
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging.current) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX.current) * 1.2;
+        slider.scrollLeft = scrollLeft.current - walk;
+      };
+      slider.addEventListener('mousedown', handleMouseDown);
+      slider.addEventListener('mouseleave', handleMouseLeave);
+      slider.addEventListener('mouseup', handleMouseUp);
+      slider.addEventListener('mousemove', handleMouseMove);
+      // Touch events
+      let touchStartX = 0;
+      let touchScrollLeft = 0;
+      const handleTouchStart = (e: TouchEvent) => {
+        isDragging.current = true;
+        touchStartX = e.touches[0].pageX - slider.offsetLeft;
+        touchScrollLeft = slider.scrollLeft;
+      };
+      const handleTouchEnd = () => {
+        isDragging.current = false;
+      };
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!isDragging.current) return;
+        const x = e.touches[0].pageX - slider.offsetLeft;
+        const walk = (x - touchStartX) * 1.2;
+        slider.scrollLeft = touchScrollLeft - walk;
+      };
+      slider.addEventListener('touchstart', handleTouchStart);
+      slider.addEventListener('touchend', handleTouchEnd);
+      slider.addEventListener('touchmove', handleTouchMove);
+      return () => {
+        slider.removeEventListener('mousedown', handleMouseDown);
+        slider.removeEventListener('mouseleave', handleMouseLeave);
+        slider.removeEventListener('mouseup', handleMouseUp);
+        slider.removeEventListener('mousemove', handleMouseMove);
+        slider.removeEventListener('touchstart', handleTouchStart);
+        slider.removeEventListener('touchend', handleTouchEnd);
+        slider.removeEventListener('touchmove', handleTouchMove);
+      };
+    }, []);
+    return (
+      <div
+        ref={optionsRef}
+        className="overflow-x-auto flex gap-4 hide-scrollbar pb-2 cursor-grab"
+        style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
+      >
         {options.map((item, index) => (
           <div
             key={item.id}
-            className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 
-                       hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5
-                       transition-all duration-300 ease-in-out cursor-pointer"
+            className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 min-w-[200px] max-w-[220px] flex-shrink-0 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
             onClick={() =>
               handleNestedCheckboxChange(
                 "terreno",
@@ -131,35 +246,21 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
               )
             }
           >
-            <div
-              className="absolute -top-2 -left-2 w-6 h-6 bg-sky-500 text-white rounded-full 
-                         flex items-center justify-center text-xs font-bold shadow-md
-                         group-hover:bg-sky-600 transition-colors duration-200"
-            >
-              {index + 1}
-            </div>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-2">
               <div className="text-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                 {item.icon}
               </div>
-              <div className="flex-1">
-                <CheckboxField
-                  id={item.id}
-                  label={
-                    <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
-                      {item.label}
-                    </span>
-                  }
-                  description=""
-                  checked={
-                    (formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]
-                  }
-                  onCheckedChange={(checked) => handleNestedCheckboxChange("terreno", subsection, item.id, checked)}
-                />
-              </div>
+              <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
+                {item.label}
+              </span>
             </div>
-
+            <CheckboxField
+              id={item.id}
+              label={null}
+              description=""
+              checked={(formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]}
+              onCheckedChange={(checked) => handleNestedCheckboxChange("terreno", subsection, item.id, checked)}
+            />
             <div
               className={`absolute inset-0 rounded-xl border-2 pointer-events-none transition-all duration-200 ${
                 (formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]
@@ -170,49 +271,51 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
           </div>
         ))}
       </div>
-    </div>
-  )
+    );
+  }
 
   return (
-    <div className="space-y-8">
-      {/* Header da seção */}
-      {/* <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
-        <h2 className="text-2xl font-bold text-sky-800 mb-2">Características do Terreno</h2>
-        <p className="text-sm text-sky-600 mb-4">Selecione as características que descrevem o terreno</p>
-        <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
-      </div> */}
-
-      <SectionCard
-        title="Situação"
-        options={situacaoOptions}
-        subsection="situacao"
-        gridCols="lg:grid-cols-3 xl:grid-cols-6"
-        icon={<Landmark className="w-6 h-6 text-sky-500" />}
-      />
-
-      <SectionCard
-        title="Características do Solo"
-        options={soloOptions}
-        subsection="caracteristicasSolo"
-        gridCols="lg:grid-cols-4"
-        icon={<Leaf className="w-6 h-6 text-sky-500" />}
-      />
-
-      <SectionCard
-        title="Topografia"
-        options={topografiaOptions}
-        subsection="topografia"
-        gridCols="lg:grid-cols-4"
-        icon={<Mountain className="w-6 h-6 text-sky-500" />}
-      />
-
-      <SectionCard
-        title="Nivelamento"
-        options={nivelamentoOptions}
-        subsection="nivelamento"
-        gridCols="lg:grid-cols-3"
-        icon={<Ruler className="w-6 h-6 text-sky-500" />}
-      />
+    <div className="w-full max-w-[1500px] mx-auto">
+      <div
+        ref={dragScrollRef}
+        className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
+        style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
+      >
+        <div className="flex flex-nowrap gap-8 min-w-0">
+          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-2xl"><Landmark className="w-6 h-6 text-sky-500" /></div>
+              <h4 className="text-xl font-bold text-sky-800">Situação</h4>
+              <div className="flex-1 h-px bg-sky-200"></div>
+            </div>
+            <OptionsCarousel options={situacaoOptions} subsection="situacao" />
+          </div>
+          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-2xl"><Leaf className="w-6 h-6 text-sky-500" /></div>
+              <h4 className="text-xl font-bold text-sky-800">Características do Solo</h4>
+              <div className="flex-1 h-px bg-sky-200"></div>
+            </div>
+            <OptionsCarousel options={soloOptions} subsection="caracteristicasSolo" />
+          </div>
+          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-2xl"><Mountain className="w-6 h-6 text-sky-500" /></div>
+              <h4 className="text-xl font-bold text-sky-800">Topografia</h4>
+              <div className="flex-1 h-px bg-sky-200"></div>
+            </div>
+            <OptionsCarousel options={topografiaOptions} subsection="topografia" />
+          </div>
+          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-2xl"><Ruler className="w-6 h-6 text-sky-500" /></div>
+              <h4 className="text-xl font-bold text-sky-800">Nivelamento</h4>
+              <div className="flex-1 h-px bg-sky-200"></div>
+            </div>
+            <OptionsCarousel options={nivelamentoOptions} subsection="nivelamento" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

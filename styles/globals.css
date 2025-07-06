@@ -101,9 +101,11 @@ body {
   width: 8px;
   background: transparent;
 }
+
 *::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
 * {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
