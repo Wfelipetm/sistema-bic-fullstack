@@ -4,7 +4,7 @@ export interface FiltrosRelatorio {
   dataInicio: string
   dataFim: string
   status: string
-  tecnico: string
+  inscricao: string
 }
 
 export interface Relatorio {

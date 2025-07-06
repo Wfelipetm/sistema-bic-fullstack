@@ -18,11 +18,6 @@ import type { FiltrosRelatorio } from "@/app/types/relatorio"
 import { buscarRelatorios } from "../services/relatorio-service"
 import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf"
 
-interface Tecnico {
-  id: number
-  nome: string
-}
-
 interface Relatorio {
   id: number
   inscricao: string
@@ -47,41 +42,40 @@ interface FiltrosRelatorioCardProps {
 
 export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCardProps) {
   const { toast } = useToast();
-  const [tecnicos, setTecnicos] = useState<Tecnico[]>([])
-  const [loadingTecnicos, setLoadingTecnicos] = useState(false)
   const [relatorios, setRelatorios] = useState<Relatorio[]>([])
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const relatoriosPorPagina = 10
+  const relatoriosPorPagina = 1
   const totalPaginas = Math.ceil(relatorios.length / relatoriosPorPagina)
 
-  // Carregar técnicos da API
+  // Novo: salvar último relatório em cache localStorage
   useEffect(() => {
-    const fetchTecnicos = async () => {
-      setLoadingTecnicos(true)
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tecnicos`)
-        const data = await response.json()
-        setTecnicos(data)
-      } catch (error) {
-        console.error("Erro ao buscar técnicos:", error)
-      } finally {
-        setLoadingTecnicos(false)
-      }
+    if (relatorios.length > 0) {
+      localStorage.setItem("ultimoRelatorioExemplo", JSON.stringify(relatorios[0]))
     }
-    fetchTecnicos()
-  }, [])
+  }, [relatorios])
 
-  // Buscar relatórios iniciais
-  useEffect(() => {
-    handleBuscar()
-  }, [])
+  // Não buscar relatórios iniciais automaticamente
+
+  // Permitir buscar pelo Enter no campo de inscrição
+  const handleInscricaoKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleBuscar();
+    }
+  }
 
   const handleBuscar = async () => {
+    // Só busca se o campo de inscrição estiver preenchido exatamente
+    if (!filtros.inscricao || filtros.inscricao.trim() === "") {
+      setRelatorios([])
+      return;
+    }
     setLoading(true)
     try {
       const dados = await buscarRelatorios(filtros)
-      setRelatorios(dados)
+      // Só mostra se houver correspondência exata
+      const exatos = dados.filter((r: Relatorio) => r.inscricao === filtros.inscricao)
+      setRelatorios(exatos)
     } catch (error) {
       console.error("Erro ao buscar relatórios:", error)
       alert("Erro ao buscar relatórios. Verifique o console.")
@@ -95,8 +89,9 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
       dataInicio: "",
       dataFim: "",
       status: "all",
-      tecnico: "all",
+      inscricao: "",
     })
+    setRelatorios([])
   }
 
   const handlePreview = async (id: string) => {
@@ -150,7 +145,7 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
         <div className="bg-white rounded-2xl shadow-lg border border-sky-100 p-4 sm:p-6 md:p-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-sky-800 mb-2">Filtros de Busca</h2>
-            <p className="text-sky-600">Filtre os relatórios por data, status ou técnico responsável</p>
+            <p className="text-sky-600">Filtre os relatórios por data, status ou número de inscrição</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
@@ -181,29 +176,18 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tecnico" className="text-sm font-medium text-sky-700">
-                Técnico
+              <Label htmlFor="inscricao" className="text-sm font-medium text-sky-700">
+                Nº Inscrição
               </Label>
-              <Select
-                value={filtros.tecnico}
-                onValueChange={(value) => setFiltros({ ...filtros, tecnico: value })}
-                disabled={loadingTecnicos}
-              >
-                <SelectTrigger className={selectClassName}>
-                  <SelectValue 
-                    placeholder={loadingTecnicos ? "Carregando..." : "Todos os técnicos"}
-                    className="text-sky-700 placeholder:text-sky-400" 
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all" className="text-sky-700">Todos os técnicos</SelectItem>
-                  {tecnicos.map((tecnico) => (
-                    <SelectItem key={tecnico.id} value={tecnico.id.toString()} className="text-sky-700">
-                      {tecnico.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                id="inscricao"
+                type="text"
+                placeholder="Digite o número da inscrição"
+                value={filtros.inscricao || ""}
+                onChange={(e) => setFiltros({ ...filtros, inscricao: e.target.value })}
+                onKeyDown={handleInscricaoKeyDown}
+                className={inputClassName}
+              />
             </div>
           </div>
 
@@ -255,113 +239,115 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
             </div>
           )}
 
-          {!loading && relatorios.length > 0 && (
-            <>
-              <div className="space-y-4">
-                {relatorios
-                  .slice((currentPage - 1) * relatoriosPorPagina, currentPage * relatoriosPorPagina)
-                  .map((relatorio) => (
-                    <div
-                      key={relatorio.id ?? Math.random()}
-                      className="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border border-sky-100 p-6 
-                                 hover:shadow-md hover:border-sky-200 transition-all duration-200"
-                    >
-                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                        <div className="flex-1">
-                          {/* Header do relatório */}
-                          <div className="flex items-center gap-3 sm:gap-4 mb-4">
-                            <div className="p-3 bg-sky-500 rounded-xl">
-                              <FileText className="h-6 w-6 text-white" />
-                            </div>
-                            <div>
-                              <h3 className="text-lg sm:text-xl font-bold text-sky-800">Relatório Técnico Nº {relatorio.inscricao}</h3>
-                              <div className="flex flex-wrap items-center gap-2 text-sky-600 text-xs sm:text-sm">
-                                <span>{relatorio.endereco}</span>
-                                {relatorio.cep && (
-                                  <>
-                                    <span>•</span>
-                                    <span
-                                      className="inline-flex items-center gap-1 cursor-pointer group hover:text-sky-800 transition-colors font-semibold"
-                                      tabIndex={0}
-                                      onClick={() => {
-                                        if (relatorio.cep) {
-                                          window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
-                                        }
-                                      }}
-                                      onKeyDown={e => {
-                                        if ((e.key === 'Enter' || e.key === ' ') && relatorio.cep) {
-                                          window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
-                                        }
-                                      }}
-                                      onMouseEnter={() => toast({
-                                        title: "Abrir no Google Maps",
-                                        description: "Clique para ver o endereço no mapa.",
-                                        duration: 2000,
-                                      })}
-                                    >
-                                      Ver no Maps
-                                      <MapPin className="h-4 w-4 text-red-500 group-hover:text-red-700 transition-colors" />
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                            </div>
+          {/* Mostra relatório(s) ou exemplo em cache */}
+          {!loading && (relatorios.length > 0 || localStorage.getItem("ultimoRelatorioExemplo")) && (
+            <div className="space-y-4">
+              {(relatorios.length > 0
+                ? relatorios.slice((currentPage - 1) * relatoriosPorPagina, currentPage * relatoriosPorPagina)
+                : [JSON.parse(localStorage.getItem("ultimoRelatorioExemplo") || "{}")]
+              ).map((relatorio, idx) =>
+                relatorio && relatorio.id ? (
+                  <div
+                    key={relatorio.id ?? idx}
+                    className="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border border-sky-100 p-6 
+                               hover:shadow-md hover:border-sky-200 transition-all duration-200"
+                  >
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        {/* Header do relatório */}
+                        <div className="flex items-center gap-3 sm:gap-4 mb-4">
+                          <div className="p-3 bg-sky-500 rounded-xl">
+                            <FileText className="h-6 w-6 text-white" />
                           </div>
-
-                          {/* Informações do relatório */}
-                          <div className="flex flex-col gap-1 text-slate-600 text-xs sm:text-sm mt-4 md:mt-0 md:ml-12 xl:ml-16">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-sky-500" />
-                              <span className="font-medium">Data:</span>
-                              <span>{new Date(relatorio.created_at).toLocaleDateString("pt-BR")}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <User className="h-4 w-4 text-sky-500" />
-                              <span className="font-medium">Proprietário:</span>
-                              <span>{relatorio.proprietario || "Não informado"}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-sky-500" />
-                              <span className="font-medium">Contato:</span>
-                              {relatorio.contato ? (
-                                <a
-                                  href={`https://wa.me/55${relatorio.contato.replace(/\D/g, "")}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-sky-700 hover:text-green-600 font-semibold transition-colors flex items-center gap-1"
-                                  title="Conversar no WhatsApp"
-                                >
-                                  {relatorio.contato}
-                                  <WhatsappIcon className="h-4 w-4 text-green-500" />
-                                </a>
-                              ) : (
-                                <span>Não informado</span>
+                          <div>
+                            <h3 className="text-lg sm:text-xl font-bold text-sky-800">Relatório Nº {relatorio.inscricao}</h3>
+                            <div className="flex flex-wrap items-center gap-2 text-sky-600 text-xs sm:text-sm">
+                              <span>{relatorio.endereco}</span>
+                              {relatorio.cep && (
+                                <>
+                                  <span>•</span>
+                                  <span
+                                    className="inline-flex items-center gap-1 cursor-pointer group hover:text-sky-800 transition-colors font-semibold"
+                                    tabIndex={0}
+                                    onClick={() => {
+                                      if (relatorio.cep) {
+                                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
+                                      }
+                                    }}
+                                    onKeyDown={e => {
+                                      if ((e.key === 'Enter' || e.key === ' ') && relatorio.cep) {
+                                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
+                                      }
+                                    }}
+                                    onMouseEnter={() => toast({
+                                      title: "Abrir no Google Maps",
+                                      description: "Clique para ver o endereço no mapa.",
+                                      duration: 2000,
+                                    })}
+                                  >
+                                    Ver no Maps
+                                    <MapPin className="h-4 w-4 text-red-500 group-hover:text-red-700 transition-colors" />
+                                  </span>
+                                </>
                               )}
                             </div>
-                            <div className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4 text-sky-500" />
-                              <span className="font-medium">Lote/Quadra:</span>
-                              <span>{relatorio.lote}/{relatorio.quadra}</span>
-                            </div>
                           </div>
                         </div>
 
-                        {/* Botão de ação */}
-                        <div className="mt-4 md:mt-0 md:ml-6 w-full md:w-auto">
-                          <Button
-                            onClick={() => handlePreview(relatorio.id.toString())}
-                            className="bg-sky-600 hover:bg-sky-700 text-white w-full md:w-auto px-6 py-3 rounded-xl font-semibold"
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            Visualizar
-                          </Button>
+                        {/* Informações do relatório */}
+                        <div className="flex flex-col gap-1 text-slate-600 text-xs sm:text-sm mt-4 md:mt-0 md:ml-12 xl:ml-16">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-sky-500" />
+                            <span className="font-medium">Data:</span>
+                            <span>{relatorio.created_at ? new Date(relatorio.created_at).toLocaleDateString("pt-BR") : "-"}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-sky-500" />
+                            <span className="font-medium">Proprietário:</span>
+                            <span>{relatorio.proprietario || "Não informado"}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-4 w-4 text-sky-500" />
+                            <span className="font-medium">Contato:</span>
+                            {relatorio.contato ? (
+                              <a
+                                href={`https://wa.me/55${relatorio.contato.replace(/\D/g, "")}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sky-700 hover:text-green-600 font-semibold transition-colors flex items-center gap-1"
+                                title="Conversar no WhatsApp"
+                              >
+                                {relatorio.contato}
+                                <WhatsappIcon className="h-4 w-4 text-green-500" />
+                              </a>
+                            ) : (
+                              <span>Não informado</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-sky-500" />
+                            <span className="font-medium">Lote/Quadra:</span>
+                            <span>{relatorio.lote}/{relatorio.quadra}</span>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Botão de ação */}
+                      <div className="mt-4 md:mt-0 md:ml-6 w-full md:w-auto">
+                        <Button
+                          onClick={() => handlePreview(relatorio.id.toString())}
+                          className="bg-sky-600 hover:bg-sky-700 text-white w-full md:w-auto px-6 py-3 rounded-xl font-semibold"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Visualizar
+                        </Button>
+                      </div>
                     </div>
-                  ))}
-              </div>
-              {/* Paginação */}
-              {totalPaginas > 1 && (
+                  </div>
+                ) : null
+              )}
+              {/* Paginação só se houver mais de 1 resultado */}
+              {relatorios.length > 1 && totalPaginas > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-8">
                   <button
                     className="p-2 rounded-full hover:bg-sky-100 disabled:opacity-50"
@@ -390,10 +376,11 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                   </button>
                 </div>
               )}
-            </>
+            </div>
           )}
 
-          {!loading && relatorios.length === 0 && (
+          {/* Mensagem padrão só se não houver nada nem em cache */}
+          {!loading && relatorios.length === 0 && !localStorage.getItem("ultimoRelatorioExemplo") && (
             <div className="text-center py-10 sm:py-16">
               <div className="p-4 bg-sky-100 rounded-full w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 flex items-center justify-center">
                 <Search className="h-8 w-8 sm:h-10 sm:w-10 text-sky-600" />

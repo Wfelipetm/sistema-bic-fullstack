@@ -42,18 +42,15 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
       }
     }
 
-    // Filtrar por técnico se não for "all"
-    if (filtros.tecnico && filtros.tecnico !== "all") {
-      try {
-        const tecnicoResponse = await fetch(`${API_BASE_URL}/tecnicos/${filtros.tecnico}/boletins`)
-        if (tecnicoResponse.ok) {
-          const boletinsPorTecnico = await tecnicoResponse.json()
-          const idsTecnico = boletinsPorTecnico.map((item: any) => item.id)
-          boletins = boletins.filter((boletim: any) => idsTecnico.includes(boletim.id))
-        }
-      } catch (error) {
-        console.warn("⚠️ Erro ao filtrar por técnico:", error)
-      }
+    // Filtrar por número de inscrição: busca exata
+    if (filtros.inscricao && filtros.inscricao.trim() !== "") {
+      boletins = boletins.filter((boletim: any) => {
+        if (!boletim.inscricao) return false;
+        return String(boletim.inscricao) === filtros.inscricao.trim();
+      });
+    } else {
+      // Se não houver inscrição, não retorna nada
+      return [];
     }
 
     return boletins
