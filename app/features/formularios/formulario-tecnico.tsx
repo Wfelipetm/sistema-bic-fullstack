@@ -108,7 +108,7 @@ export default function FormularioTecnico() {
       "lote",
       "quadra",
       "endereco",
-      "tecnicoId",
+      // "tecnicoId", // removido
       "proprietario",
       "cpfCnpj",
       "telefone",
@@ -391,10 +391,7 @@ export default function FormularioTecnico() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      if (!formData.tecnicoId) {
-        toast.error("Por favor, selecione um técnico responsável.");
-        return;
-      }
+      // Não exige técnico responsável
 
       // Resto da lógica de salvamento mantida igual...
       const sanitizedFormData = {
@@ -600,6 +597,7 @@ export default function FormularioTecnico() {
         <DadosBasicosSection
           formData={formData}
           handleInputChange={handleInputChange}
+          // Não passa props relacionadas a técnico
         />
       ),
     },

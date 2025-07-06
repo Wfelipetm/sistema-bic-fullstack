@@ -24,14 +24,10 @@ export async function createBoletim(formData: FormularioData) {
     cpf: Number(formData.cpf),
     contato: Number(formData.telefone),
     responsavel: formData.responsavel || "Responsável",
-    responsavel_tributario: formData.responsavel_tributario || "", // <-- Adicione esta linha
-    tecnico_id: Number(formData.tecnicoId) // Adicione esta linha!
+    responsavel_tributario: formData.responsavel_tributario || ""
   }
 
-  if (!formData.tecnicoId) {
-    alert("Selecione um técnico válido!")
-    return
-  }
+  // Removido: obrigatoriedade de técnico
 
   // Log para depuração
   console.log("Payload enviado para /boletim/:", JSON.stringify(payload, null, 2))

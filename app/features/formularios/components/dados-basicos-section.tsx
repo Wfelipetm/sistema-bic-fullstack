@@ -27,26 +27,11 @@ function getHoje() {
 }
 
 export function DadosBasicosSection({ formData, handleInputChange }: DadosBasicosSectionProps) {
-  const [tecnicos, setTecnicos] = useState<Tecnico[]>([])
-  const [loadingTecnicos, setLoadingTecnicos] = useState(false)
+  // Removido: técnicos
   const [lancamentoNovo, setLancamentoNovo] = useState(getPrimeiroDiaMes())
   const [revisao, setRevisao] = useState(getHoje())
 
-  useEffect(() => {
-    const fetchTecnicos = async () => {
-      setLoadingTecnicos(true)
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tecnicos`)
-        const data = await response.json()
-        setTecnicos(data)
-      } catch (error) {
-        console.error("Erro ao buscar técnicos:", error)
-      } finally {
-        setLoadingTecnicos(false)
-      }
-    }
-    fetchTecnicos()
-  }, [])
+  // Removido: busca de técnicos
 
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {
@@ -208,27 +193,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
-        <div>
-          <Label htmlFor="tecnicoId" className={labelClassName}>Técnico Responsável *</Label>
-          <select
-            id="tecnicoId"
-            value={formData.tecnicoId || ""}
-            onChange={(e) => {
-              const numericValue = Number.parseInt(e.target.value, 10)
-              handleInputChange("tecnicoId", isNaN(numericValue) ? "" : numericValue.toString())
-            }}
-            className={selectClassName}
-            disabled={loadingTecnicos}
-            style={{ color: formData.tecnicoId ? '#0369a1' : '#38bdf8' }}
-          >
-            <option value="" style={{ color: '#38bdf8' }}>{loadingTecnicos ? "Carregando técnicos..." : "Selecione um técnico"}</option>
-            {tecnicos.map((tecnico) => (
-              <option key={tecnico.id} value={tecnico.id} style={{ color: '#0369a1' }}>
-                {tecnico.nome} (ID: {tecnico.id})
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Campo de técnico removido */}
 
         <div>
           <Label htmlFor="proprietario" className={labelClassName}>Proprietário (Compromissário)</Label>
