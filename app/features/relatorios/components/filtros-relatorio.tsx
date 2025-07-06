@@ -7,14 +7,13 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Search, X, Eye, FileText, MapPin, Calendar, User, Phone, ExternalLink } from "lucide-react"
+import { toast } from "sonner"
 
 const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 32 32" fill="currentColor" height="1em" width="1em" {...props}>
     <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.236 6.393L4 29l7.828-2.205A12.94 12.94 0 0016 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-1.77 0-3.484-.463-4.98-1.34l-.355-.21-4.65 1.31 1.24-4.53-.23-.36C6.36 18.01 5.5 16.55 5.5 15c0-5.799 4.701-10.5 10.5-10.5S26.5 9.201 26.5 15 21.799 25 16 25zm5.07-7.75c-.277-.139-1.637-.807-1.89-.899-.253-.093-.437-.139-.62.14-.184.278-.71.899-.87 1.085-.16.185-.32.208-.597.07-.277-.139-1.17-.431-2.23-1.375-.823-.734-1.379-1.64-1.541-1.917-.161-.278-.017-.428.122-.566.125-.124.278-.323.417-.485.139-.162.185-.278.278-.463.093-.185.046-.347-.023-.485-.07-.139-.62-1.497-.85-2.05-.224-.539-.453-.466-.62-.475l-.528-.009c-.17 0-.446.064-.68.3-.232.236-.88.861-.88 2.099 0 1.238.902 2.434 1.028 2.603.125.17 1.775 2.71 4.3 3.692.602.207 1.07.33 1.436.422.603.153 1.153.132 1.588.08.484-.058 1.637-.668 1.87-1.312.232-.644.232-1.196.162-1.312-.07-.116-.253-.185-.53-.324z" />
   </svg>
 );
-import { useToast } from "@/components/ui/use-toast"
-import type { FiltrosRelatorio } from "@/app/types/relatorio"
 import { buscarRelatorios } from "../services/relatorio-service"
 import { gerarRelatorioPDF } from "../../../../hooks/use-relatorio-pdf"
 
@@ -34,13 +33,19 @@ interface Relatorio {
   status?: string
 }
 
+interface FiltrosRelatorio {
+  dataInicio: string
+  dataFim: string
+  status: string
+  inscricao: string
+}
+
 interface FiltrosRelatorioCardProps {
   filtros: FiltrosRelatorio
   setFiltros: Dispatch<SetStateAction<FiltrosRelatorio>>
 }
 
 export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCardProps) {
-  const { toast } = useToast();
   const [relatorios, setRelatorios] = useState<Relatorio[]>([])
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -64,20 +69,29 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
   }
 
   const handleBuscar = async () => {
-    // Só busca se o campo de inscrição estiver preenchido exatamente
     if (!filtros.inscricao || filtros.inscricao.trim() === "") {
       setRelatorios([])
+      setTimeout(() => {
+        toast.error("Nenhum relatório foi encontrado para o número de inscrição informado.");
+      }, 0)
       return;
     }
     setLoading(true)
     try {
       const dados = await buscarRelatorios(filtros)
-      // Só mostra se houver correspondência exata
-      const exatos = dados.filter((r: Relatorio) => r.inscricao === filtros.inscricao)
-      setRelatorios(exatos)
+      const existe = dados.some((r: Relatorio) => String(r.inscricao).trim() === String(filtros.inscricao).trim())
+      if (!existe) {
+        setRelatorios([])
+        setTimeout(() => {
+          toast.error("Nenhum relatório foi encontrado para o número de inscrição informado.");
+        }, 0)
+      } else {
+        const exatos = dados.filter((r: Relatorio) => String(r.inscricao).trim() === String(filtros.inscricao).trim())
+        setRelatorios(exatos)
+      }
     } catch (error) {
       console.error("Erro ao buscar relatórios:", error)
-      alert("Erro ao buscar relatórios. Verifique o console.")
+      toast.error("Erro ao buscar relatórios. Verifique o console.")
     } finally {
       setLoading(false)
     }
@@ -278,9 +292,7 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                                         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
                                       }
                                     }}
-                                    onMouseEnter={() => toast({
-                                      title: "Abrir no Google Maps",
-                                      description: "Clique para ver o endereço no mapa.",
+                                     onMouseEnter={() => toast.info("Clique para ver o endereço no mapa.", {
                                       duration: 2000,
                                     })}
                                   >
