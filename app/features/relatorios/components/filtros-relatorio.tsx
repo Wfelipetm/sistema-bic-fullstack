@@ -28,7 +28,6 @@ interface Relatorio {
   cpf: string
   contato: string
   cep?: string
-  tecnico_id?: number
   created_at: string
   updated_at: string
   tipo?: string
