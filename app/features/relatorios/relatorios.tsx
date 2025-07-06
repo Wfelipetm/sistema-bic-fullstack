@@ -21,7 +21,7 @@ export default function Relatorios({ setActiveView }: RelatoriosProps) {
     dataInicio: "",
     dataFim: "",
     status: "all",
-    tecnico: "all",
+    inscricao: "",
   })
 
   const [relatorios, setRelatorios] = useState([])

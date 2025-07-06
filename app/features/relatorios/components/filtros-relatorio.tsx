@@ -292,9 +292,18 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                                         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(relatorio.cep)}`, '_blank');
                                       }
                                     }}
-                                     onMouseEnter={() => toast.info("Clique para ver o endereço no mapa.", {
-                                      duration: 2000,
-                                    })}
+                                    onMouseEnter={() => {
+                                      // Mostra o toast correto para cada caso
+                                      if (relatorio && relatorio.contato && relatorio.contato.trim().length > 0) {
+                                        toast.info("Clique para ver o endereço no mapa.", {
+                                          duration: 2000,
+                                        });
+                                      } else {
+                                        toast.info("Clique para ver o endereço no mapa.", {
+                                          duration: 2000,
+                                        });
+                                      }
+                                    }}
                                   >
                                     Ver no Maps
                                     <MapPin className="h-4 w-4 text-red-500 group-hover:text-red-700 transition-colors" />
@@ -325,11 +334,25 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                                 href={`https://wa.me/55${relatorio.contato.replace(/\D/g, "")}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sky-700 hover:text-green-600 font-semibold transition-colors flex items-center gap-1"
+                                className="text-sky-700 hover:text-green-600 font-semibold transition-colors flex items-center gap-1 group"
                                 title="Conversar no WhatsApp"
+                                tabIndex={0}
+                                onClick={() => {
+                                  window.open(`https://wa.me/55${relatorio.contato.replace(/\D/g, "")}`, "_blank");
+                                }}
+                                onKeyDown={e => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    window.open(`https://wa.me/55${relatorio.contato.replace(/\D/g, "")}`, "_blank");
+                                  }
+                                }}
+                                onMouseEnter={() => {
+                                  toast.info("Clique para conversar no WhatsApp.", {
+                                    duration: 2000,
+                                  });
+                                }}
                               >
                                 {relatorio.contato}
-                                <WhatsappIcon className="h-4 w-4 text-green-500" />
+                                <WhatsappIcon className="h-4 w-4 text-green-500 group-hover:text-green-700 transition-colors" />
                               </a>
                             ) : (
                               <span>Não informado</span>
