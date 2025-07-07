@@ -1,6 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
+// Adiciona tipagem global para a função de validação
+declare global {
+  interface Window {
+    __validateRequiredMetragens?: () => boolean;
+  }
+}
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
@@ -13,6 +20,28 @@ interface MetragensSectionProps {
 }
 
 export function MetragensSection({ formData, handleNestedInputChange }: MetragensSectionProps) {
+  // Função de validação obrigatória
+  function validateRequiredMetragens() {
+    const obrigatorios = [
+      { id: "areaTerreno", label: "Área do Terreno" },
+      { id: "testada", label: "Testada" },
+      { id: "areaEdificada", label: "Área Edificada" },
+    ];
+    for (const campo of obrigatorios) {
+      const valor = formData.metragens[campo.id as keyof typeof formData.metragens];
+      if (!valor || valor.toString().trim() === "") {
+        toast.warning(`Preencha o campo ${campo.label}.`);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Exponha a função de validação para o componente pai via window (workaround para navegação)
+  useEffect(() => {
+    window.__validateRequiredMetragens = validateRequiredMetragens;
+    return () => { delete window.__validateRequiredMetragens; };
+  }, [formData]);
   const [metragensApi, setMetragensApi] = useState<any[]>([])
 
   useEffect(() => {
@@ -59,7 +88,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8 select-none">
       {/* Header da seção */}
       {/* <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Metragens</h2>
@@ -71,9 +100,13 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
         {metragemItems.map((item, index) => (
           <div
             key={item.id}
-            className="group relative bg-white rounded-2xl shadow-sm border border-slate-200 p-8 
-                       hover:shadow-md hover:border-sky-200 hover:-translate-y-1
-                       transition-all duration-300 ease-in-out"
+            className="group relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-8 
+                       transition-all duration-300 ease-in-out
+                       w-full max-w-full min-h-[220px] flex flex-col mx-auto mb-4
+                       md:min-w-[260px] md:max-w-[340px]
+                       lg:min-w-[300px] lg:max-w-[380px]
+                       xl:min-w-[340px] xl:max-w-[420px]"
+            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
           >
             {/* Número do item */}
             <div

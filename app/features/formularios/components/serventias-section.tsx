@@ -1,9 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import { toast } from "sonner"
+// Adiciona tipagem global para a função de validação
+declare global {
+  interface Window {
+    __validateRequiredServentias?: () => boolean;
+  }
+}
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
-import { Sofa, Bed, Utensils, ChefHat, ShowerHead, Car, Home, DoorOpen, Building2, Warehouse } from "lucide-react"
+import { Home, Sofa, Bed, Utensils, ChefHat, ShowerHead, Car, DoorOpen, Building2, Warehouse } from "lucide-react"
 
 interface ServentiasSectionProps {
   formData: FormularioData
@@ -24,6 +31,24 @@ const defaultServentias = [
 ]
 
 export function ServentiasSection({ formData, handleNestedInputChange }: ServentiasSectionProps) {
+  // Função de validação obrigatória
+  function validateRequiredServentias() {
+    // Todos os campos de serventias devem ser preenchidos com valor > 0
+    for (const item of serventiasItems) {
+      const valor = formData.serventias[item.id as keyof typeof formData.serventias];
+      if (!valor || Number(valor) <= 0) {
+        toast.warning(`Preencha o campo ${item.label}.`);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Exponha a função de validação para o componente pai via window (workaround para navegação)
+  useEffect(() => {
+    window.__validateRequiredServentias = validateRequiredServentias;
+    return () => { delete window.__validateRequiredServentias; };
+  }, [formData]);
   const [serventiasItems, setServentiasItems] = useState(defaultServentias)
 
   useEffect(() => {
@@ -35,12 +60,16 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
         const keys = Object.keys(serventiasObj).filter((k) => !ignore.includes(k))
         if (keys.length > 0) {
           setServentiasItems(
-            keys.map((key, idx) => ({
-              id: key,
-              label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-              icon: Building2,
-            })),
-          )
+            keys.map((key, idx) => {
+              // Tenta encontrar o ícone padrão pelo id
+              const found = defaultServentias.find((s) => s.id === key);
+              return {
+                id: key,
+                label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
+                icon: found ? found.icon : Home,
+              };
+            })
+          );
         } else {
           setServentiasItems(defaultServentias)
         }
@@ -58,7 +87,7 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8">
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8 select-none">
       {/* Header da seção */}
       {/* <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Serventias</h2>
@@ -67,36 +96,36 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
       </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        {serventiasItems.map((item, index) => (
+        {serventiasItems.map((item) => (
           <div
             key={item.id}
-            className="group relative bg-white rounded-2xl shadow-sm border border-slate-200 p-6 
-                       hover:shadow-md hover:border-sky-200 hover:-translate-y-1
-                       transition-all duration-300 ease-in-out"
+            className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 flex flex-col items-center"
           >
-            {/* Número do item */}
-            <div
-              className="absolute -top-3 -left-3 w-8 h-8 bg-sky-500 text-white rounded-full 
-                         flex items-center justify-center text-sm font-bold shadow-md
-                         group-hover:bg-sky-600 transition-colors duration-200"
-            >
-              {index + 1}
+            {/* Ícone animado ao lado do campo */}
+
+            {/* Efeitos animados diferentes em cada card */}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-sky-500 grow-effect">
+                {React.createElement(item.icon, { className: "w-8 h-8" })}
+              </span>
+              <label htmlFor={item.id} className="text-lg font-bold text-sky-800 cursor-pointer">
+                {item.label}
+              </label>
             </div>
 
-            {/* Ícone */}
-            <div className="text-3xl mb-4 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
-              {item.icon && typeof item.icon === 'function' ? (
-                <item.icon className="w-8 h-8 mx-auto text-sky-500" />
-              ) : null}
-            </div>
-
-            {/* Label */}
-            <label htmlFor={item.id} className="text-lg font-bold text-sky-800 mb-4 block text-center cursor-pointer">
-              {item.label}
-            </label>
+      <style>{`
+        @keyframes grow-effect {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.12); }
+        }
+        .grow-effect {
+          animation: grow-effect 2.2s infinite;
+          display: inline-block;
+        }
+      `}</style>
 
             {/* Input */}
-            <div className="flex justify-center">
+            <div className="flex justify-center w-full">
               <input
                 type="text"
                 inputMode="numeric"

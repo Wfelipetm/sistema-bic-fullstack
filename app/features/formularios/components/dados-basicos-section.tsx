@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
@@ -27,6 +28,26 @@ function getHoje() {
 }
 
 export function DadosBasicosSection({ formData, handleInputChange }: DadosBasicosSectionProps) {
+  // Validação dos campos obrigatórios
+  function validateRequiredFields() {
+    if (!formData.inscricaoNumero || formData.inscricaoNumero.trim() === "") {
+      toast.warning("Preencha o campo Inscrição Nº.");
+      return false;
+    }
+    if (!formData.lote || formData.lote.trim() === "") {
+      toast.warning("Preencha o campo Lote.");
+      return false;
+    }
+    if (!formData.quadra || formData.quadra.trim() === "") {
+      toast.warning("Preencha o campo Quadra.");
+      return false;
+    }
+    if (!formData.endereco || formData.endereco.trim() === "") {
+      toast.warning("Preencha o campo Endereço.");
+      return false;
+    }
+    return true;
+  }
   // Removido: técnicos
   const [lancamentoNovo, setLancamentoNovo] = useState(getPrimeiroDiaMes())
   const [revisao, setRevisao] = useState(getHoje())
@@ -71,7 +92,16 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl shadow-md border border-sky-100 px-3 py-8 min-h-[320px] md:min-h-[360px] xl:min-h-[400px]">
+    <div
+      className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 px-3 py-8 min-h-[320px] md:min-h-[360px] xl:min-h-[400px] w-full max-w-full mx-auto select-none"
+      style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
+    >
+      {/*
+        Para usar a validação, chame validateRequiredFields() ao tentar avançar para o próximo passo do formulário.
+        Exemplo de uso:
+        if (!validateRequiredFields()) return;
+        // ...continua navegação
+      */}
       <style>{`
         .dados-basicos-section-grid > div {
           display: flex;

@@ -5,6 +5,7 @@ import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
 import { situacaoAPI, caracterSoloAPI, topografiaAPI, nivelamentoAPI } from "@/lib/api-services"
 import { Landmark, Leaf, Mountain, Ruler } from "lucide-react"
+import { toast } from "@/components/ui/use-toast"
 
 interface TerrenoSectionProps {
   formData: FormularioData
@@ -162,81 +163,14 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
     })
   }, [])
 
-  // Carrossel horizontal para opções dentro de cada card
-  function OptionsCarousel({ options, subsection }: { options: any[]; subsection: string }) {
-    const optionsRef = useRef<HTMLDivElement>(null);
-    const isDragging = useRef(false);
-    const startX = useRef(0);
-    const scrollLeft = useRef(0);
-
-    useEffect(() => {
-      const slider = optionsRef.current;
-      if (!slider) return;
-      const handleMouseDown = (e: MouseEvent) => {
-        isDragging.current = true;
-        slider.classList.add('scrolling');
-        startX.current = e.pageX - slider.offsetLeft;
-        scrollLeft.current = slider.scrollLeft;
-      };
-      const handleMouseLeave = () => {
-        isDragging.current = false;
-        slider.classList.remove('scrolling');
-      };
-      const handleMouseUp = () => {
-        isDragging.current = false;
-        slider.classList.remove('scrolling');
-      };
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging.current) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX.current) * 1.2;
-        slider.scrollLeft = scrollLeft.current - walk;
-      };
-      slider.addEventListener('mousedown', handleMouseDown);
-      slider.addEventListener('mouseleave', handleMouseLeave);
-      slider.addEventListener('mouseup', handleMouseUp);
-      slider.addEventListener('mousemove', handleMouseMove);
-      // Touch events
-      let touchStartX = 0;
-      let touchScrollLeft = 0;
-      const handleTouchStart = (e: TouchEvent) => {
-        isDragging.current = true;
-        touchStartX = e.touches[0].pageX - slider.offsetLeft;
-        touchScrollLeft = slider.scrollLeft;
-      };
-      const handleTouchEnd = () => {
-        isDragging.current = false;
-      };
-      const handleTouchMove = (e: TouchEvent) => {
-        if (!isDragging.current) return;
-        const x = e.touches[0].pageX - slider.offsetLeft;
-        const walk = (x - touchStartX) * 1.2;
-        slider.scrollLeft = touchScrollLeft - walk;
-      };
-      slider.addEventListener('touchstart', handleTouchStart);
-      slider.addEventListener('touchend', handleTouchEnd);
-      slider.addEventListener('touchmove', handleTouchMove);
-      return () => {
-        slider.removeEventListener('mousedown', handleMouseDown);
-        slider.removeEventListener('mouseleave', handleMouseLeave);
-        slider.removeEventListener('mouseup', handleMouseUp);
-        slider.removeEventListener('mousemove', handleMouseMove);
-        slider.removeEventListener('touchstart', handleTouchStart);
-        slider.removeEventListener('touchend', handleTouchEnd);
-        slider.removeEventListener('touchmove', handleTouchMove);
-      };
-    }, []);
+  // Lista vertical para opções dentro de cada card
+  function OptionsList({ options, subsection }: { options: any[]; subsection: string }) {
     return (
-      <div
-        ref={optionsRef}
-        className="overflow-x-auto flex gap-4 hide-scrollbar pb-2 cursor-grab"
-        style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
-      >
+      <div className="flex flex-col gap-4">
         {options.map((item, index) => (
           <div
             key={item.id}
-            className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 min-w-[200px] max-w-[220px] flex-shrink-0 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
+            className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
             onClick={() =>
               handleNestedCheckboxChange(
                 "terreno",
@@ -274,6 +208,32 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
     );
   }
 
+  // Padroniza animação dos ícones para todos os cards igual ao solo
+  const iconAnimClass = {
+    solo: "animate-pulse",
+    topografia: "animate-pulse",
+    nivelamento: "animate-pulse",
+  }
+
+  // Função para checar se algum card está vazio e disparar toast
+  function checkCardsAndToast() {
+    if (soloOptions.filter(opt => (formData.terreno.caracteristicasSolo as any)[opt.id]).length === 0) {
+      toast({ title: "Atenção!", description: "Selecione pelo menos uma opção em Características do Solo." })
+      return false
+    }
+    if (topografiaOptions.filter(opt => (formData.terreno.topografia as any)[opt.id]).length === 0) {
+      toast({ title: "Atenção!", description: "Selecione pelo menos uma opção em Topografia." })
+      return false
+    }
+    if (nivelamentoOptions.filter(opt => (formData.terreno.nivelamento as any)[opt.id]).length === 0) {
+      toast({ title: "Atenção!", description: "Selecione pelo menos uma opção em Nivelamento." })
+      return false
+    }
+    return true
+  }
+
+  // Exemplo de uso: chame checkCardsAndToast() ao tentar navegar
+
   return (
     <div className="w-full max-w-[1500px] mx-auto">
       <div
@@ -282,38 +242,73 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
         <div className="flex flex-nowrap gap-8 min-w-0">
-          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 mx-auto mb-4"
+            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="text-2xl"><Landmark className="w-6 h-6 text-sky-500" /></div>
               <h4 className="text-xl font-bold text-sky-800">Situação</h4>
               <div className="flex-1 h-px bg-sky-200"></div>
             </div>
-            <OptionsCarousel options={situacaoOptions} subsection="situacao" />
+            <OptionsList options={situacaoOptions} subsection="situacao" />
+            {/* ...nada de resumo visual para o card 1... */}
           </div>
-          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4"
+            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="text-2xl"><Leaf className="w-6 h-6 text-sky-500" /></div>
+              <div className="text-2xl"><Leaf className={`w-6 h-6 text-sky-500 ${iconAnimClass.solo}`} /></div>
               <h4 className="text-xl font-bold text-sky-800">Características do Solo</h4>
               <div className="flex-1 h-px bg-sky-200"></div>
             </div>
-            <OptionsCarousel options={soloOptions} subsection="caracteristicasSolo" />
+            <OptionsList options={soloOptions} subsection="caracteristicasSolo" />
+            <div className="flex-1"></div>
+            <div className="mt-6 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
+              <div className="flex items-center gap-3 mb-2">
+                <Leaf className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.solo}`} />
+                <span className="font-semibold text-sky-800 text-base">Solo: Base da Estrutura</span>
+              </div>
+              <span className="font-bold text-sky-900">{soloOptions.filter(opt => (formData.terreno.caracteristicasSolo as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
+              <span className="block mt-2">Solo adequado = obra estável. Atenção ao tipo e à umidade para evitar problemas futuros.</span>
+              <span className="block mt-2 italic text-sky-600">A base certa faz toda diferença.</span>
+            </div>
           </div>
-          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
+          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 mx-auto mb-4"
+            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="text-2xl"><Mountain className="w-6 h-6 text-sky-500" /></div>
+              <div className="text-2xl"><Mountain className={`w-6 h-6 text-sky-500 ${iconAnimClass.topografia}`} /></div>
               <h4 className="text-xl font-bold text-sky-800">Topografia</h4>
               <div className="flex-1 h-px bg-sky-200"></div>
             </div>
-            <OptionsCarousel options={topografiaOptions} subsection="topografia" />
-          </div>
-          <div className="snap-start flex-shrink-0 w-[350px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="text-2xl"><Ruler className="w-6 h-6 text-sky-500" /></div>
-              <h4 className="text-xl font-bold text-sky-800">Nivelamento</h4>
-              <div className="flex-1 h-px bg-sky-200"></div>
+            <OptionsList options={topografiaOptions} subsection="topografia" />
+          <div className="flex-1"></div>
+          <div className="mt-24 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
+            <div className="flex items-center gap-3 mb-2">
+              <Mountain className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.topografia}`} />
+              <span className="font-semibold text-sky-800 text-base">Topografia: Impacto Direto</span>
             </div>
-            <OptionsCarousel options={nivelamentoOptions} subsection="nivelamento" />
+            <span className="font-bold text-sky-900">{topografiaOptions.filter(opt => (formData.terreno.topografia as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
+            <span className="block mt-2">Inclinação e relevo influenciam drenagem, acesso e custo. Adapte o projeto ao terreno.</span>
+            <span className="block mt-2 italic text-sky-600">Aproveite o melhor do lote.</span>
           </div>
+          </div>
+        <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4"
+          style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="text-2xl"><Ruler className={`w-6 h-6 text-sky-500 ${iconAnimClass.nivelamento}`} /></div>
+            <h4 className="text-xl font-bold text-sky-800">Nivelamento</h4>
+            <div className="flex-1 h-px bg-sky-200"></div>
+          </div>
+          <OptionsList options={nivelamentoOptions} subsection="nivelamento" />
+          <div className="flex-1"></div>
+          <div className="mt-6 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
+            <div className="flex items-center gap-3 mb-2">
+              <Ruler className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.nivelamento}`} />
+              <span className="font-semibold text-sky-800 text-base">Nivelamento: Resultado Final</span>
+            </div>
+            <span className="font-bold text-sky-900">{nivelamentoOptions.filter(opt => (formData.terreno.nivelamento as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
+            <span className="block mt-2">Nivelamento correto evita infiltrações, rachaduras e retrabalho. Atenção ao detalhe.</span>
+            <span className="block mt-2 italic text-sky-600">Cada centímetro conta.</span>
+          </div>
+        </div>
         </div>
       </div>
     </div>

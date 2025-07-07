@@ -389,6 +389,11 @@ export default function FormularioTecnico() {
   };
 
   const handleSave = async () => {
+    // Validação obrigatória da Avaliação Urbanística
+    if (window.__validateRequiredAvaliacaoUrbanistica && !window.__validateRequiredAvaliacaoUrbanistica()) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     try {
       // Não exige técnico responsável
@@ -579,7 +584,7 @@ export default function FormularioTecnico() {
 
       toast.success("Formulário BIC salvo com sucesso!");
     } catch (e) {
-      toast.error("Erro ao salvar o formulário!");
+      toast.error("Inscrição já existe");
     } finally {
       setIsLoading(false);
     }
@@ -802,7 +807,78 @@ export default function FormularioTecnico() {
               {currentStep < steps.length - 1 ? (
                 <button
                   type="button"
-                  onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
+                  onClick={() => {
+                    // Validação obrigatória dos Dados Básicos
+                    if (steps[currentStep].id === "dadosBasicos") {
+                      if (!formData.inscricaoNumero || formData.inscricaoNumero.trim() === "") {
+                        toast.warning("Preencha o campo Inscrição Nº.");
+                        return;
+                      }
+                      if (!formData.lote || formData.lote.trim() === "") {
+                        toast.warning("Preencha o campo Lote.");
+                        return;
+                      }
+                      if (!formData.quadra || formData.quadra.trim() === "") {
+                        toast.warning("Preencha o campo Quadra.");
+                        return;
+                      }
+                      if (!formData.endereco || formData.endereco.trim() === "") {
+                        toast.warning("Preencha o campo Endereço.");
+                        return;
+                      }
+                    }
+                    // Validação obrigatória do Logradouro
+                    if (steps[currentStep].id === "logradouro") {
+                      if (typeof window !== "undefined" && typeof window.__validateRequiredLogradouro === "function") {
+                        if (!window.__validateRequiredLogradouro()) {
+                          return;
+                        }
+                      }
+                    }
+                    // Validação obrigatória das Metragens
+                    if (steps[currentStep].id === "metragens") {
+                      if (typeof window !== "undefined" && typeof window.__validateRequiredMetragens === "function") {
+                        if (!window.__validateRequiredMetragens()) {
+                          return;
+                        }
+                      }
+                    }
+                    // Validação obrigatória da Construção
+                    if (steps[currentStep].id === "construcao") {
+                      if (typeof window !== "undefined" && typeof window.__validateRequiredConstrucao === "function") {
+                        if (!window.__validateRequiredConstrucao()) {
+                          return;
+                        }
+                      }
+                    }
+                    // Validação obrigatória das Serventias
+                    if (steps[currentStep].id === "serventias") {
+                      if (typeof window !== "undefined" && typeof window.__validateRequiredServentias === "function") {
+                        if (!window.__validateRequiredServentias()) {
+                          return;
+                        }
+                      }
+                    }
+                    // Validação obrigatória do Terreno
+                    if (steps[currentStep].id === "terreno") {
+                      const soloPreenchido = Object.values(formData.terreno.caracteristicasSolo).some(Boolean);
+                      const topoPreenchido = Object.values(formData.terreno.topografia).some(Boolean);
+                      const nivelPreenchido = Object.values(formData.terreno.nivelamento).some(Boolean);
+                      if (!soloPreenchido) {
+                        toast.warning("Selecione pelo menos uma opção em Características do Solo.");
+                        return;
+                      }
+                      if (!topoPreenchido) {
+                        toast.warning("Selecione pelo menos uma opção em Topografia.");
+                        return;
+                      }
+                      if (!nivelPreenchido) {
+                        toast.warning("Selecione pelo menos uma opção em Nivelamento.");
+                        return;
+                      }
+                    }
+                    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+                  }}
                   className="w-full md:w-auto px-6 py-2 rounded-xl border border-sky-200 bg-white text-sky-700 font-semibold shadow-md hover:bg-sky-100 hover:text-sky-900 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Avançar etapa"
                   tabIndex={0}

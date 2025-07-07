@@ -1,6 +1,13 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import { toast } from "sonner"
+// Adiciona tipagem global para a função de validação
+declare global {
+  interface Window {
+    __validateRequiredConstrucao?: () => boolean;
+  }
+}
 // Hook para drag-to-scroll horizontal
 function useHorizontalDragScroll() {
   const ref = useRef<HTMLDivElement>(null);
@@ -68,6 +75,34 @@ interface ConstrucaoSectionProps {
 }
 
 export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: ConstrucaoSectionProps) {
+  // Função de validação obrigatória
+  function validateRequiredConstrucao() {
+    const obrigatorios = [
+      { key: "piso", label: "Piso" },
+      { key: "forro", label: "Forro" },
+      { key: "cobertura", label: "Cobertura" },
+      { key: "tipo", label: "Tipo" },
+      { key: "esquadrias", label: "Esquadrias" },
+      { key: "acabamentoInterno", label: "Acabamento Interno" },
+      { key: "acabamentoExterno", label: "Acabamento Externo" },
+      { key: "uso", label: "Uso" },
+      { key: "tipoConstrucao", label: "Tipo de Construção" },
+    ];
+    for (const grupo of obrigatorios) {
+      const opcoes = formData.construcao[grupo.key as keyof typeof formData.construcao];
+      if (!opcoes || !Object.values(opcoes).some(Boolean)) {
+        toast.warning(`Selecione pelo menos uma opção em ${grupo.label}.`);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Exponha a função de validação para o componente pai via window (workaround para navegação)
+  useEffect(() => {
+    window.__validateRequiredConstrucao = validateRequiredConstrucao;
+    return () => { delete window.__validateRequiredConstrucao; };
+  }, [formData]);
   // Estados para opções dinâmicas da API
   const [tipoOptions, setTipoOptions] = useState([
     { id: "casa", label: "Casa", icon: <Home size={18} /> },
@@ -184,7 +219,15 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
     subsection: string
     icon: React.ReactNode
   }) => (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all duration-300">
+    <div
+      className="bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 transition-all duration-300 
+                 flex flex-col min-h-[220px] w-full max-w-full 
+                 md:min-w-[280px] md:max-w-[340px] 
+                 lg:min-w-[320px] lg:max-w-[380px] 
+                 xl:min-w-[340px] xl:max-w-[420px] 
+                 mx-auto mb-4"
+      style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
+    >
       <div className="flex items-center gap-3 mb-6">
         <div className="text-xl">{icon}</div>
         <h4 className="text-lg font-bold text-sky-800">{title}</h4>
