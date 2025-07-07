@@ -266,13 +266,13 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
 
   const [dragScrollRef, isDragging] = useHorizontalDragScroll();
   return (
-    <div className="w-full max-w-[1500px] mx-auto">
+    <div className="w-full max-w-[1550px] mx-auto">
       <div
         ref={dragScrollRef}
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
-        <div className="flex flex-nowrap gap-8 min-w-0">
+        <div className="flex flex-nowrap gap-4 min-w-0">
           <SectionCard
             title="Piso"
             options={pisoOptions}

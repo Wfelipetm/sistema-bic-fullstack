@@ -170,7 +170,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         {options.map((item, index) => (
           <div
             key={item.id}
-            className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
+            className="group relative bg-white rounded-2xl shadow-sm border border-slate-200 p-4 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
             onClick={() =>
               handleNestedCheckboxChange(
                 "terreno",
@@ -235,7 +235,7 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
   // Exemplo de uso: chame checkCardsAndToast() ao tentar navegar
 
   return (
-    <div className="w-full max-w-[1500px] mx-auto">
+    <div className="w-full max-w-[1900px] mx-auto">
       <div
         ref={dragScrollRef}
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
