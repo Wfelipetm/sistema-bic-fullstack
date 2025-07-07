@@ -703,18 +703,18 @@ export default function FormularioTecnico() {
   const stepProgress = Math.round(((currentStep + 1) / steps.length) * 100);
 
   // Adicione este useEffect para navegação por teclado
-  // useEffect(() => {
-  //   const handleKeyDown = (e: KeyboardEvent) => {
-  //     if (e.key === "ArrowRight") {
-  //       setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
-  //     }
-  //     if (e.key === "ArrowLeft") {
-  //       setCurrentStep((prev) => Math.max(prev - 1, 0));
-  //     }
-  //   };
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   return () => window.removeEventListener("keydown", handleKeyDown);
-  // }, []);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      }
+      if (e.key === "ArrowLeft") {
+        setCurrentStep((prev) => Math.max(prev - 1, 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <div >
