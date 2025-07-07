@@ -272,7 +272,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
-        <div className="flex flex-nowrap gap-4 min-w-0">
+        <div className="flex flex-nowrap gap-8 min-w-0">
           <SectionCard
             title="Piso"
             options={pisoOptions}
