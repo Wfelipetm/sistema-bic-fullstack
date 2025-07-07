@@ -6,7 +6,7 @@ export interface NavigationItem {
   url: string
   icon: React.ComponentType<{ className?: string }>
   id: ViewType
-  description: string
+  description?: string
 }
 
 export interface BreadcrumbInfo {

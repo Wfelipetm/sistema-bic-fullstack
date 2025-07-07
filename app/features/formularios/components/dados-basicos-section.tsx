@@ -66,15 +66,16 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         .catch(() => {})
     }
   }, [formData.cpf])
+//tamanho dos inputs
 
   const inputClassName = `
-    h-10 w-full text-sm rounded-lg 
+    h-14 w-full text-base rounded-xl 
     border border-slate-200 bg-white text-sky-700
     placeholder:text-sky-400
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
-    px-3
+    px-6
   `
 
   const labelClassName = "text-sm font-medium text-sky-600 mb-1 block"

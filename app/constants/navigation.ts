@@ -65,17 +65,13 @@ export const navigationItems: NavigationItem[] = [
     title: "Formulário BIC",
     url: "#",
     icon: FileText,
-    id: "formulario",
-    description: "Boletim de Informação Cadastral",
-
+    id: "formulario"
   },
   {
     title: "Relatórios",
     url: "#",
     icon: BarChart3,
-    id: "relatorios",
-    description: "Consulta e visualização",
-
+    id: "relatorios"
   },
 ]
 

@@ -1,6 +1,7 @@
 "use client"
 
 import type * as React from "react"
+import "@fontsource-variable/inter";
 import { Building2 } from "lucide-react"
 
 import {
@@ -29,7 +30,8 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
   return (
     <Sidebar
       collapsible="icon"
-      onClick={toggleSidebar} // <-- Adicione isso!
+      onClick={toggleSidebar}
+      style={{ fontFamily: 'InterVariable, Inter, system-ui, sans-serif', background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)', borderRight: '1.5px solid #dbeafe', boxShadow: '0 2px 24px 0 rgba(80,150,255,0.07)' }}
       {...props}
     >
       <SidebarHeader className="pt-24 -mt-1.5">
@@ -52,9 +54,8 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-         
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="mt-4">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
@@ -63,9 +64,18 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
                     tooltip={item.description}
                     onClick={() => setActiveView(item.id)}
                   >
-                    <button className="flex items-center gap-2 w-full">
-                      <item.icon className="size-4 text-blue-700 stroke-2" />
-                      <span className="text-blue-700 font-medium">{item.title}</span>
+                    <button
+                      className={
+                        `flex items-center gap-3 w-full px-3 py-3 rounded-2xl transition-all duration-300
+                        text-blue-800 font-semibold group tracking-tight
+                        hover:bg-blue-100/70 hover:shadow-[0_2px_12px_0_rgba(80,150,255,0.10)] hover:scale-[1.018]
+                        focus:bg-blue-100 focus:outline-none
+                        ` + (activeView === item.id ? ' bg-blue-200/80 shadow-[0_2px_16px_0_rgba(80,150,255,0.15)] scale-[1.018] ring-2 ring-blue-200' : '')
+                      }
+                      style={{ fontFamily: 'inherit', fontVariationSettings: '"wght" 600, "slnt" 0', letterSpacing: '-0.01em', fontSize: '1.08rem', paddingTop: '0.85rem', paddingBottom: '0.85rem' }}
+                    >
+                      <item.icon className="size-5 text-blue-700 stroke-2 group-hover:text-blue-900 transition-colors duration-200 drop-shadow-sm" />
+                      <span className="text-blue-800 font-semibold group-hover:text-blue-900 transition-colors duration-200" style={{fontFamily: 'inherit'}}>{item.title}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -76,17 +86,11 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
       </SidebarContent>
       {/* Só mostra o rodapé se o sidebar NÃO estiver colapsado */}
       {state !== "collapsed" && (
-        <div className="mt-auto p-4 border-t border-blue-100">
+        <div className="mt-auto p-5 border-t border-blue-100 bg-gradient-to-t from-blue-50/80 to-transparent">
           <div className="flex flex-col items-end">
-            <span className="text-xs text-end text-blue-700 dark:text-blue-200">
-              © 2025 Sistema BIC.
-            </span>
-            <span className="text-xs text-end text-blue-700 dark:text-blue-200">
-              Desenvolvido por SMCTIC.
-            </span>
-            <span className="text-[10px] text-blue-400 mt-1">
-              Versão 3.0.0.
-            </span>
+            <span className="text-xs text-end text-blue-700 dark:text-blue-200 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>© 2025 Sistema BIC.</span>
+            <span className="text-xs text-end text-blue-700 dark:text-blue-200 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>Desenvolvido por SMCTIC.</span>
+            <span className="text-[10px] text-blue-400 mt-1 font-mono">Versão 3.0.0.</span>
           </div>
         </div>
       )}
