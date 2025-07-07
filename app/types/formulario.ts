@@ -100,7 +100,7 @@ export interface FormularioData {
 
     // 3- Tipo de Construção
     tipoConstrucao: {
-      madeira: boolean
+      madeira_interna: boolean
       alvenaria: boolean
       metalica: boolean
       concreto: boolean

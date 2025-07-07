@@ -172,7 +172,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
     { id: "religioso", label: "Religioso", icon: <Church size={18} /> },
   ])
   const [tipoConstrucaoOptions, setTipoConstrucaoOptions] = useState([
-    { id: "madeira", label: "Madeira", icon: <Warehouse size={18} /> },
+    { id: "madeira_interna", label: "Madeira", icon: <Warehouse size={18} /> },
     { id: "alvenaria", label: "Alvenaria", icon: <BrickWall size={18} /> },
     { id: "metalica", label: "Metálica", icon: <Construction size={18} /> },
     { id: "concreto", label: "Concreto", icon: <Landmark size={18} /> },

@@ -33,12 +33,14 @@ export function AvaliacaoUrbanisticaSection({
   // Validação obrigatória dos campos/grupos
   // Validação obrigatória: só permite salvar se pelo menos uma opção de calçamento estiver marcada
   function validateRequiredAvaliacaoUrbanistica() {
-    // Força a validação: só permite salvar se pelo menos uma opção de calçamento estiver marcada
-    if (!formData.calcamento || Object.values(formData.calcamento).filter(Boolean).length === 0) {
+    // Validação obrigatória: pelo menos uma opção de calçamento (tipo ou extensão)
+    const tipoMarcado = formData.calcamento?.tipo && Object.values(formData.calcamento.tipo).some(Boolean);
+    const extensaoMarcada = formData.calcamento?.extensao && Object.values(formData.calcamento.extensao).some(Boolean);
+    if (!tipoMarcado && !extensaoMarcada) {
       toast.error("Selecione pelo menos uma opção em Calçamento.");
       return false;
     }
-    // Força a validação: só permite salvar se uma opção de avaliação urbanística estiver marcada
+    // Validação obrigatória: avaliação urbanística
     if (!formData.avaliacaoUrbanistica || String(formData.avaliacaoUrbanistica).trim() === "") {
       toast.error("Selecione pelo menos uma opção em Avaliação Urbanística do Logradouro.");
       return false;
@@ -151,19 +153,19 @@ export function AvaliacaoUrbanisticaSection({
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {/* Ícones com tons de azul e checkbox de volta */}
-          {/* Ícones com tons de azul e checkbox de volta */}
           {[
-            { id: "sem_asfalto", label: "S/Asfalto", icon: Ban, description: "Sem asfalto" },
-            { id: "asfaltada", label: "Asfaltada", icon: Car, description: "Rua asfaltada" },
-            { id: "novo", label: "Novo", icon: Sparkles, description: "Asfalto novo" },
-            { id: "antigo", label: "Antigo", icon: History, description: "Asfalto antigo" },
-            { id: "parte", label: "Parte", icon: Divide, description: "Parcialmente asfaltada" },
-            { id: "toda", label: "Toda", icon: CheckSquare, description: "Toda asfaltada" },
-            { id: "paralelo", label: "Paralelo", icon: GripHorizontal, description: "Paralelepípedo" },
-            { id: "bloco", label: "Bloco", icon: LayoutGrid, description: "Bloco intertravado" },
+            { id: "sem_asfalto", label: "S/Asfalto", icon: Ban, description: "Sem asfalto", grupo: "tipo" },
+            { id: "asfaltada", label: "Asfaltada", icon: Car, description: "Rua asfaltada", grupo: "tipo" },
+            { id: "novo", label: "Novo", icon: Sparkles, description: "Asfalto novo", grupo: "tipo" },
+            { id: "antigo", label: "Antigo", icon: History, description: "Asfalto antigo", grupo: "tipo" },
+            { id: "parte", label: "Parte", icon: Divide, description: "Parcialmente asfaltada", grupo: "extensao" },
+            { id: "toda", label: "Toda", icon: CheckSquare, description: "Toda asfaltada", grupo: "extensao" },
+            { id: "paralelo", label: "Paralelo", icon: GripHorizontal, description: "Paralelepípedo", grupo: "extensao" },
+            { id: "bloco", label: "Bloco", icon: LayoutGrid, description: "Bloco intertravado", grupo: "extensao" },
           ].map((item, idx) => {
-            const checked = formData.calcamento[item.id as keyof typeof formData.calcamento];
+            const checked = formData.calcamento?.[item.grupo as 'tipo' | 'extensao']?.[
+              item.id as keyof typeof formData.calcamento['tipo'] & keyof typeof formData.calcamento['extensao']
+            ];
             const Icon = item.icon;
             return (
               <div
@@ -181,7 +183,7 @@ export function AvaliacaoUrbanisticaSection({
                   type="checkbox"
                   id={item.id}
                   checked={!!checked}
-                  onChange={e => handleCheckboxChange('calcamento', item.id, e.target.checked)}
+                  onChange={e => handleNestedCheckboxChange('calcamento', item.grupo, item.id, e.target.checked)}
                   className="w-5 h-5 accent-sky-600 border-slate-300 rounded focus:ring-2 focus:ring-sky-200"
                 />
                 {/* Indicador visual */}

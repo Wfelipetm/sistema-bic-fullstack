@@ -68,7 +68,7 @@ export const formularioInicial: FormularioData = {
             religioso: false,
         },
         tipoConstrucao: {
-            madeira: false,
+            madeira_interna: false,
             alvenaria: false,
             metalica: false,
             concreto: false,

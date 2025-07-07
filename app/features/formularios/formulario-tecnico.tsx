@@ -533,6 +533,8 @@ export default function FormularioTecnico() {
           nivelamento_id: nivelamentoRes.id,
         }),
         createMetragens({ ...formData.metragens, boletim_id: boletim.id }),
+        // Salva o grupo tipoConstrucao explicitamente
+        tipoConstrucaoAPI.create({ tipoConstrucao: sanitizeBooleans(formData.construcao.tipoConstrucao) }),
         (async () => {
           const construcaoPayload = {
             ...formData.construcao,

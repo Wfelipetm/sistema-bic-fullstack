@@ -354,7 +354,7 @@ export async function gerarRelatorioPDF(id: number) {
       {
         titulo: "3- Tipo de\nConstrução:",
         opcoes: [
-          [data.madeira === true ? "X" : "", "1- Madeira"],
+          [data.madeira_interna === true ? "X" : "", "1- Madeira"],
           [data.alvenaria === true ? "X" : "", "2- Alvenaria"],
           [data.metalica === true ? "X" : "", "3- Metálica"],
           [data.concreto === true ? "X" : "", "4- Concreto"],
