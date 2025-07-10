@@ -592,6 +592,14 @@ export default function FormularioTecnico() {
     }
   };
 
+  // Função para checar se todas as metragens são zero ou vazias
+  function isAllMetragensZero() {
+    const m = formData.metragens;
+    const zeroOrEmpty = (v: any) => v === "0" || v === 0 || v === "0.00" || v === "0,00" || v === "" || v === undefined || v === null;
+    return zeroOrEmpty(m.areaTerreno) && zeroOrEmpty(m.testada) && zeroOrEmpty(m.areaEdificada);
+  }
+
+  // Monta steps dinamicamente pulando construção se necessário
   const steps = [
     {
       id: "dadosBasicos",
@@ -604,7 +612,6 @@ export default function FormularioTecnico() {
         <DadosBasicosSection
           formData={formData}
           handleInputChange={handleInputChange}
-          // Não passa props relacionadas a técnico
         />
       ),
     },
@@ -652,21 +659,25 @@ export default function FormularioTecnico() {
         />
       ),
     },
-    {
-      id: "construcao",
-      title: "IV - Informações sobre a Construção",
-      description:
-        "Selecione as características da construção",
-      icon: FileText,
-      iconColor: "text-sky-600",
-      iconBgColor: "bg-sky-50",
-      content: (
-        <ConstrucaoSection
-          formData={formData}
-          handleNestedCheckboxChange={handleNestedCheckboxChange}
-        />
-      ),
-    },
+    // Só inclui construção se alguma metragem for diferente de zero
+    ...(!isAllMetragensZero()
+      ? [
+          {
+            id: "construcao",
+            title: "IV - Informações sobre a Construção",
+            description: "Selecione as características da construção",
+            icon: FileText,
+            iconColor: "text-sky-600",
+            iconBgColor: "bg-sky-50",
+            content: (
+              <ConstrucaoSection
+                formData={formData}
+                handleNestedCheckboxChange={handleNestedCheckboxChange}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       id: "serventias",
       title: "Serventias e Características Complementares",
@@ -702,19 +713,41 @@ export default function FormularioTecnico() {
   // Progresso baseado no step atual
   const stepProgress = Math.round(((currentStep + 1) / steps.length) * 100);
 
-  // Adicione este useEffect para navegação por teclado
+  // Navegação por teclado pulando construção se necessário
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
-        setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+        setCurrentStep((prev) => {
+          let next = prev + 1;
+          // Pular construção se não existir
+          if (
+            steps[next] &&
+            steps[next].id === "construcao" &&
+            isAllMetragensZero()
+          ) {
+            next++;
+          }
+          return Math.min(next, steps.length - 1);
+        });
       }
       if (e.key === "ArrowLeft") {
-        setCurrentStep((prev) => Math.max(prev - 1, 0));
+        setCurrentStep((prev) => {
+          let prevStep = prev - 1;
+          // Pular construção se não existir
+          if (
+            steps[prevStep] &&
+            steps[prevStep].id === "construcao" &&
+            isAllMetragensZero()
+          ) {
+            prevStep--;
+          }
+          return Math.max(prevStep, 0);
+        });
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [steps, isAllMetragensZero]);
 
   return (
     <div >
@@ -796,7 +829,19 @@ export default function FormularioTecnico() {
               <div className="w-full md:w-auto md:flex-1 md:flex md:justify-start">
                 <button
                   type="button"
-                  onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
+                  onClick={() => {
+                    setCurrentStep((prev) => {
+                      let prevStep = prev - 1;
+                      if (
+                        steps[prevStep] &&
+                        steps[prevStep].id === "construcao" &&
+                        isAllMetragensZero()
+                      ) {
+                        prevStep--;
+                      }
+                      return Math.max(prevStep, 0);
+                    });
+                  }}
                   className="w-full md:w-auto px-6 py-2 rounded-xl border border-sky-200 bg-white text-sky-700 font-semibold shadow-md hover:bg-sky-100 hover:text-sky-900 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Voltar etapa"
                   tabIndex={0}
@@ -879,7 +924,18 @@ export default function FormularioTecnico() {
                         return;
                       }
                     }
-                    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+                    setCurrentStep((prev) => {
+                      let next = prev + 1;
+                      // Pular construção se não existir
+                      if (
+                        steps[next] &&
+                        steps[next].id === "construcao" &&
+                        isAllMetragensZero()
+                      ) {
+                        next++;
+                      }
+                      return Math.min(next, steps.length - 1);
+                    });
                   }}
                   className="w-full md:w-auto px-6 py-2 rounded-xl border border-sky-200 bg-white text-sky-700 font-semibold shadow-md hover:bg-sky-100 hover:text-sky-900 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Avançar etapa"

@@ -135,8 +135,14 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
               <Input
                 id={item.id}
                 placeholder={item.placeholder}
-                value={formData.metragens[item.id as keyof typeof formData.metragens]}
-                onChange={(e) => handleNestedInputChange("metragens", item.id, e.target.value)}
+                value={formData.metragens[item.id as keyof typeof formData.metragens] ?? ""}
+                onChange={(e) => {
+                  let val = e.target.value.replace(/,/g, ".");
+                  // Permite zero, vazio ou número positivo
+                  if (/^\d*(\.\d*)?$/.test(val)) {
+                    handleNestedInputChange("metragens", item.id, val);
+                  }
+                }}
                 className={inputClassName}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sky-600 font-bold text-lg select-none">

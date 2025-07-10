@@ -226,7 +226,8 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
         {/* Campo de técnico removido */}
 
-        <div>
+        {/* Linha: proprietário | telefone | cpf */}
+        <div className="md:col-span-2">
           <Label htmlFor="proprietario" className={labelClassName}>Proprietário (Compromissário)</Label>
           <Input
             id="proprietario"
@@ -237,12 +238,12 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
           />
         </div>
         <div>
-          <Label htmlFor="responsavel_tributario" className={labelClassName}>Responsável Tributário</Label>
+          <Label htmlFor="telefone" className={labelClassName}>Telefone</Label>
           <Input
-            id="responsavel_tributario"
-            placeholder="Nome"
-            value={formData.responsavel_tributario || ""}
-            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value.toUpperCase())}
+            id="telefone"
+            placeholder="(00) 00000-0000"
+            value={formData.telefone}
+            onChange={(e) => handleInputChange("telefone", e.target.value)}
             className={inputClassName}
           />
         </div>
@@ -256,13 +257,34 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
-        <div>
-          <Label htmlFor="telefone" className={labelClassName}>Telefone de contato</Label>
+        {/* Linha: responsável tributário | telefone resp. tributário | cpf resp. tributário */}
+        <div className="md:col-span-2">
+          <Label htmlFor="responsavel_tributario" className={labelClassName}>Responsável Tributário</Label>
           <Input
-            id="telefone"
+            id="responsavel_tributario"
+            placeholder="Nome"
+            value={formData.responsavel_tributario || ""}
+            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value.toUpperCase())}
+            className={inputClassName}
+          />
+        </div>
+        <div>
+          <Label htmlFor="responsavel_tributario_telefone" className={labelClassName}>Telefone Resp. Tributário</Label>
+          <Input
+            id="responsavel_tributario_telefone"
             placeholder="(00) 00000-0000"
-            value={formData.telefone}
-            onChange={(e) => handleInputChange("telefone", e.target.value)}
+            value={formData.responsavel_tributario_telefone || ""}
+            onChange={(e) => handleInputChange("responsavel_tributario_telefone", e.target.value)}
+            className={inputClassName}
+          />
+        </div>
+        <div>
+          <Label htmlFor="responsavel_tributario_cpf" className={labelClassName}>CPF Resp. Tributário</Label>
+          <Input
+            id="responsavel_tributario_cpf"
+            placeholder="000.000.000-00"
+            value={formData.responsavel_tributario_cpf || ""}
+            onChange={(e) => handleInputChange("responsavel_tributario_cpf", e.target.value)}
             className={inputClassName}
           />
         </div>

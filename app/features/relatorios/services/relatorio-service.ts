@@ -1,6 +1,6 @@
 import type { FiltrosRelatorio } from "@/app/types/relatorio"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 export async function buscarRelatorios(filtros: FiltrosRelatorio) {
   try {

@@ -24,7 +24,9 @@ export async function createBoletim(formData: FormularioData) {
     cpf: Number(formData.cpf),
     contato: Number(formData.telefone),
     responsavel: formData.responsavel || "Responsável",
-    responsavel_tributario: formData.responsavel_tributario || ""
+    responsavel_tributario: formData.responsavel_tributario || "",
+    responsavel_tributario_telefone: formData.responsavel_tributario_telefone || "",
+    responsavel_tributario_cpf: formData.responsavel_tributario_cpf || ""
   }
 
   // Removido: obrigatoriedade de técnico

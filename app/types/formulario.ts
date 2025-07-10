@@ -215,8 +215,12 @@ export interface FormularioData {
 
   // Responsável
   responsavel?: string
-  responsavel_tributario?: string // <--- Adicione esta linha
 
-  // Técnico responsável
+  // Responsável tributário (opcional)
+  responsavel_tributario?: string
+  responsavel_tributario_telefone?: string
+  responsavel_tributario_cpf?: string
+
+  // Técnico responsável (opcional)
   tecnicoId?: string | number
 }

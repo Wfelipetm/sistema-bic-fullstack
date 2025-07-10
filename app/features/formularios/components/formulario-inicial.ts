@@ -150,8 +150,13 @@ export const formularioInicial: FormularioData = {
             paralelo: false,
             bloco: false,
         },
-    }, logradouroComPlaca: false, responsavel: "", obsLogradouro: {
+    }, logradouroComPlaca: false, responsavel: "",
+    responsavel_tributario: "",
+    responsavel_tributario_telefone: "",
+    responsavel_tributario_cpf: "",
+    obsLogradouro: {
         logradouro_placa: false,
         observacoes: "",
-    }, observacoes: undefined
+    },
+    observacoes: undefined
 }

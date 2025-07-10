@@ -8,7 +8,7 @@ export async function gerarRelatorioPDF(id: number) {
   }
 
   // 1. Buscar dados da API
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
   const response = await fetch(`${apiBaseUrl}/boletim/${id}/completo`);
   const data = await response.json();
 
@@ -77,7 +77,7 @@ export async function gerarRelatorioPDF(id: number) {
   doc.line(5, 42, 190, 42);
   y += 4;
 
-  // ENDEREÇO + RESPONSÁVEL TRIBUTÁRIO NA MESMA LINHA
+  // ENDEREÇO + RESPONSÁVEL TRIBUTÁRIO + TELEFONE/CPF NA MESMA LINHA
   doc.setFont("helvetica", "bold");
   doc.text("Endereço:", 10, (y += 6));
   doc.setFont("helvetica", "normal");
@@ -92,6 +92,22 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text("Resp. Tributário:", 86, y); // Posição ajustada para caber ao lado do CEP
   doc.setFont("helvetica", "normal");
   doc.text(String(data.responsavel_tributario ?? ""), 115, y); // Posição ajustada
+
+  // Telefone e CPF do responsável tributário (em sequência, se existirem)
+  let xTel = 115 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
+  if (data.responsavel_tributario_telefone) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Tel.:", xTel, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(String(data.responsavel_tributario_telefone), xTel + 13, y);
+    xTel += 13 + (String(data.responsavel_tributario_telefone).length * 2.5) + 6;
+  }
+  if (data.responsavel_tributario_cpf) {
+    doc.setFont("helvetica", "bold");
+    doc.text("CPF:", xTel, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(String(data.responsavel_tributario_cpf), xTel + 13, y);
+  }
 
   doc.line(5, 52, 190, 52);
   y += 4;
