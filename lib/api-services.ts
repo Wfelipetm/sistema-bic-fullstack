@@ -3,12 +3,12 @@ import { apiUrl } from "@/lib/api"
 
 // Utilitário para obter headers com Authorization
 function authHeaders(extra: Record<string, any> = {}) {
-  const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...extra,
-  };
+    const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+    return {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...extra,
+    };
 }
 
 // BOLETIM

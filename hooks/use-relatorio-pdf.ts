@@ -9,7 +9,12 @@ export async function gerarRelatorioPDF(id: number) {
 
   // 1. Buscar dados da API
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  const response = await fetch(`${apiBaseUrl}/boletim/${id}/completo`);
+  const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+  const response = await fetch(`${apiBaseUrl}/boletim/${id}/completo`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
+  });
   const data = await response.json();
 
   const doc = new jsPDF({ orientation: "landscape" });
