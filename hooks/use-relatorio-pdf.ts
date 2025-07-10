@@ -84,7 +84,7 @@ export async function gerarRelatorioPDF(id: number) {
 
   // ENDEREÇO + RESPONSÁVEL TRIBUTÁRIO + TELEFONE/CPF NA MESMA LINHA
   doc.setFont("helvetica", "bold");
-  doc.text("Endereço:", 10, (y += 6));
+  doc.text("Endereço:", 10, (y += 4));
   doc.setFont("helvetica", "normal");
   doc.text(String(data.endereco ?? ""), 30, y);
 
@@ -93,33 +93,10 @@ export async function gerarRelatorioPDF(id: number) {
   doc.setFont("helvetica", "normal");
   doc.text(String(data.cep ?? ""), 170, y);
 
-  doc.setFont("helvetica", "bold");
-  doc.text("Resp. Tributário:", 86, y); // Posição ajustada para caber ao lado do CEP
-  doc.setFont("helvetica", "normal");
-  doc.text(String(data.responsavel_tributario ?? ""), 115, y); // Posição ajustada
-
-  // Telefone e CPF do responsável tributário (em sequência, se existirem)
-  let xTel = 115 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
-  if (data.responsavel_tributario_telefone) {
-    doc.setFont("helvetica", "bold");
-    doc.text("Tel.:", xTel, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(data.responsavel_tributario_telefone), xTel + 13, y);
-    xTel += 13 + (String(data.responsavel_tributario_telefone).length * 2.5) + 6;
-  }
-  if (data.responsavel_tributario_cpf) {
-    doc.setFont("helvetica", "bold");
-    doc.text("CPF:", xTel, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(data.responsavel_tributario_cpf), xTel + 13, y);
-  }
-
-  doc.line(5, 52, 190, 52);
-  y += 4;
-
+  doc.line(5, 49, 190, 49);
   // PROPRIETÁRIO
   doc.setFont("helvetica", "bold");
-  doc.text("Proprietário (Compromissário):", 10, (y += 6));
+  doc.text("Proprietário (Compromissário):", 10, (y += 7));
   doc.setFont("helvetica", "normal");
   doc.text(String(data.proprietario ?? ""), 65, y);
 
@@ -127,14 +104,39 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text("CPF:", 120, y);
   doc.setFont("helvetica", "normal");
   doc.text(String(data.cpf ?? ""), 130, y);
-  doc.line(5, 62, 190, 62);
+  doc.line(5, 57, 190, 57);
+
+  y += 4;
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Resp. Tributário:", 10, y + 4); // Posição ajustada para caber ao lado do CEP
+  doc.setFont("helvetica", "normal");
+  doc.text(String(data.responsavel_tributario ?? ""), 40, y + 4); // Posição ajustada
+
+  // Telefone e CPF do responsável tributário (em sequência, se existirem)
+  let xTel = 110 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
+  if (data.responsavel_tributario_telefone) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Tel.:", xTel, y + 4);
+    doc.setFont("helvetica", "normal");
+    doc.text(String(data.responsavel_tributario_telefone), xTel + 9, y + 4);
+    xTel += 13 + (String(data.responsavel_tributario_telefone).length * 2.5) + 6;
+  }
+  if (data.responsavel_tributario_cpf) {
+    doc.setFont("helvetica", "bold");
+    doc.text("CPF:", xTel + 10, y + 4);
+    doc.setFont("helvetica", "normal");
+    doc.text(String(data.responsavel_tributario_cpf), xTel + 19, y + 4);
+  }
+
+   doc.line(5, 65, 190, 65);
   y += 4;
 
   // LOGRADOURO
   doc.setFont("helvetica", "bold");
-  doc.text("I - INFORMAÇÕES SOBRE O LOGRADOURO:", 60, (y += 5));
+  doc.text("I - INFORMAÇÕES SOBRE O LOGRADOURO:", 60, (y += 8));
   doc.setFont("helvetica", "normal");
-  doc.line(5, 70, 190, 70);
+  doc.line(5, 72, 190, 72);
   y += 2;
   const InformacoesLogradouro = [
     [data.pavimentacao === true ? "X" : "", "1- Pavimentação"],
@@ -151,14 +153,14 @@ export async function gerarRelatorioPDF(id: number) {
     doc.text(check, x + 1, y + 6);
     doc.text(label, x + 5, y + 6);
   });
-  doc.line(5, 79, 190, 79);
+  doc.line(5, 82, 190, 82);
   y += 10;
 
   // TERRENO - EXIBIÇÃO EM COLUNAS
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("II - INFORMAÇÕES SOBRE O TERRENO:", 64, y + 4);
-  doc.line(5, 86, 190, 86);
+  doc.line(5, 88, 190, 88);
   y += 4;
   const renderTerrenoHorizontal = () => {
     const opcoes = [
@@ -199,7 +201,7 @@ export async function gerarRelatorioPDF(id: number) {
       },
     ];
 
-    const startY = y + 7;
+    const startY = y + 6;
     const colWidth = 45;
 
     opcoes.forEach((grupo, i) => {
@@ -227,7 +229,7 @@ export async function gerarRelatorioPDF(id: number) {
   };
 
   renderTerrenoHorizontal();
-  doc.line(5, 124, 190, 124);
+  doc.line(5, 128, 190, 128);
 
   // METRAGENS
   const formatNum = (v: any, sufixo: string) =>
@@ -237,10 +239,10 @@ export async function gerarRelatorioPDF(id: number) {
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  doc.text("III - METRAGENS:", 85, 128);
-  doc.line(5, 130, 190, 130);
+  doc.text("III - METRAGENS:", 85, 133);
+  doc.line(5, 135, 190, 135);
   doc.setFont("helvetica", "bold");
-  doc.text("Área do Terreno:", 10, (y += 3));
+  doc.text("Área do Terreno:", 10, (y += 7));
   doc.setFont("helvetica", "normal");
   doc.text(formatNum(String(data.area_terreno), " m²"), 40, y);
   doc.setFont("helvetica", "bold");
@@ -251,7 +253,7 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text("Área Edificada:", 127, y);
   doc.setFont("helvetica", "normal");
   doc.text(formatNum(String(data.area_edificada), " m²"), 155, y);
-  doc.line(5, 137, 190, 137);
+  doc.line(5, 142, 190, 142);
   y -= 3;
 
   // CHAMAR AS SEÇÕES RESTANTES PARA APARECEREM NO PDF (após as declarações)
