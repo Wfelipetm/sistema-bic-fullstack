@@ -89,9 +89,9 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text(String(data.endereco ?? ""), 30, y);
 
   doc.setFont("helvetica", "bold");
-  doc.text("CEP:", 160, y);
+  doc.text("CEP:", 120, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.cep ?? ""), 170, y);
+  doc.text(String(data.cep ?? ""), 130, y);
 
   doc.line(5, 49, 190, 49);
   // PROPRIETÁRIO
@@ -115,18 +115,19 @@ export async function gerarRelatorioPDF(id: number) {
 
   // Telefone e CPF do responsável tributário (em sequência, se existirem)
   let xTel = 110 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
+  
+  if (data.responsavel_tributario_cpf) {
+    doc.setFont("helvetica", "bold");
+    doc.text("CPF:", xTel + 10, y + 4);
+    doc.setFont("helvetica", "normal");
+    doc.text(String(data.responsavel_tributario_cpf), xTel + 19, y + 4);
+  }
   if (data.responsavel_tributario_telefone) {
     doc.setFont("helvetica", "bold");
     doc.text("Tel.:", xTel, y + 4);
     doc.setFont("helvetica", "normal");
     doc.text(String(data.responsavel_tributario_telefone), xTel + 9, y + 4);
     xTel += 13 + (String(data.responsavel_tributario_telefone).length * 2.5) + 6;
-  }
-  if (data.responsavel_tributario_cpf) {
-    doc.setFont("helvetica", "bold");
-    doc.text("CPF:", xTel + 10, y + 4);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(data.responsavel_tributario_cpf), xTel + 19, y + 4);
   }
 
    doc.line(5, 65, 190, 65);
