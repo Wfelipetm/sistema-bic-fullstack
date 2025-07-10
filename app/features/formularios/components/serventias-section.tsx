@@ -33,10 +33,14 @@ const defaultServentias = [
 export function ServentiasSection({ formData, handleNestedInputChange }: ServentiasSectionProps) {
   // Função de validação obrigatória
   function validateRequiredServentias() {
-    // Todos os campos de serventias devem ser preenchidos com valor > 0
+    // Todos os campos de serventias devem ser preenchidos (zero é aceito)
     for (const item of serventiasItems) {
       const valor = formData.serventias[item.id as keyof typeof formData.serventias];
-      if (!valor || Number(valor) <= 0) {
+      if (
+        valor === undefined ||
+        valor === null ||
+        (typeof valor === "string" && String(valor).trim() === "")
+      ) {
         toast.warning(`Preencha o campo ${item.label}.`);
         return false;
       }
@@ -132,9 +136,11 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
                 pattern="[0-9]*"
                 id={item.id}
                 className={inputClassName}
-                value={formData.serventias[item.id as keyof typeof formData.serventias] || ""}
+                value={formData.serventias[item.id as keyof typeof formData.serventias] ?? ""}
                 onChange={(e) => {
-                  handleNestedInputChange("serventias", item.id, e.target.value)
+                  // Permite apenas números inteiros >= 0
+                  const val = e.target.value.replace(/[^0-9]/g, "");
+                  handleNestedInputChange("serventias", item.id, val);
                 }}
                 autoComplete="off"
                 placeholder="0"
