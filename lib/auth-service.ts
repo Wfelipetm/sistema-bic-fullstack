@@ -28,10 +28,12 @@ export interface ApiError {
 
 class AuthService {
     private async makeRequest<T>(endpoint: string, options: RequestInit): Promise<T> {
+        const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 ...options.headers,
             },
         })

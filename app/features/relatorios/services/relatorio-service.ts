@@ -21,7 +21,12 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
     }
 
 
-    let response = await fetch(url)
+    const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+    let response = await fetch(url, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      }
+    })
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.status}`)
     }
@@ -31,7 +36,11 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
     // Filtrar por status se não for "all"
     if (filtros.status && filtros.status !== "all") {
       try {
-        const statusResponse = await fetch(`${API_BASE_URL}/relatorios/status/${filtros.status}`)
+        const statusResponse = await fetch(`${API_BASE_URL}/relatorios/status/${filtros.status}`, {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        })
         if (statusResponse.ok) {
           const boletinsPorStatus = await statusResponse.json()
           const idsStatus = boletinsPorStatus.map((item: any) => item.id)
@@ -63,7 +72,12 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
 
 export async function buscarTecnicos() {
   try {
-    const response = await fetch(`${API_BASE_URL}/tecnicos`)
+    const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+    const response = await fetch(`${API_BASE_URL}/tecnicos`, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      }
+    })
     return await response.json()
   } catch (error) {
     console.error("❌ Erro ao buscar técnicos:", error)

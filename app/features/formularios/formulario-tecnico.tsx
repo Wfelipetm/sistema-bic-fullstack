@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -70,7 +70,7 @@ function deepSanitizeBooleans(obj: any): any {
   return obj;
 }
 
-export default function FormularioTecnico() {
+export default function qFormularioTecnico() {
   const [formData, setFormData] = useState<FormularioData>(formularioInicial);
   const [isLoading, setIsLoading] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -237,7 +237,8 @@ export default function FormularioTecnico() {
   useEffect(() => {
     // APIs calls mantidas iguais...
     situacaoAPI.get().then((data) => {
-      const options = data.map((item: any, idx: number) => ({
+      const arr = Array.isArray(data) ? data : (data ? [data] : []);
+      const options = arr.map((item: any, idx: number) => ({
         id: item.id,
         label:
           item.descricao &&
@@ -258,7 +259,8 @@ export default function FormularioTecnico() {
     });
 
     caracterSoloAPI.get().then((data) => {
-      const options = data.map((item: any, idx: number) => ({
+      const arr = Array.isArray(data) ? data : (data ? [data] : []);
+      const options = arr.map((item: any, idx: number) => ({
         id: item.id,
         label:
           item.descricao &&
@@ -279,7 +281,8 @@ export default function FormularioTecnico() {
     });
 
     topografiaAPI.get().then((data) => {
-      const options = data.map((item: any, idx: number) => ({
+      const arr = Array.isArray(data) ? data : (data ? [data] : []);
+      const options = arr.map((item: any, idx: number) => ({
         id: item.id,
         label:
           item.descricao &&
@@ -300,7 +303,8 @@ export default function FormularioTecnico() {
     });
 
     nivelamentoAPI.get().then((data) => {
-      const options = data.map((item: any, idx: number) => ({
+      const arr = Array.isArray(data) ? data : (data ? [data] : []);
+      const options = arr.map((item: any, idx: number) => ({
         id: item.id,
         label:
           item.descricao &&
@@ -592,12 +596,12 @@ export default function FormularioTecnico() {
     }
   };
 
-  // Função para checar se todas as metragens são zero ou vazias
-  function isAllMetragensZero() {
+  // Função para checar se todas as metragens são zero ou vazias (memoizada para evitar erro de dependências do useEffect)
+  const isAllMetragensZero = useCallback(() => {
     const m = formData.metragens;
     const zeroOrEmpty = (v: any) => v === "0" || v === 0 || v === "0.00" || v === "0,00" || v === "" || v === undefined || v === null;
     return zeroOrEmpty(m.areaTerreno) && zeroOrEmpty(m.testada) && zeroOrEmpty(m.areaEdificada);
-  }
+  }, [formData.metragens]);
 
   // Monta steps dinamicamente pulando construção se necessário
   const steps = [

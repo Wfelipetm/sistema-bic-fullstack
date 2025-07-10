@@ -34,9 +34,13 @@ export async function createBoletim(formData: FormularioData) {
   // Log para depuração
   console.log("Payload enviado para /boletim/:", JSON.stringify(payload, null, 2))
 
+  const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
   const res = await fetch(apiUrl("/boletim/"), {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
     body: JSON.stringify(payload),
   })
   if (!res.ok) {
