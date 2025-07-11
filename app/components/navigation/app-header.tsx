@@ -59,10 +59,10 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
 
         {/* Perfil do usuário */}
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex flex-col text-right">
+          {/* <div className="hidden md:flex flex-col text-right">
             <span className="text-sm font-semibold text-blue-900">{user.name}</span>
             <span className="text-xs text-blue-400">{user.role}</span>
-          </div>
+          </div> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-blue-50">
