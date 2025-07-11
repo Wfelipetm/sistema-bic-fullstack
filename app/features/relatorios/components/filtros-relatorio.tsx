@@ -54,16 +54,16 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
   const relatoriosPorPagina = 1
   const totalPaginas = Math.ceil(relatorios.length / relatoriosPorPagina)
 
-  // Verificar autenticação ao carregar o componente
-  useEffect(() => {
-    const checkAuth = async () => {
-      const isAuthenticated = await authService.checkAuthAndRedirect();
-      if (!isAuthenticated) {
-        toast.error("Sessão expirada. Redirecionando para login...");
-      }
-    };
-    checkAuth();
-  }, []);
+  // Verificar autenticação ao carregar o componente - DESABILITADO
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const isAuthenticated = await authService.checkAuthAndRedirect();
+  //     if (!isAuthenticated) {
+  //       toast.error("Sessão expirada. Redirecionando para login...");
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []);
 
   // Novo: salvar último relatório em cache localStorage
   useEffect(() => {
