@@ -54,11 +54,11 @@ export function AvaliacaoUrbanisticaSection({
     return () => { delete window.__validateRequiredAvaliacaoUrbanistica; };
   }, [formData]);
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
-    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-sky-400" /> },
-    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-sky-400" /> },
+    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-yellow-400" /> },
+    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-yellow-300" /> },
     { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: <Zap className="w-6 h-6 text-sky-400" /> },
-    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-sky-400" /> },
-    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-sky-400" /> },
+    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-orange-400" /> },
+    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-red-400" /> },
   ])
 
   useEffect(() => {
