@@ -33,7 +33,6 @@ export default function Relatorios({ setActiveView }: RelatoriosProps) {
   }, [])
 
   const handlePreview = (relatorioId: string) => {
-    console.log(`Visualizando relatório ${relatorioId}`)
     alert(`Abrindo visualização do relatório ${relatorioId}`)
   }
 

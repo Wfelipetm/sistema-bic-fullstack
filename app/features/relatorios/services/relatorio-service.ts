@@ -20,14 +20,25 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
       url += `?${params.toString()}`
     }
 
-
     const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.')
+    }
+
     let response = await fetch(url, {
       headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     })
+
     if (!response.ok) {
+      if (response.status === 401) {
+        // Token expirado ou inválido
+        localStorage.removeItem('bic-token')
+        throw new Error('Sessão expirada. Faça login novamente.')
+      }
       throw new Error(`Erro na requisição: ${response.status}`)
     }
 
@@ -38,7 +49,8 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
       try {
         const statusResponse = await fetch(`${API_BASE_URL}/relatorios/status/${filtros.status}`, {
           headers: {
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         })
         if (statusResponse.ok) {
@@ -73,11 +85,26 @@ export async function buscarRelatorios(filtros: FiltrosRelatorio) {
 export async function buscarTecnicos() {
   try {
     const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.')
+    }
+
     const response = await fetch(`${API_BASE_URL}/tecnicos`, {
       headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     })
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('bic-token')
+        throw new Error('Sessão expirada. Faça login novamente.')
+      }
+      throw new Error(`Erro na requisição: ${response.status}`)
+    }
+
     return await response.json()
   } catch (error) {
     console.error("❌ Erro ao buscar técnicos:", error)

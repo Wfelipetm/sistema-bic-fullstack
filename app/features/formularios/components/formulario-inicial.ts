@@ -1,7 +1,37 @@
 import type { FormularioData } from "@/app/types/formulario"
 
 export const formularioInicial: FormularioData = {
-    inscricaoNumero: "", numeroInscricao: "", numeroBote: "", numeroQuadra: "", nomeLogradouro: "", lancamentoNovo: "", revisao: "", lote: "", quadra: "", loteamento: "", distrito: "", endereco: "", cep: "", proprietario: "", cpf: "", telefone: "", logradouro: {
+    // Dados básicos
+    inscricaoNumero: "",
+    lancamentoNovo: "",
+    revisao: "",
+
+    // Localização
+    lote: "",
+    quadra: "",
+    loteamento: "",
+    distrito: "",
+    endereco: "",
+    cep: "",
+
+    // Proprietário
+    proprietario: "",
+    cpf: "",
+    telefone: "",
+
+    // Responsável
+    responsavel: "",
+
+    // Responsável Tributário
+    responsavel_tributario: "",
+    responsavel_tributario_telefone: "",
+    responsavel_tributario_cpf: "",
+
+    // Foto do boletim
+    foto: null,
+    fotoPreview: "",
+
+    logradouro: {
         pavimentacao: false,
         iluminacaoPublica: false,
         redeEsgoto: false,
@@ -33,25 +63,16 @@ export const formularioInicial: FormularioData = {
             ao_nivel: false,
             acima_nivel: false,
         },
-    }, terrenoCaracteristicas: {
-        alagadico: false,
-        arenoso: false,
-        rochoso: false,
-        normal: false,
-    }, terrenoNivelamento: {
-        abaixoNivel: false,
-        aoNivel: false,
-        acimaNivel: false,
-    }, terrenoTopografia: {
-        aclive: false,
-        declive: false,
-        encosta: false,
-        horizontal: false,
-    }, metragens: {
+    },
+
+    metragens: {
         areaTerreno: "",
         testada: "",
         areaEdificada: "",
-    }, construcao: {
+    },
+
+    construcao: {
+        // 1- Tipo
         tipo: {
             tipo_casa: false,
             tipo_apartamento: false,
@@ -150,13 +171,12 @@ export const formularioInicial: FormularioData = {
             paralelo: false,
             bloco: false,
         },
-    }, logradouroComPlaca: false, responsavel: "",
-    responsavel_tributario: "",
-    responsavel_tributario_telefone: "",
-    responsavel_tributario_cpf: "",
+    }, logradouroComPlaca: false,
     obsLogradouro: {
         logradouro_placa: false,
         observacoes: "",
     },
-    observacoes: undefined
+
+    // Técnico responsável (opcional)
+    tecnicoId: undefined
 }

@@ -5,7 +5,6 @@ import { apiUrl } from "@/lib/api"
 export const serventiasAPI = {
     get: () => fetch(apiUrl("/serventias/")).then(r => r.json()),
     create: (data: any) => {
-        console.log("🔎 Payload enviado para /serventias/:", data); // <-- Adicione esta linha
         return fetch(apiUrl("/serventias/"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },

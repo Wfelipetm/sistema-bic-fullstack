@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Camera, X } from "lucide-react"
 import type { FormularioData } from "@/app/types/formulario"
 import { apiUrl } from "@/lib/api"
 
@@ -15,6 +17,8 @@ interface Tecnico {
 interface DadosBasicosSectionProps {
   formData: FormularioData
   handleInputChange: (field: string, value: string) => void
+  handleFileChange?: (field: string, file: File | null) => void
+  handleNestedInputChange?: (section: string, field: string, value: string) => void
 }
 
 function getPrimeiroDiaMes() {
@@ -27,7 +31,7 @@ function getHoje() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
 }
 
-export function DadosBasicosSection({ formData, handleInputChange }: DadosBasicosSectionProps) {
+export function DadosBasicosSection({ formData, handleInputChange, handleFileChange, handleNestedInputChange }: DadosBasicosSectionProps) {
   // Validação dos campos obrigatórios
   function validateRequiredFields() {
     if (!formData.inscricaoNumero || formData.inscricaoNumero.trim() === "") {
@@ -48,7 +52,49 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
     }
     return true;
   }
-  // Removido: técnicos
+
+  // Função para lidar com upload de foto
+  const handleFotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    
+    if (file) {
+      // Validar tipo de arquivo
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Apenas arquivos JPEG, JPG e PNG são permitidos.");
+        return;
+      }
+      
+      // Validar tamanho (5MB máximo)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        toast.error("O arquivo deve ter no máximo 5MB.");
+        return;
+      }
+
+      // Criar preview da imagem
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = e.target?.result as string;
+        handleInputChange("fotoPreview", preview);
+      };
+      reader.readAsDataURL(file);
+
+      // Salvar o arquivo
+      if (handleFileChange) {
+        handleFileChange("foto", file);
+      }
+    }
+  };
+
+  // Função para remover foto
+  const removeFoto = () => {
+    if (handleFileChange) {
+      handleFileChange("foto", null);
+    }
+    handleInputChange("fotoPreview", "");
+  };
+
   const [lancamentoNovo, setLancamentoNovo] = useState(getPrimeiroDiaMes())
   const [revisao, setRevisao] = useState(getHoje())
 
@@ -69,13 +115,13 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
 //tamanho dos inputs
 
   const inputClassName = `
-    h-14 w-full text-base rounded-xl 
+    h-12 sm:h-14 w-full text-sm sm:text-base rounded-xl 
     border border-slate-200 bg-white text-sky-700
     placeholder:text-sky-400
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
-    px-6
+    px-4 sm:px-6
   `
 
   const labelClassName = "text-sm font-medium text-sky-600 mb-1 block"
@@ -94,7 +140,10 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
 
   return (
     <div
-      className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 px-3 py-8 min-h-[320px] md:min-h-[360px] xl:min-h-[400px] w-full max-w-full mx-auto select-none"
+      className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 
+                 px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 
+                 min-h-[320px] md:min-h-[360px] xl:min-h-[400px] 
+                 w-full max-w-full mx-auto select-none"
       style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
     >
       {/*
@@ -116,7 +165,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         <div className="w-12 h-1 bg-sky-300 rounded-full" />
       </div> */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8 dados-basicos-section-grid">
         <div>
           <Label htmlFor="inscricaoNumero" className={labelClassName}>Inscrição Nº *</Label>
           <Input
@@ -177,7 +226,7 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6 mb-8 dados-basicos-section-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 dados-basicos-section-grid">
 
         <div>
           <Label htmlFor="quadra" className={labelClassName}>Quadra *</Label>
@@ -223,11 +272,11 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-6 mb-8 dados-basicos-section-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8 dados-basicos-section-grid">
         {/* Campo de técnico removido */}
 
         {/* Linha: proprietário | telefone | cpf */}
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2 lg:col-span-2">
           <Label htmlFor="proprietario" className={labelClassName}>Proprietário (Compromissário)</Label>
           <Input
             id="proprietario"
@@ -257,8 +306,78 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
             className={inputClassName}
           />
         </div>
+        
+        {/* Campo de Upload de Foto - Responsivo e Contido */}
+        <div className="order-last sm:order-none sm:col-span-2 md:col-span-1 lg:row-span-2">
+          <Label className={labelClassName}>Foto do Boletim</Label>
+          <div className="space-y-2 w-full max-w-full">
+            {/* Área de upload */}
+            {!formData.fotoPreview && (
+              <div className="relative border-2 border-dashed border-sky-300 rounded-xl p-3 text-center hover:border-sky-400 transition-colors cursor-pointer 
+                            h-32 w-full max-w-[200px] sm:h-36 sm:max-w-[180px] md:h-40 md:max-w-full lg:max-w-[200px] mx-auto sm:mx-0">
+                <Camera className="mx-auto h-5 w-5 sm:h-6 sm:w-6 text-sky-400 mb-2" />
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-sky-700">
+                    Clique para adicionar foto
+                  </p>
+                  <p className="text-xs text-sky-500">
+                    PNG, JPG até 5MB
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFotoChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+            )}
+
+            {/* Preview da foto */}
+            {formData.fotoPreview && (
+              <div className="relative w-full max-w-[200px] sm:max-w-[180px] md:max-w-full lg:max-w-[200px] mx-auto sm:mx-0">
+                <div className="border border-sky-200 rounded-xl overflow-hidden cursor-pointer hover:border-sky-400 transition-colors
+                              h-32 w-full sm:h-36 md:h-40 aspect-[4/3]"
+                     onClick={() => document.getElementById('foto-input')?.click()}>
+                  <img
+                    src={formData.fotoPreview}
+                    alt="Preview do boletim"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+                    <Camera className="h-5 w-5 text-white opacity-0 hover:opacity-80 transition-opacity" />
+                  </div>
+                </div>
+                
+                {/* Botão para remover foto */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFoto();
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-md transition-colors z-10"
+                  title="Remover foto"
+                >
+                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                
+                <input
+                  id="foto-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFotoChange}
+                  className="hidden"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Linha: responsável tributário | telefone resp. tributário | cpf resp. tributário */}
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2 lg:col-span-2">
           <Label htmlFor="responsavel_tributario" className={labelClassName}>Responsável Tributário</Label>
           <Input
             id="responsavel_tributario"
@@ -291,8 +410,6 @@ export function DadosBasicosSection({ formData, handleInputChange }: DadosBasico
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6 mb-8 dados-basicos-section-grid">
-
-
 
       </div>
 

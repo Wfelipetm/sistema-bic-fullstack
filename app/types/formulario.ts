@@ -1,12 +1,4 @@
 export interface FormularioData {
-  observacoes: string | number | readonly string[] | undefined
-  numeroInscricao: string | number | readonly string[] | undefined
-  numeroBote: string | number | readonly string[] | undefined
-  numeroQuadra: string | number | readonly string[] | undefined
-  nomeLogradouro: string | number | readonly string[] | undefined
-  terrenoCaracteristicas: any
-  terrenoNivelamento: any
-  terrenoTopografia: any
   // Dados básicos
   inscricaoNumero: string
   lancamentoNovo: string // Ex: "2024-06-13T00:00:00.000Z"
@@ -24,6 +16,18 @@ export interface FormularioData {
   proprietario: string
   cpf: string
   telefone: string
+
+  // Responsável
+  responsavel?: string
+
+  // Responsável Tributário
+  responsavel_tributario?: string
+  responsavel_tributario_telefone?: string
+  responsavel_tributario_cpf?: string
+
+  // Foto do boletim
+  foto?: File | null
+  fotoPreview?: string
 
   // I - Informações sobre o logradouro
   logradouro: {
@@ -212,14 +216,6 @@ export interface FormularioData {
     logradouro_placa: boolean
     observacoes: string
   }
-
-  // Responsável
-  responsavel?: string
-
-  // Responsável tributário (opcional)
-  responsavel_tributario?: string
-  responsavel_tributario_telefone?: string
-  responsavel_tributario_cpf?: string
 
   // Técnico responsável (opcional)
   tecnicoId?: string | number

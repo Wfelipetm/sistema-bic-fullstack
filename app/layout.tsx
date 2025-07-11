@@ -30,9 +30,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>
-        <ThemeProvider attribute="class" defaultTheme="light">
+    <html lang="pt-BR" suppressHydrationWarning className="light">
+      <body className={`${inter.variable} font-sans light`}>
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={false}
+          forcedTheme="light"
+          storageKey="bic-theme"
+        >
           <AuthProvider>
             <Toaster
               position="top-center"

@@ -103,6 +103,47 @@ class AuthService {
             },
         })
     }
+
+    // Função para validar token
+    async validateToken(): Promise<boolean> {
+        try {
+            const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+            if (!token) return false;
+
+            // Usar endpoint de usuários para validar o token
+            const response = await fetch(`${API_BASE_URL}/usuarios`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('bic-token');
+                }
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Erro ao validar token:', error);
+            return false;
+        }
+    }
+
+    // Função para verificar autenticação e redirecionar se necessário
+    async checkAuthAndRedirect(): Promise<boolean> {
+        const isValid = await this.validateToken();
+        if (!isValid) {
+            if (typeof window !== "undefined") {
+                window.location.href = '/login';
+            }
+            return false;
+        }
+        return true;
+    }
 }
 
 export const authService = new AuthService()

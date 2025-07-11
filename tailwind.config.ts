@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss"
 
 const config = {
-  darkMode: ["class"],
+  darkMode: "media", // Usa a preferência do sistema, mas será sobrescrita pelo ThemeProvider
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -75,16 +75,16 @@ const config = {
           900: "#7f1d1d",
         },
         '10': '#349FED',
-				'30': '#E8E9EC',
-				'60': '#F4F4F5',
-				hover: '#349FED',
-				second10: '#0266AF',
-				TitleText: '#375582',
-				Description: '#707D91',
-				iconColor: '#0266AF',
-				bg60: '#E2E4EE',
-				primary10: '#0266AF',
-				primary30: '#375582',
+        '30': '#E8E9EC',
+        '60': '#F4F4F5',
+        hover: '#349FED',
+        second10: '#0266AF',
+        TitleText: '#375582',
+        Description: '#707D91',
+        iconColor: '#0266AF',
+        bg60: '#E2E4EE',
+        primary10: '#0266AF',
+        primary30: '#375582',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
