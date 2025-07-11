@@ -214,7 +214,7 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
   }) {
     const selectedLabels = options.filter((opt) => (formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[opt.id])).map((opt) => opt.label).join(", ");
     return (
-      <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4 select-none"
+      <div className="snap-start flex-shrink-0 w-full max-w-screen min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4 select-none"
         style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
         <div className="flex items-center gap-3 mb-6">
           <div className={`text-2xl ${iconAnimClass}`}>{icon}</div>
@@ -222,25 +222,26 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
           <div className="flex-1 h-px bg-sky-200"></div>
         </div>
         <div className="flex flex-col gap-4">
-          {options.map((item) => (
+            {options.map((item) => (
             <div
               key={item.id}
-              className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer"
+              className="group relative bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:shadow-md hover:border-sky-200 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer flex items-center justify-between"
               onClick={() =>
-                handleNestedCheckboxChange(
-                  "construcao",
-                  subsection,
-                  item.id,
-                  !(formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[item.id]),
-                )
+              handleNestedCheckboxChange(
+                "construcao",
+                subsection,
+                item.id,
+                !(formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[item.id]),
+              )
               }
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="text-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200 {iconAnimClass}">{item.icon}</div>
-                <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
-                  {item.label}
-                </span>
+              <div className="flex items-center gap-3">
+              <div className={`text-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200 ${iconAnimClass}`}>{item.icon}</div>
+              <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
+                {item.label}
+              </span>
               </div>
+              <div className="ml-auto pl-4 flex items-center">
               <CheckboxField
                 id={item.id}
                 label={null}
@@ -248,15 +249,16 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
                 checked={formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[item.id]}
                 onCheckedChange={(checked) => handleNestedCheckboxChange("construcao", subsection, item.id, checked)}
               />
+              </div>
               <div
-                className={`absolute inset-0 rounded-xl border-2 pointer-events-none transition-all duration-200 ${
-                  formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[item.id]
-                    ? "border-sky-400 bg-sky-50/30"
-                    : "border-transparent"
-                }`}
+              className={`absolute inset-0 rounded-xl border-2 pointer-events-none transition-all duration-200 ${
+                formData.construcao[subsection] && (formData.construcao[subsection] as Record<string, boolean>)[item.id]
+                ? "border-sky-400 bg-sky-50/30"
+                : "border-transparent"
+              }`}
               ></div>
             </div>
-          ))}
+            ))}
         </div>
         <div className="flex-1"></div>
         <CardResumo icon={resumoIcon} title={title} selectedLabels={selectedLabels} impact={resumoImpact} dica={resumoDica} />
@@ -266,13 +268,14 @@ export function ConstrucaoSection({ formData, handleNestedCheckboxChange }: Cons
 
   const [dragScrollRef, isDragging] = useHorizontalDragScroll();
   return (
-    <div className="w-full max-w-[1550px] mx-auto">
+    <div className="w-full max-w-screen mx-auto overflow-hidden px-4">
+
       <div
         ref={dragScrollRef}
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
-        <div className="flex flex-nowrap gap-8 min-w-0">
+        <div className="flex flex-nowrap gap-8 max-w-[320px]">
           <SectionCard
             title="Piso"
             options={pisoOptions}
