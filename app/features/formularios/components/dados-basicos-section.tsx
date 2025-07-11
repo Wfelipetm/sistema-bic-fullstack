@@ -121,7 +121,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
     focus:border-sky-300 focus:ring-2 focus:ring-sky-100 focus:outline-none
     hover:border-sky-200 hover:shadow-sm
     transition-all duration-200 ease-in-out
-    px-4 sm:px-6
+    px-4 sm:px-2
   `
 
   const labelClassName = "text-sm font-medium text-sky-600 mb-1 block"
@@ -167,7 +167,10 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8 dados-basicos-section-grid">
         <div>
-          <Label htmlFor="inscricaoNumero" className={labelClassName}>Inscrição Nº *</Label>
+            <div className="flex flex-row items-start">
+            <Label htmlFor="inscricaoNumero" className={labelClassName}>Inscrição Nº</Label>
+            <span className="text-red-600 text-base -mt-1">*</span>
+            </div>
           <Input
             id="inscricaoNumero"
             placeholder="Número da inscrição"
@@ -179,7 +182,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
         </div>
 
         <div>
-          <Label className={labelClassName}>Lançamento novo em:</Label>
+          <Label className={labelClassName}>Lançamento</Label>
           <Input
             type="date"
             value={lancamentoNovo}
@@ -192,7 +195,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
         </div>
 
         <div>
-          <Label className={labelClassName}>Revisão em:</Label>
+          <Label className={labelClassName}>Revisão</Label>
           <Input
             type="date"
             value={revisao}
@@ -215,7 +218,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           />
         </div>
         <div>
-          <Label htmlFor="lote" className={labelClassName}>Lote *</Label>
+          <Label htmlFor="lote" className={labelClassName}>Lote</Label>
           <Input
             id="lote"
             placeholder="Número do lote"
@@ -229,7 +232,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 dados-basicos-section-grid">
 
         <div>
-          <Label htmlFor="quadra" className={labelClassName}>Quadra *</Label>
+          <Label htmlFor="quadra" className={labelClassName}>Quadra</Label>
           <Input
             id="quadra"
             placeholder="Quadra"
@@ -261,7 +264,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           />
         </div>
         <div>
-          <Label htmlFor="endereco" className={labelClassName}>Endereço *</Label>
+          <Label htmlFor="endereco" className={labelClassName}>Endereço</Label>
           <Input
             id="endereco"
             placeholder="Endereço completo"
@@ -314,7 +317,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             {/* Área de upload */}
             {!formData.fotoPreview && (
               <div className="relative border-2 border-dashed border-sky-300 rounded-xl p-3 text-center hover:border-sky-400 transition-colors cursor-pointer 
-                            h-32 w-full max-w-[200px] sm:h-36 sm:max-w-[180px] md:h-40 md:max-w-full lg:max-w-[200px] mx-auto sm:mx-0">
+                            h-32 w-full max-w-[200px] sm:h-36 sm:max-w-[180px] md:h-44 md:max-w-full lg:max-w-[275px] mx-auto sm:mx-0">
                 <Camera className="mx-auto h-5 w-5 sm:h-6 sm:w-6 text-sky-400 mb-2" />
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-sky-700">
@@ -335,7 +338,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
 
             {/* Preview da foto */}
             {formData.fotoPreview && (
-              <div className="relative w-full max-w-[200px] sm:max-w-[180px] md:max-w-full lg:max-w-[200px] mx-auto sm:mx-0">
+              <div className="relative w-full max-w-[200px] sm:max-w-[180px] md:max-w-full lg:max-w-[275px] mx-auto sm:mx-0">
                 <div className="border border-sky-200 rounded-xl overflow-hidden cursor-pointer hover:border-sky-400 transition-colors
                               h-32 w-full sm:h-36 md:h-40 aspect-[4/3]"
                      onClick={() => document.getElementById('foto-input')?.click()}>
@@ -356,7 +359,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
                     e.stopPropagation();
                     removeFoto();
                   }}
-                  className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-md transition-colors z-10"
+                  className="absolute -top-2 -right-2 bg-[#0284c7] hover:bg-[#0284c790] text-white rounded-full p-1 shadow-md transition-colors z-10"
                   title="Remover foto"
                 >
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -388,7 +391,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           />
         </div>
         <div>
-          <Label htmlFor="responsavel_tributario_telefone" className={labelClassName}>Telefone Resp. Tributário</Label>
+          <Label htmlFor="responsavel_tributario_telefone" className={labelClassName}>Tel. Tributário</Label>
           <Input
             id="responsavel_tributario_telefone"
             placeholder="(00) 00000-0000"
@@ -398,7 +401,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           />
         </div>
         <div>
-          <Label htmlFor="responsavel_tributario_cpf" className={labelClassName}>CPF Resp. Tributário</Label>
+          <Label htmlFor="responsavel_tributario_cpf" className={labelClassName}>CPF Tributário</Label>
           <Input
             id="responsavel_tributario_cpf"
             placeholder="000.000.000-00"

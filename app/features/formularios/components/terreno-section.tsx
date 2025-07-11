@@ -187,20 +187,21 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
               <span className="font-medium text-sky-700 group-hover:text-sky-800 transition-colors duration-200">
                 {item.label}
               </span>
+              <div className="ml-auto">
+                <CheckboxField
+                  id={item.id}
+                  label={null}
+                  description=""
+                  checked={(formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]}
+                  onCheckedChange={(checked) => handleNestedCheckboxChange("terreno", subsection, item.id, checked)}
+                />
+              </div>
             </div>
-            <CheckboxField
-              id={item.id}
-              label={null}
-              description=""
-              checked={(formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]}
-              onCheckedChange={(checked) => handleNestedCheckboxChange("terreno", subsection, item.id, checked)}
-            />
             <div
-              className={`absolute inset-0 rounded-xl border-2 pointer-events-none transition-all duration-200 ${
-                (formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]
+              className={`absolute inset-0 rounded-xl border-2 pointer-events-none transition-all duration-200 ${(formData.terreno[subsection as keyof typeof formData.terreno] as any)[item.id]
                   ? "border-sky-400 bg-sky-50/30"
                   : "border-transparent"
-              }`}
+                }`}
             ></div>
           </div>
         ))}
@@ -235,13 +236,13 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
   // Exemplo de uso: chame checkCardsAndToast() ao tentar navegar
 
   return (
-    <div className="w-full max-w-[1900px] mx-auto">
+    <div className="w-full  mx-auto">
       <div
         ref={dragScrollRef}
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
-        <div className="flex flex-nowrap gap-8 min-w-0">
+        <div className="flex flex-nowrap gap-8 max-w-[100px]">
           <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 mx-auto mb-4"
             style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
             <div className="flex items-center gap-3 mb-6">
@@ -279,36 +280,36 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
               <div className="flex-1 h-px bg-sky-200"></div>
             </div>
             <OptionsList options={topografiaOptions} subsection="topografia" />
-          <div className="flex-1"></div>
-          <div className="mt-24 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
-            <div className="flex items-center gap-3 mb-2">
-              <Mountain className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.topografia}`} />
-              <span className="font-semibold text-sky-800 text-base">Topografia: Impacto Direto</span>
+            <div className="flex-1"></div>
+            <div className="mt-24 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
+              <div className="flex items-center gap-3 mb-2">
+                <Mountain className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.topografia}`} />
+                <span className="font-semibold text-sky-800 text-base">Topografia: Impacto Direto</span>
+              </div>
+              <span className="font-bold text-sky-900">{topografiaOptions.filter(opt => (formData.terreno.topografia as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
+              <span className="block mt-2">Inclinação e relevo influenciam drenagem, acesso e custo. Adapte o projeto ao terreno.</span>
+              <span className="block mt-2 italic text-sky-600">Aproveite o melhor do lote.</span>
             </div>
-            <span className="font-bold text-sky-900">{topografiaOptions.filter(opt => (formData.terreno.topografia as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
-            <span className="block mt-2">Inclinação e relevo influenciam drenagem, acesso e custo. Adapte o projeto ao terreno.</span>
-            <span className="block mt-2 italic text-sky-600">Aproveite o melhor do lote.</span>
           </div>
-          </div>
-        <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4"
-          style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl"><Ruler className={`w-6 h-6 text-sky-500 ${iconAnimClass.nivelamento}`} /></div>
-            <h4 className="text-xl font-bold text-sky-800">Nivelamento</h4>
-            <div className="flex-1 h-px bg-sky-200"></div>
-          </div>
-          <OptionsList options={nivelamentoOptions} subsection="nivelamento" />
-          <div className="flex-1"></div>
-          <div className="mt-6 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
-            <div className="flex items-center gap-3 mb-2">
-              <Ruler className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.nivelamento}`} />
-              <span className="font-semibold text-sky-800 text-base">Nivelamento: Resultado Final</span>
+          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 flex flex-col mx-auto mb-4"
+            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-2xl"><Ruler className={`w-6 h-6 text-sky-500 ${iconAnimClass.nivelamento}`} /></div>
+              <h4 className="text-xl font-bold text-sky-800">Nivelamento</h4>
+              <div className="flex-1 h-px bg-sky-200"></div>
             </div>
-            <span className="font-bold text-sky-900">{nivelamentoOptions.filter(opt => (formData.terreno.nivelamento as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
-            <span className="block mt-2">Nivelamento correto evita infiltrações, rachaduras e retrabalho. Atenção ao detalhe.</span>
-            <span className="block mt-2 italic text-sky-600">Cada centímetro conta.</span>
+            <OptionsList options={nivelamentoOptions} subsection="nivelamento" />
+            <div className="flex-1"></div>
+            <div className="mt-6 text-xs text-sky-700 bg-sky-50 rounded-lg p-3 border border-sky-100">
+              <div className="flex items-center gap-3 mb-2">
+                <Ruler className={`w-8 h-8 text-sky-400 drop-shadow ${iconAnimClass.nivelamento}`} />
+                <span className="font-semibold text-sky-800 text-base">Nivelamento: Resultado Final</span>
+              </div>
+              <span className="font-bold text-sky-900">{nivelamentoOptions.filter(opt => (formData.terreno.nivelamento as any)[opt.id]).map(opt => opt.label).join(", ")}</span>
+              <span className="block mt-2">Nivelamento correto evita infiltrações, rachaduras e retrabalho. Atenção ao detalhe.</span>
+              <span className="block mt-2 italic text-sky-600">Cada centímetro conta.</span>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

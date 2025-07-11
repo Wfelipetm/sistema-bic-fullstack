@@ -88,9 +88,9 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
       {state !== "collapsed" && (
         <div className="mt-auto p-5 border-t border-blue-100 bg-gradient-to-t from-blue-50/80 to-transparent">
           <div className="flex flex-col items-end">
-            <span className="text-xs text-end text-blue-700 dark:text-blue-200 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>© 2025 Sistema BIC.</span>
-            <span className="text-xs text-end text-blue-700 dark:text-blue-200 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>Desenvolvido por SMCTIC.</span>
-            <span className="text-[10px] text-blue-400 mt-1 font-mono">Versão 3.0.0.</span>
+            <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>© 2025 Sistema BIC.</span>
+            <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>Desenvolvido por SMCTIC.</span>
+            <span className="text-[10px] text-blue-400 mt-1 font-mono">Versão 1.0.0.</span>
           </div>
         </div>
       )}

@@ -45,7 +45,7 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
     {
       id: "pavimentacao",
       label: "Pavimentação",
-      description: "Via pavimentada com asfalto ou concreto.",
+      description: "Via pavimentada com asfalto.",
       icon: <Car className="w-8 h-8 text-sky-400 animate-pulse" />, // Carro para pavimentação
     },
     {
@@ -116,60 +116,51 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
       </div> */}
 
       {/* Grid de itens */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
         {logradouroItems.map((item, index) => (
           <div
-            key={item.id}
-            className="group relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-8 
-                       transition-all duration-300 ease-in-out cursor-pointer
-                       flex flex-col items-center h-full w-full max-w-full min-h-[200px] mx-auto mb-4
-                       md:min-w-[220px] md:max-w-[320px] lg:min-w-[260px] lg:max-w-[340px] xl:min-w-[300px] xl:max-w-[380px]"
-            style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
-            onClick={() =>
-              handleCheckboxChange(
-                "logradouro",
-                item.id,
-                !formData.logradouro[item.id as keyof typeof formData.logradouro],
-              )
-            }
+        key={item.id}
+        className="group relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 
+               transition-all duration-300 ease-in-out cursor-pointer
+               flex flex-col items-center h-full w-full min-h-[180px] mx-auto
+               hover:shadow-3xl hover:scale-105 hover:bg-sky-50/20"
+        style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
+        onClick={() =>
+          handleCheckboxChange(
+            "logradouro",
+            item.id,
+            !formData.logradouro[item.id as keyof typeof formData.logradouro],
+          )
+        }
           >
-            {/* Número do item */}
-            <div
-              className="absolute -top-3 -left-3 w-8 h-8 bg-sky-500 text-white rounded-full 
-                           flex items-center justify-center text-sm font-bold shadow-md
-                           group-hover:bg-sky-600 transition-colors duration-200"
-            >
-              {index + 1}
-            </div>
+        {/* Ícone */}
+        <div className="mb-3 opacity-90 group-hover:opacity-100 transition-opacity duration-200">
+          {item.icon}
+        </div>
 
-            {/* Ícone */}
-            <div className="mb-3 opacity-90 group-hover:opacity-100 transition-opacity duration-200">
-              {item.icon}
-            </div>
+        {/* Conteúdo */}
+        <div className="flex-1 w-full text-center">
+          <span className="font-semibold text-sky-700 group-hover:text-sky-800 transition-colors duration-200 block text-lg mb-1">
+            {item.label}
+          </span>
+          <span className="text-xs text-sky-600 block mb-2">{item.description}</span>
+          <CheckboxField
+            id={item.id}
+            label={null}
+            description={item.description}
+            checked={formData.logradouro[item.id as keyof typeof formData.logradouro]}
+            onCheckedChange={(checked) => handleCheckboxChange("logradouro", item.id, checked)}
+          />
+        </div>
 
-            {/* Conteúdo */}
-            <div className="flex-1 w-full text-center">
-              <span className="font-semibold text-sky-700 group-hover:text-sky-800 transition-colors duration-200 block text-lg mb-1">
-                {item.label}
-              </span>
-              <span className="text-xs text-sky-600 block mb-2">{item.description}</span>
-              <CheckboxField
-                id={item.id}
-                label={null}
-                description={item.description}
-                checked={formData.logradouro[item.id as keyof typeof formData.logradouro]}
-                onCheckedChange={(checked) => handleCheckboxChange("logradouro", item.id, checked)}
-              />
-            </div>
-
-            {/* Indicador visual de seleção */}
-            <div
-              className={`absolute inset-0 rounded-2xl border-2 pointer-events-none transition-all duration-200 ${
-                formData.logradouro[item.id as keyof typeof formData.logradouro]
-                  ? "border-sky-400 bg-sky-50/30"
-                  : "border-transparent"
-              }`}
-            />
+        {/* Indicador visual de seleção */}
+        <div
+          className={`absolute inset-0 rounded-2xl border-2 pointer-events-none transition-all duration-200 ${
+            formData.logradouro[item.id as keyof typeof formData.logradouro]
+          ? "border-sky-400 bg-sky-50/30"
+          : "border-transparent"
+          }`}
+        />
           </div>
         ))}
       </div>
