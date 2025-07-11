@@ -54,11 +54,11 @@ export function AvaliacaoUrbanisticaSection({
     return () => { delete window.__validateRequiredAvaliacaoUrbanistica; };
   }, [formData]);
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
-    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-yellow-400" /> },
-    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-yellow-300" /> },
+    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-sky-400" /> },
+    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-sky-400" /> },
     { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: <Zap className="w-6 h-6 text-sky-400" /> },
-    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-orange-400" /> },
-    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-red-400" /> },
+    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-sky-400" /> },
+    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-sky-400" /> },
   ])
 
   useEffect(() => {
@@ -96,31 +96,28 @@ export function AvaliacaoUrbanisticaSection({
     <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8 select-none">
       <div className="space-y-8">
         {/* Avaliação Urbanística do Logradouro */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl"><BarChart className="w-7 h-7 text-sky-500" /></div>
-            <h4 className="text-xl font-bold text-sky-800">Avaliação Urbanística do Logradouro</h4>
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl"><BarChart className="w-6 h-6 sm:w-7 sm:h-7 text-sky-500" /></div>
+            <h4 className="text-lg sm:text-xl font-bold text-sky-800">Avaliação Urbanística do Logradouro</h4>
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>
 
           <RadioGroup
             value={formData.avaliacaoUrbanistica}
             onValueChange={(value) => handleInputChange("avaliacaoUrbanistica", value)}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4"
           >
             {avaliacaoOptions.map((item, index) => (
               <div
                 key={item.value}
-                className={`group relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${
+                className={`group relative p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${
                   formData.avaliacaoUrbanistica === item.value
                     ? "border-sky-400 bg-sky-50 shadow-md"
                     : "border-slate-200 hover:border-sky-200 hover:bg-sky-50/50 hover:shadow-sm"
                 }`}
               >
-                <div className="absolute -top-2 -left-2 w-6 h-6 bg-sky-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md group-hover:bg-sky-600 transition-colors duration-200">
-                  {index + 1}
-                </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row items-center sm:space-x-3 space-y-2 sm:space-y-0">
                   <RadioGroupItem
                     value={item.value}
                     id={item.value}
@@ -128,11 +125,11 @@ export function AvaliacaoUrbanisticaSection({
                                border-slate-300 hover:border-sky-400 transition-colors duration-200
                                focus:ring-2 focus:ring-sky-200 focus:ring-offset-2"
                   />
-                  <div className="text-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                  <div className="text-xl sm:text-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                     {item.icon}
                   </div>
-                  <div className="flex-1">
-                    <Label htmlFor={item.value} className="font-bold text-sky-800 cursor-pointer block">
+                  <div className="flex-1 text-center sm:text-left">
+                    <Label htmlFor={item.value} className="font-bold text-sky-800 cursor-pointer block text-sm sm:text-base">
                       {item.label}
                     </Label>
                     {item.description && (

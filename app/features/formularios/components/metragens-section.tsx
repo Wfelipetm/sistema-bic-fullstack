@@ -88,7 +88,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
   `
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8 select-none">
+    <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-lg border border-sky-100 p-8 mb-8  select-none">
       {/* Header da seção */}
       {/* <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-800 mb-2">Metragens</h2>
@@ -96,26 +96,25 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
         <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
       </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1
+      gap-8">
         {metragemItems.map((item, index) => (
           <div
             key={item.id}
             className="group relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-8 
                        transition-all duration-300 ease-in-out
                        w-full max-w-full min-h-[220px] flex flex-col mx-auto mb-4
-                       md:min-w-[260px] md:max-w-[340px]
-                       lg:min-w-[300px] lg:max-w-[380px]
-                       xl:min-w-[340px] xl:max-w-[420px]"
+                       "
             style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}
           >
             {/* Número do item */}
-            <div
+            {/* <div
               className="absolute -top-3 -left-3 w-8 h-8 bg-sky-500 text-white rounded-full 
                          flex items-center justify-center text-sm font-bold shadow-md
                          group-hover:bg-sky-600 transition-colors duration-200"
             >
               {index + 1}
-            </div>
+            </div> */}
 
             {/* Ícone */}
             <div className="mb-4 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
@@ -153,9 +152,8 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
             {/* Indicador de preenchimento */}
             <div className="mt-3 text-center">
               <div
-                className={`inline-block w-2 h-2 rounded-full transition-colors duration-200 ${
-                  formData.metragens[item.id as keyof typeof formData.metragens] ? "bg-green-400" : "bg-slate-300"
-                }`}
+                className={`inline-block w-2 h-2 rounded-full transition-colors duration-200 ${formData.metragens[item.id as keyof typeof formData.metragens] ? "bg-green-400" : "bg-slate-300"
+                  }`}
               />
             </div>
           </div>
