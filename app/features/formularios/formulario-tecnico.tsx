@@ -225,9 +225,9 @@ export default function qFormularioTecnico() {
     if (formData.avaliacaoUrbanistica) filledFields++;
     totalFields++;
 
-    // Observações gerais
+    // Observações do logradouro
     totalFields++;
-    if (formData.observacoes) filledFields++;
+    if (formData.obsLogradouro?.observacoes) filledFields++;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -339,6 +339,14 @@ export default function qFormularioTecnico() {
     }));
   };
 
+  // Nova função para lidar com arquivos
+  const handleFileChange = (field: string, file: File | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: file,
+    }));
+  };
+
   const handleNestedInputChange = (
     section: string,
     field: string,
@@ -347,7 +355,7 @@ export default function qFormularioTecnico() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...(prev[section as keyof typeof prev] as Record<string, any>),
         [field]:
           section === "serventias"
             ? value === ""
@@ -445,7 +453,7 @@ export default function qFormularioTecnico() {
 
       const obsLogradouroPayload = {
         logradouro_placa: !!formData.logradouroComPlaca,
-        observacoes: formData.observacoes || "",
+        observacoes: formData.obsLogradouro?.observacoes || "",
       };
 
       // Funções de sanitização para acabamento interno/externo
@@ -616,6 +624,8 @@ export default function qFormularioTecnico() {
         <DadosBasicosSection
           formData={formData}
           handleInputChange={handleInputChange}
+          handleFileChange={handleFileChange}
+          handleNestedInputChange={handleNestedInputChange}
         />
       ),
     },

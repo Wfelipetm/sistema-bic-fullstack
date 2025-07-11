@@ -16,5 +16,6 @@ export interface Relatorio {
   tecnico_id?: number
   created_at: string
   updated_at: string
+  foto?: string // Caminho para a foto do boletim
   // Adicione outros campos conforme necessário
 }

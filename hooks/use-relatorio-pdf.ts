@@ -10,11 +10,30 @@ export async function gerarRelatorioPDF(id: number) {
   // 1. Buscar dados da API
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
   const token = typeof window !== "undefined" ? localStorage.getItem('bic-token') : null;
+
+  if (!token) {
+    alert('Token de autenticação não encontrado. Faça login novamente.');
+    window.location.href = '/login';
+    return;
+  }
+
   const response = await fetch(`${apiBaseUrl}/boletim/${id}/completo`, {
     headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     }
   });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem('bic-token');
+      alert('Sessão expirada. Faça login novamente.');
+      window.location.href = '/login';
+      return;
+    }
+    throw new Error(`Erro ao buscar dados do relatório: ${response.status}`);
+  }
+
   const data = await response.json();
 
   const doc = new jsPDF({ orientation: "landscape" });

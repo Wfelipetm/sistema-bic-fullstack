@@ -52,6 +52,28 @@
   }
 }
 
+/* Força o tema light e sobrescreve configurações dark do navegador */
+html {
+  color-scheme: light !important;
+}
+
+html.dark,
+body.dark,
+[data-theme="dark"] {
+  color-scheme: light !important;
+}
+
+/* Previne que o Chrome force dark mode baseado na preferência do sistema */
+@media (prefers-color-scheme: dark) {
+
+  html,
+  body {
+    color-scheme: light !important;
+    background-color: white !important;
+    color: black !important;
+  }
+}
+
 @media print {
   .print\:block {
     display: block !important;

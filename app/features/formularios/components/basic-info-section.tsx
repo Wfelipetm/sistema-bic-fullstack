@@ -10,13 +10,10 @@ import { apiUrl } from "@/lib/api"
 interface BasicInfoSectionProps {
   formData: FormularioData
   handleInputChange: (field: string, value: string) => void
+  handleNestedInputChange?: (section: string, field: string, value: string) => void
 }
 
-export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSectionProps) {
-  useEffect(() => {
-    console.log("formData (BasicInfoSection):", formData)
-  }, [formData])
-
+export function BasicInfoSection({ formData, handleInputChange, handleNestedInputChange }: BasicInfoSectionProps) {
   useEffect(() => {
     if (formData.cpf && formData.cpf.length === 11) {
       fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
@@ -35,14 +32,14 @@ export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSecti
       <h2 className="text-2xl font-bold text-blue-900 mb-6">Informações Básicas</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div>
-          <Label htmlFor="numeroInscricao" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="inscricaoNumero" className="text-base font-semibold text-blue-900">
             Número de inscrição *
           </Label>
           <Input
-            id="numeroInscricao"
+            id="inscricaoNumero"
             placeholder="Ex: 12345"
-            value={formData.numeroInscricao}
-            onChange={(e) => handleInputChange("numeroInscricao", e.target.value)}
+            value={formData.inscricaoNumero}
+            onChange={(e) => handleInputChange("inscricaoNumero", e.target.value)}
             className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
           />
         </div>
@@ -71,26 +68,26 @@ export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSecti
           />
         </div>
         <div>
-          <Label htmlFor="numeroBote" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="lote" className="text-base font-semibold text-blue-900">
             Número de lote *
           </Label>
           <Input
-            id="numeroBote"
+            id="lote"
             placeholder="Ex: 001"
-            value={formData.numeroBote}
-            onChange={(e) => handleInputChange("numeroBote", e.target.value)}
+            value={formData.lote}
+            onChange={(e) => handleInputChange("lote", e.target.value)}
             className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
           />
         </div>
         <div>
-          <Label htmlFor="numeroQuadra" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="quadra" className="text-base font-semibold text-blue-900">
             Número da quadra *
           </Label>
           <Input
-            id="numeroQuadra"
+            id="quadra"
             placeholder="Ex: A"
-            value={formData.numeroQuadra}
-            onChange={(e) => handleInputChange("numeroQuadra", e.target.value)}
+            value={formData.quadra}
+            onChange={(e) => handleInputChange("quadra", e.target.value)}
             className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
           />
         </div>
@@ -107,14 +104,14 @@ export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSecti
           />
         </div>
         <div className="md:col-span-2">
-          <Label htmlFor="nomeLogradouro" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="endereco" className="text-base font-semibold text-blue-900">
             Nome do logradouro *
           </Label>
           <Input
-            id="nomeLogradouro"
+            id="endereco"
             placeholder="Ex: Rua das Flores"
-            value={formData.nomeLogradouro}
-            onChange={(e) => handleInputChange("nomeLogradouro", e.target.value)}
+            value={formData.endereco}
+            onChange={(e) => handleInputChange("endereco", e.target.value)}
             className="mt-2 h-12 text-lg rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition placeholder:text-blue-300"
           />
         </div>
@@ -167,14 +164,18 @@ export function BasicInfoSection({ formData, handleInputChange }: BasicInfoSecti
           />
         </div>
         <div className="md:col-span-3">
-          <Label htmlFor="observacoes" className="text-base font-semibold text-blue-900">
+          <Label htmlFor="obsLogradouro" className="text-base font-semibold text-blue-900">
             Observações
           </Label>
           <Textarea
-            id="observacoes"
+            id="obsLogradouro"
             placeholder="Observações adicionais sobre o imóvel..."
-            value={formData.observacoes}
-            onChange={(e) => handleInputChange("observacoes", e.target.value)}
+            value={formData.obsLogradouro?.observacoes || ""}
+            onChange={(e) => {
+              if (handleNestedInputChange) {
+                handleNestedInputChange("obsLogradouro", "observacoes", e.target.value);
+              }
+            }}
             className="mt-2 rounded-xl border-blue-200 text-blue-800 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-200 text-lg transition placeholder:text-blue-300"
             rows={3}
           />

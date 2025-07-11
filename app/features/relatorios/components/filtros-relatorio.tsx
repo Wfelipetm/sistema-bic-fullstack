@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { Search, X, Eye, FileText, MapPin, Calendar, User, Phone, ExternalLink } from "lucide-react"
+import { Search, X, Eye, FileText, MapPin, Calendar, User, Phone, ExternalLink, Download, Image } from "lucide-react"
 import { toast } from "sonner"
+import { authService } from "@/lib/auth-service"
 
 const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 32 32" fill="currentColor" height="1em" width="1em" {...props}>
@@ -31,6 +32,7 @@ interface Relatorio {
   updated_at: string
   tipo?: string
   status?: string
+  foto?: string // Caminho para a foto do boletim
 }
 
 interface FiltrosRelatorio {
@@ -51,6 +53,17 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
   const [currentPage, setCurrentPage] = useState(1)
   const relatoriosPorPagina = 1
   const totalPaginas = Math.ceil(relatorios.length / relatoriosPorPagina)
+
+  // Verificar autenticação ao carregar o componente
+  useEffect(() => {
+    const checkAuth = async () => {
+      const isAuthenticated = await authService.checkAuthAndRedirect();
+      if (!isAuthenticated) {
+        toast.error("Sessão expirada. Redirecionando para login...");
+      }
+    };
+    checkAuth();
+  }, []);
 
   // Novo: salvar último relatório em cache localStorage
   useEffect(() => {
@@ -91,7 +104,19 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
       }
     } catch (error) {
       console.error("Erro ao buscar relatórios:", error)
-      toast.error("Erro ao buscar relatórios. Verifique o console.")
+      const errorMessage = error instanceof Error ? error.message : "Erro ao buscar relatórios"
+      
+      // Se for erro de autenticação, redirecionar para login
+      if (errorMessage.includes('Token não encontrado') || 
+          errorMessage.includes('Sessão expirada') ||
+          errorMessage.includes('401')) {
+        toast.error("Sessão expirada. Redirecionando para login...")
+        setTimeout(() => {
+          window.location.href = '/login'
+        }, 2000)
+      } else {
+        toast.error(errorMessage)
+      }
     } finally {
       setLoading(false)
     }
@@ -119,6 +144,50 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
     } catch (error) {
       console.error("Erro ao gerar preview:", error)
       alert("Erro ao gerar preview do relatório")
+    }
+  }
+
+  const handleDownloadFoto = async (foto: string, inscricao: string) => {
+    try {
+      toast.info("Iniciando download da foto...");
+      
+      // Montar a URL da foto baseada no backend
+      // Se já for uma URL completa, usar como está; senão, construir a URL
+      const fotoUrl = foto.startsWith('http') 
+        ? foto 
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${foto}`;
+      
+      const response = await fetch(fotoUrl)
+      
+      if (!response.ok) {
+        throw new Error(`Erro ao baixar foto: ${response.status} ${response.statusText}`)
+      }
+      
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      
+      // Obter a extensão do arquivo da URL ou usar jpg como padrão
+      const extension = foto.split('.').pop()?.toLowerCase() || 'jpg'
+      
+      // Criar link para download
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `foto-boletim-${inscricao}.${extension}`
+      link.style.display = 'none'
+      
+      document.body.appendChild(link)
+      link.click()
+      
+      // Aguardar um pouco antes de remover o link
+      setTimeout(() => {
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      }, 100);
+      
+      toast.success("Foto baixada com sucesso!")
+    } catch (error) {
+      console.error("Erro ao baixar foto:", error)
+      toast.error(`Erro ao baixar a foto: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   }
 
@@ -266,6 +335,50 @@ export function FiltrosRelatorioCard({ filtros, setFiltros }: FiltrosRelatorioCa
                                hover:shadow-md hover:border-sky-200 transition-all duration-200"
                   >
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                      {/* Área da foto (se existir) */}
+                      {relatorio.foto && (
+                        <div className="w-full md:w-32 lg:w-40 flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                          <div className="relative group">
+                            <img
+                              src={relatorio.foto.startsWith('http') 
+                                ? relatorio.foto 
+                                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${relatorio.foto}`}
+                              alt={`Foto do boletim ${relatorio.inscricao}`}
+                              className="w-full h-24 md:h-32 lg:h-40 object-cover rounded-xl border-2 border-sky-200 
+                                       hover:border-sky-400 transition-all duration-200 hover:shadow-lg"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.style.display = 'none'
+                                target.nextElementSibling?.classList.remove('hidden')
+                              }}
+                            />
+                            {/* Botão transparente para download */}
+                            <button
+                              onClick={() => handleDownloadFoto(relatorio.foto!, relatorio.inscricao)}
+                              className="absolute inset-0 bg-transparent hover:bg-black/20 rounded-xl transition-all duration-200
+                                       flex items-center justify-center opacity-0 hover:opacity-100 cursor-pointer group"
+                              title="Clique para baixar a foto"
+                            >
+                              <div className="bg-white/90 rounded-full p-3 transform group-hover:scale-110 transition-transform duration-200">
+                                <Download className="h-6 w-6 text-sky-700" />
+                              </div>
+                            </button>
+                            {/* Indicador de foto no canto */}
+                            <div className="absolute top-2 right-2 bg-sky-600 text-white rounded-full p-1">
+                              <Image className="h-3 w-3" />
+                            </div>
+                          </div>
+                          {/* Fallback se a imagem não carregar */}
+                          <div className="hidden w-full h-24 md:h-32 lg:h-40 bg-sky-100 rounded-xl border-2 border-sky-200 
+                                        items-center justify-center text-sky-600">
+                            <div className="text-center">
+                              <Image className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                              <span className="text-xs">Foto não disponível</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex-1">
                         {/* Header do relatório */}
                         <div className="flex items-center gap-3 sm:gap-4 mb-4">
