@@ -8,7 +8,7 @@ declare global {
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { Star, Sparkles, Zap, AlertTriangle, X, BarChart, Ban, Clock, Ruler, Square, Signpost, Pencil, Car, History, Divide, CheckSquare, GripHorizontal, LayoutGrid } from "lucide-react"
+import { Star, Sparkles, Zap, AlertTriangle, X, BarChart, Ban, Clock, Ruler, Square, Signpost, Pencil, Car, History, Divide, CheckSquare, GripHorizontal, LayoutGrid, SignalZero, SignalLow, SignalMedium, SignalHigh, Signal, AudioWaveform, Columns3 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -54,11 +54,11 @@ export function AvaliacaoUrbanisticaSection({
     return () => { delete window.__validateRequiredAvaliacaoUrbanistica; };
   }, [formData]);
   const [avaliacaoOptions, setAvaliacaoOptions] = useState([
-    { value: "alta", label: "Alta", description: "Excelente infraestrutura", icon: <Star className="w-6 h-6 text-yellow-400" /> },
-    { value: "media", label: "Média", description: "Boa infraestrutura", icon: <Sparkles className="w-6 h-6 text-yellow-300" /> },
-    { value: "mediaBaixa", label: "Média Baixa", description: "Infraestrutura regular", icon: <Zap className="w-6 h-6 text-sky-400" /> },
-    { value: "baixa", label: "Baixa", description: "Infraestrutura limitada", icon: <AlertTriangle className="w-6 h-6 text-orange-400" /> },
-    { value: "muitoBaixa", label: "Muito Baixa", description: "Infraestrutura precária", icon: <X className="w-6 h-6 text-red-400" /> },
+    { value: "muitoBaixa", label: "Muito Baixa", icon: <SignalZero className="w-6 h-6 text-sky-400" /> },
+    { value: "baixa", label: "Baixa", icon: <SignalLow className="w-6 h-6 text-sky-400" /> },
+    { value: "mediaBaixa", label: "Média Baixa",  icon: <SignalMedium className="w-6 h-6 text-sky-400" /> },
+    { value: "media", label: "Média",  icon: <SignalHigh className="w-6 h-6 text-sky-400" /> },
+    { value: "alta", label: "Alta", icon: <Signal className="w-6 h-6 text-sky-400" /> },
   ])
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export function AvaliacaoUrbanisticaSection({
       toast.warning("Limite de 400 caracteres atingido!")
       return
     }
-    handleInputChange("observacoes", e.target.value)
+    handleInputChange("obsLogradouro.observacoes", e.target.value)
   }
 
 
@@ -132,9 +132,7 @@ export function AvaliacaoUrbanisticaSection({
                     <Label htmlFor={item.value} className="font-bold text-sky-800 cursor-pointer block text-sm sm:text-base">
                       {item.label}
                     </Label>
-                    {item.description && (
-                      <p className="text-xs text-sky-600 mt-1">{item.description}</p>
-                    )}
+                    
                   </div>
                 </div>
               </div>
@@ -145,19 +143,19 @@ export function AvaliacaoUrbanisticaSection({
         {/* Calçamento */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="text-2xl"><Square className="w-7 h-7" /></div>
+            <div className="text-2xl"><Square className="w-7 h-7 text-sky-400"/></div>
             <h4 className="text-xl font-bold text-sky-800">Calçamento</h4>
             <div className="flex-1 h-px bg-sky-200"></div>
           </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { id: "sem_asfalto", label: "S/Asfalto", icon: Ban, description: "Sem asfalto", grupo: "tipo" },
+            { id: "sem_asfalto", label: "S/Asfalto", icon: AudioWaveform, description: "Sem asfalto", grupo: "tipo" },
             { id: "asfaltada", label: "Asfaltada", icon: Car, description: "Rua asfaltada", grupo: "tipo" },
             { id: "novo", label: "Novo", icon: Sparkles, description: "Asfalto novo", grupo: "tipo" },
             { id: "antigo", label: "Antigo", icon: History, description: "Asfalto antigo", grupo: "tipo" },
             { id: "parte", label: "Parte", icon: Divide, description: "Parcialmente asfaltada", grupo: "extensao" },
             { id: "toda", label: "Toda", icon: CheckSquare, description: "Toda asfaltada", grupo: "extensao" },
-            { id: "paralelo", label: "Paralelo", icon: GripHorizontal, description: "Paralelepípedo", grupo: "extensao" },
+            { id: "paralelo", label: "Paralelo", icon: Columns3, description: "Paralelepípedo", grupo: "extensao" },
             { id: "bloco", label: "Bloco", icon: LayoutGrid, description: "Bloco intertravado", grupo: "extensao" },
           ].map((item, idx) => {
             const checked = formData.calcamento?.[item.grupo as 'tipo' | 'extensao']?.[
@@ -167,7 +165,7 @@ export function AvaliacaoUrbanisticaSection({
             return (
               <div
                 key={item.id}
-                className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 flex flex-col items-center min-h-[140px] transition-all duration-200"
+                className="relative bg-white rounded-2xl shadow-2xl shadow-[#2069e530] border border-slate-200 p-6 flex flex-col items-center min-h-[140px] transition-all duration-200"
                 style={{ userSelect: 'none' }}
               >
                 <span className="mb-2 grow-effect text-blue-300">
@@ -234,7 +232,7 @@ export function AvaliacaoUrbanisticaSection({
             <Textarea
               id="observacoes"
               placeholder="Digite suas observações aqui..."
-              value={formData.observacoes}
+              value={formData.obsLogradouro?.observacoes || ""}
               onChange={handleObservacoesChange}
               className="rounded-xl border-slate-200 text-sky-800 bg-white 
                          focus:border-sky-300 focus:ring-2 focus:ring-sky-100 
@@ -247,10 +245,10 @@ export function AvaliacaoUrbanisticaSection({
               <span className="text-sky-600">Máximo 400 caracteres</span>
               <span
                 className={`font-medium ${
-                  String(formData.observacoes).length > 350 ? "text-orange-500" : "text-sky-500"
+                  String(formData.obsLogradouro?.observacoes || "").length > 350 ? "text-orange-500" : "text-sky-500"
                 }`}
               >
-                {String(formData.observacoes).length}/400
+                {String(formData.obsLogradouro?.observacoes || "").length}/400
               </span>
             </div>
           </div>

@@ -120,9 +120,10 @@ class AuthService {
             });
 
             if (!response.ok) {
-                if (response.status === 401) {
-                    localStorage.removeItem('bic-token');
-                }
+                // Comentado para evitar logout automático
+                // if (response.status === 401) {
+                //     localStorage.removeItem('bic-token');
+                // }
                 return false;
             }
 

@@ -333,10 +333,25 @@ export default function qFormularioTecnico() {
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => {
+      // Suporte a campos aninhados usando dot notation (ex: "obsLogradouro.observacoes")
+      if (field.includes('.')) {
+        const [parentField, childField] = field.split('.');
+        return {
+          ...prev,
+          [parentField]: {
+            ...(prev[parentField as keyof typeof prev] as Record<string, any>),
+            [childField]: value,
+          },
+        };
+      }
+      
+      // Campo simples
+      return {
+        ...prev,
+        [field]: value,
+      };
+    });
   };
 
   // Nova função para lidar com arquivos
