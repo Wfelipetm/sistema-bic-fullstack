@@ -620,11 +620,16 @@ export default function qFormularioTecnico() {
   };
 
   // Função para checar se todas as metragens são zero ou vazias (memoizada para evitar erro de dependências do useEffect)
-  const isAllMetragensZero = useCallback(() => {
-    const m = formData.metragens;
-    const zeroOrEmpty = (v: any) => v === "0" || v === 0 || v === "0.00" || v === "0,00" || v === "" || v === undefined || v === null;
-    return zeroOrEmpty(m.areaTerreno) && zeroOrEmpty(m.testada) && zeroOrEmpty(m.areaEdificada);
-  }, [formData.metragens]);
+  // Nova lógica: só pula para Serventias se areaEdificada for zero ou vazio
+  const isAreaEdificadaZero = useCallback(() => {
+    const v = formData.metragens.areaEdificada;
+    if (v === undefined || v === null) return true;
+    if (typeof v === "string") {
+      const val = v.replace(",", ".").trim();
+      return val === "0" || val === "0.00" || val === "";
+    }
+    return v === 0;
+  }, [formData.metragens.areaEdificada]);
 
   // Monta steps dinamicamente pulando construção se necessário
   const steps = [
@@ -688,8 +693,8 @@ export default function qFormularioTecnico() {
         />
       ),
     },
-    // Só inclui construção se alguma metragem for diferente de zero
-    ...(!isAllMetragensZero()
+    // Só inclui construção se areaEdificada for diferente de zero
+    ...(!isAreaEdificadaZero()
       ? [
           {
             id: "construcao",
@@ -752,7 +757,7 @@ export default function qFormularioTecnico() {
           if (
             steps[next] &&
             steps[next].id === "construcao" &&
-            isAllMetragensZero()
+            isAreaEdificadaZero()
           ) {
             next++;
           }
@@ -766,7 +771,7 @@ export default function qFormularioTecnico() {
           if (
             steps[prevStep] &&
             steps[prevStep].id === "construcao" &&
-            isAllMetragensZero()
+            isAreaEdificadaZero()
           ) {
             prevStep--;
           }
@@ -776,7 +781,7 @@ export default function qFormularioTecnico() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [steps, isAllMetragensZero]);
+  }, [steps, isAreaEdificadaZero]);
 
   return (
     <div >
@@ -864,7 +869,7 @@ export default function qFormularioTecnico() {
                       if (
                         steps[prevStep] &&
                         steps[prevStep].id === "construcao" &&
-                        isAllMetragensZero()
+                        isAreaEdificadaZero()
                       ) {
                         prevStep--;
                       }
@@ -959,7 +964,7 @@ export default function qFormularioTecnico() {
                       if (
                         steps[next] &&
                         steps[next].id === "construcao" &&
-                        isAllMetragensZero()
+                        isAreaEdificadaZero()
                       ) {
                         next++;
                       }

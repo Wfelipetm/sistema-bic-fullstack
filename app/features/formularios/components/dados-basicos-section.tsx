@@ -32,6 +32,70 @@ function getHoje() {
 }
 
 export function DadosBasicosSection({ formData, handleInputChange, handleFileChange, handleNestedInputChange }: DadosBasicosSectionProps) {
+  // Máscara para data DD/MM/AAAA
+  function maskDate(value: string) {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1/$2")
+      .replace(/^(\d{2}\/\d{2})(\d)/, "$1/$2")
+      .slice(0, 10);
+  }
+
+  function isValidDateFormat(val: string) {
+    return /^\d{2}\/\d{2}\/\d{4}$/.test(val) || val === "" || val === "00/00/0000";
+  }
+  // Validações de sintaxe
+  function isValidCPF(cpf: string) {
+    cpf = cpf.replace(/\D/g, "");
+    if (cpf.length !== 11) return false;
+    // Bloqueia sequências repetidas
+    if (/^(\d)\1+$/.test(cpf)) return false;
+    // Bloqueia sequências crescentes/decrescentes
+    const crescentes = "12345678909";
+    const decrescentes = "98765432100";
+    if (cpf === crescentes || cpf === decrescentes) return false;
+    // Validação dos dígitos verificadores
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
+    let check1 = (sum * 10) % 11;
+    if (check1 === 10) check1 = 0;
+    if (check1 !== parseInt(cpf.charAt(9))) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
+    let check2 = (sum * 10) % 11;
+    if (check2 === 10) check2 = 0;
+    if (check2 !== parseInt(cpf.charAt(10))) return false;
+    return true;
+  }
+
+  function isValidCEP(cep: string) {
+    const cleanCep = cep.replace(/\D/g, "");
+    // Deve ter 8 dígitos
+    if (!/^\d{8}$/.test(cleanCep)) return false;
+    // Não pode ser sequência repetida (ex: 11111111, 00000000)
+    if (/^(\d)\1{7}$/.test(cleanCep)) return false;
+    // Opcional: validação de faixas reais de CEP (01000000 a 99999999)
+    const cepNum = parseInt(cleanCep, 10);
+    if (cepNum < 1000000 || cepNum > 99999999) return false;
+    return true;
+  }
+
+  function isValidTelefone(tel: string) {
+    // Remove tudo que não é número
+    const cleanTel = tel.replace(/\D/g, "");
+    // Deve ter 10 ou 11 dígitos
+    if (!(cleanTel.length === 10 || cleanTel.length === 11)) return false;
+    // Não pode ser sequência repetida (ex: 11111111111)
+    if (/^(\d)\1{9,10}$/.test(cleanTel)) return false;
+    // DDD válido (11 a 99, mas alguns não existem, aqui aceito 11-99)
+    const ddd = parseInt(cleanTel.substring(0,2), 10);
+    if (ddd < 11 || ddd > 99) return false;
+    // Celular: 11 dígitos, começa com 9
+    if (cleanTel.length === 11 && cleanTel[2] !== '9') return false;
+    // Fixo: 10 dígitos, começa com 2-8
+    if (cleanTel.length === 10 && !/[2-8]/.test(cleanTel[2])) return false;
+    return true;
+  }
   // Validação dos campos obrigatórios
   function validateRequiredFields() {
     if (!formData.inscricaoNumero || formData.inscricaoNumero.trim() === "") {
@@ -50,10 +114,41 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
       toast.warning("Preencha o campo Endereço.");
       return false;
     }
+    // Campos de data agora podem ser vazios, não obrigatórios
+    if (formData.cpf && !isValidCPF(formData.cpf)) {
+      toast.warning("CPF inválido. Digite um CPF válido.");
+      return false;
+    }
+    if (formData.cep && !isValidCEP(formData.cep)) {
+      toast.warning("CEP inválido. Digite um CEP com 8 dígitos.");
+      return false;
+    }
+    if (formData.telefone && !isValidTelefone(formData.telefone)) {
+      toast.warning("Telefone inválido. Use o formato (00) 00000-0000.");
+      return false;
+    }
     return true;
   }
 
   // Função para lidar com upload de foto
+  // Função para preparar dados antes de enviar para o backend
+  function getSanitizedFormData() {
+    function isNullDate(val: string | undefined) {
+      if (!val) return null;
+      const v = val.trim();
+      // Aceita apenas datas válidas no formato DD/MM/AAAA
+      if (v === "00/00/0000" || v === "0000-00-00" || v === "") return null;
+      // Se não for uma data válida, retorna null
+      if (!/^\d{2}\/\d{2}\/\d{4}$/.test(v)) return null;
+      // Opcional: pode adicionar mais validações de data aqui
+      return v;
+    }
+    return {
+      ...formData,
+      lancamentoNovo: isNullDate(formData.lancamentoNovo),
+      revisao: isNullDate(formData.revisao),
+    };
+  }
   const handleFotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     
@@ -184,26 +279,36 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
         <div>
           <Label className={labelClassName}>Lançamento</Label>
           <Input
-            type="date"
-            value={lancamentoNovo}
+            type="text"
+            inputMode="numeric"
+            maxLength={10}
+            placeholder="00/00/0000"
+            value={formData.lancamentoNovo || ""}
             onChange={(e) => {
-              setLancamentoNovo(e.target.value)
-              handleInputChange("lancamentoNovo", e.target.value)
+              const masked = maskDate(e.target.value);
+              setLancamentoNovo(masked);
+              handleInputChange("lancamentoNovo", masked);
             }}
-            className={inputClassName}
+            className={inputClassName + (!isValidDateFormat(formData.lancamentoNovo || "") ? " border-red-400" : "")}
+            title="Digite 00/00/0000 para deixar vazio"
           />
         </div>
 
         <div>
           <Label className={labelClassName}>Revisão</Label>
           <Input
-            type="date"
-            value={revisao}
+            type="text"
+            inputMode="numeric"
+            maxLength={10}
+            placeholder="00/00/0000"
+            value={formData.revisao || ""}
             onChange={(e) => {
-              setRevisao(e.target.value)
-              handleInputChange("revisao", e.target.value)
+              const masked = maskDate(e.target.value);
+              setRevisao(masked);
+              handleInputChange("revisao", masked);
             }}
-            className={inputClassName}
+            className={inputClassName + (!isValidDateFormat(formData.revisao || "") ? " border-red-400" : "")}
+            title="Digite 00/00/0000 para deixar vazio"
           />
         </div>
 
@@ -211,10 +316,10 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           <Label htmlFor="cep" className={labelClassName}>CEP</Label>
           <Input
             id="cep"
-            placeholder="00000-000"
+            placeholder="00000000"
             value={formData.cep}
-            onChange={(e) => handleInputChange("cep", e.target.value)}
-            className={inputClassName}
+            onChange={(e) => handleInputChange("cep", e.target.value.replace(/\D/g, ""))}
+            className={inputClassName + (formData.cep && !isValidCEP(formData.cep) ? " border-red-400" : "")}
           />
         </div>
         <div>
@@ -285,7 +390,30 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             id="proprietario"
             placeholder="Nome completo"
             value={formData.proprietario}
-            onChange={(e) => handleInputChange("proprietario", e.target.value.toUpperCase())}
+            onChange={e => {
+              // Permite digitação livre, só converte para maiúsculas
+              handleInputChange("proprietario", e.target.value.toUpperCase());
+            }}
+            onBlur={e => {
+              const value = e.target.value.toUpperCase();
+              const preposicoesSobrenomes = [
+                "DA", "DE", "DO", "DOS", "DAS", "E", "EM", "SOB", "SOBRE", "PARA", "COM", "SEM", "POR",
+                "A", "O", "AS", "OS", "UM", "UMA", "UNS", "UMAS", "NO", "NA", "NOS", "NAS", "AO", "AOS", "À", "ÀS",
+                "PELO", "PELA", "PELOS", "PELAS",
+                "SILVA", "SOUZA", "SANTOS", "COSTA", "OLIVEIRA", "PEREIRA", "ALMEIDA", "FERREIRA", "RODRIGUES", "MARTINS"
+              ];
+              let palavras = value.split(/\s+/).filter(Boolean);
+              if (palavras.length > 3) {
+                // Abrevia a primeira palavra intermediária que não seja preposição/sobrenome
+                for (let i = 1; i < palavras.length - 1; i++) {
+                  if (!preposicoesSobrenomes.includes(palavras[i])) {
+                    palavras[i] = palavras[i][0] + ".";
+                    break;
+                  }
+                }
+              }
+              handleInputChange("proprietario", palavras.join(" "));
+            }}
             className={inputClassName}
           />
         </div>
@@ -296,7 +424,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             placeholder="(00) 00000-0000"
             value={formData.telefone}
             onChange={(e) => handleInputChange("telefone", e.target.value)}
-            className={inputClassName}
+            className={inputClassName + (formData.telefone && !isValidTelefone(formData.telefone) ? " border-red-400" : "")}
           />
         </div>
         <div>
@@ -305,8 +433,8 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             id="cpf"
             placeholder="000.000.000-00"
             value={formData.cpf}
-            onChange={(e) => handleInputChange("cpf", e.target.value)}
-            className={inputClassName}
+            onChange={(e) => handleInputChange("cpf", e.target.value.replace(/\D/g, ""))}
+            className={inputClassName + (formData.cpf && !isValidCPF(formData.cpf) ? " border-red-400" : "")}
           />
         </div>
         
@@ -316,15 +444,15 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           <div className="space-y-2 w-full max-w-full">
             {/* Área de upload */}
             {!formData.fotoPreview && (
-              <div className="relative border-2 border-dashed border-sky-300 rounded-xl p-3 text-center hover:border-sky-400 transition-colors cursor-pointer 
-                            h-32 w-full max-w-[200px] sm:h-36 sm:max-w-[180px] md:h-44 md:max-w-full lg:max-w-[275px] mx-auto sm:mx-0">
+                <div className="relative border-2 border-dashed border-sky-300 rounded-xl p-3 text-center hover:border-sky-400 transition-colors cursor-pointer 
+                    h-24 w-full max-w-[200px] sm:h-36 sm:max-w-[180px] md:h-44 md:max-w-full lg:max-w-[275px] mx-auto sm:mx-0 flex flex-col items-center justify-center">
                 <Camera className="mx-auto h-5 w-5 sm:h-6 sm:w-6 text-sky-400 mb-2" />
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-sky-700">
-                    Clique para adicionar foto
+                  Clique para adicionar foto
                   </p>
                   <p className="text-xs text-sky-500">
-                    PNG, JPG até 5MB
+                  PNG, JPG até 5MB
                   </p>
                 </div>
                 <input
@@ -333,7 +461,7 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
                   onChange={handleFotoChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-              </div>
+                </div>
             )}
 
             {/* Preview da foto */}
@@ -386,7 +514,28 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             id="responsavel_tributario"
             placeholder="Nome"
             value={formData.responsavel_tributario || ""}
-            onChange={(e) => handleInputChange("responsavel_tributario", e.target.value.toUpperCase())}
+            onChange={e => {
+              handleInputChange("responsavel_tributario", e.target.value.toUpperCase());
+            }}
+            onBlur={e => {
+              const value = e.target.value.toUpperCase();
+              const preposicoesSobrenomes = [
+                "DA", "DE", "DO", "DOS", "DAS", "E", "EM", "SOB", "SOBRE", "PARA", "COM", "SEM", "POR",
+                "A", "O", "AS", "OS", "UM", "UMA", "UNS", "UMAS", "NO", "NA", "NOS", "NAS", "AO", "AOS", "À", "ÀS",
+                "PELO", "PELA", "PELOS", "PELAS",
+                "SILVA", "SOUZA", "SANTOS", "COSTA", "OLIVEIRA", "PEREIRA", "ALMEIDA", "FERREIRA", "RODRIGUES", "MARTINS"
+              ];
+              let palavras = value.split(/\s+/).filter(Boolean);
+              if (palavras.length > 3) {
+                for (let i = 1; i < palavras.length - 1; i++) {
+                  if (!preposicoesSobrenomes.includes(palavras[i])) {
+                    palavras[i] = palavras[i][0] + ".";
+                    break;
+                  }
+                }
+              }
+              handleInputChange("responsavel_tributario", palavras.join(" "));
+            }}
             className={inputClassName}
           />
         </div>
@@ -396,8 +545,8 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             id="responsavel_tributario_telefone"
             placeholder="(00) 00000-0000"
             value={formData.responsavel_tributario_telefone || ""}
-            onChange={(e) => handleInputChange("responsavel_tributario_telefone", e.target.value)}
-            className={inputClassName}
+            onChange={e => handleInputChange("responsavel_tributario_telefone", e.target.value)}
+            className={inputClassName + (formData.responsavel_tributario_telefone && !isValidTelefone(formData.responsavel_tributario_telefone) ? " border-red-400" : "")}
           />
         </div>
         <div>
@@ -406,8 +555,8 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             id="responsavel_tributario_cpf"
             placeholder="000.000.000-00"
             value={formData.responsavel_tributario_cpf || ""}
-            onChange={(e) => handleInputChange("responsavel_tributario_cpf", e.target.value)}
-            className={inputClassName}
+            onChange={e => handleInputChange("responsavel_tributario_cpf", e.target.value.replace(/\D/g, ""))}
+            className={inputClassName + (formData.responsavel_tributario_cpf && !isValidCPF(formData.responsavel_tributario_cpf) ? " border-red-400" : "")}
           />
         </div>
       </div>
