@@ -242,8 +242,8 @@ export function TerrenoSection({ formData, handleNestedCheckboxChange }: Terreno
         className="overflow-x-auto flex pb-4 hide-scrollbar cursor-grab"
         style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}
       >
-        <div className="flex flex-nowrap gap-8 max-w-[100px]">
-          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[320px] md:min-w-[320px] md:max-w-[370px] lg:min-w-[340px] lg:max-w-[400px] xl:min-w-[360px] xl:max-w-[420px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 mx-auto mb-4"
+        <div className="flex flex-nowrap gap-8 max-w-[500px]">
+          <div className="snap-start flex-shrink-0 w-full max-w-full min-h-[350px] md:min-w-[320px] md:max-w-[400px lg:max-w-[400px] bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl shadow-2xl border border-sky-100 p-8 mx-auto mb-4"
             style={{ boxShadow: '0 8px 32px 0 rgba(80, 150, 255, 0.18), 0 1.5px 8px 0 rgba(80, 150, 255, 0.10)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="text-2xl"><Landmark className="w-6 h-6 text-sky-500" /></div>

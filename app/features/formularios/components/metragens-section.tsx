@@ -96,7 +96,7 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
         <div className="w-16 h-1 bg-sky-300 rounded-full"></div>
       </div> */}
 
-      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1
       gap-8">
         {metragemItems.map((item, index) => (
           <div

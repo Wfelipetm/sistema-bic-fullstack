@@ -206,13 +206,17 @@ export function AvaliacaoUrbanisticaSection({
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-6">
             <div className="text-3xl"><Signpost className="w-8 h-8 text-sky-500" /></div>
-            <div className="flex-1">
+            <div >
+              <div className="flex-1 flex flex-row items-center gap-3 border-2 border-slate-200 w-64 p-2 rounded-xl">
+
               <CheckboxField
                 id="logradouroComPlaca"
-                label={<span className="font-bold text-sky-800 text-lg">Logradouro com Placa?</span>}
+                label={null}
                 checked={formData.logradouroComPlaca}
                 onCheckedChange={(checked) => handleInputChange("logradouroComPlaca", !!checked)}
               />
+              <span className="font-bold text-sky-800 text-lg">Logradouro com Placa?</span>
+              </div>
             </div>
           </div>
         </div>
