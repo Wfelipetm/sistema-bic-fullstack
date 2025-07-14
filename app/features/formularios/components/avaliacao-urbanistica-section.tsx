@@ -61,6 +61,15 @@ export function AvaliacaoUrbanisticaSection({
     { value: "alta", label: "Alta", icon: <Signal className="w-6 h-6 text-sky-400" /> },
   ])
 
+  // Garante que o campo não inicia preenchido
+  useEffect(() => {
+    if (formData.avaliacaoUrbanistica) {
+      handleInputChange("avaliacaoUrbanistica", "");
+    }
+    // Só executa na montagem
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     fetch(apiUrl("/avali-urba-logradouro/"))
       .then((res) => res.json())
