@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { apiUrl, apiFetch } from "@/lib/api"
 import { Car, Lightbulb, Droplet, Trash2, Clipboard, Trash, Lamp } from "lucide-react"
 
 interface LogradouroSectionProps {
@@ -75,8 +75,7 @@ export function LogradouroSection({ formData, handleCheckboxChange }: Logradouro
   ])
 
   useEffect(() => {
-    fetch(apiUrl("/info-logradouro/"))
-      .then((res) => res.json())
+    apiFetch(apiUrl("/info-logradouro/"))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(

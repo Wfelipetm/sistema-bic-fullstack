@@ -9,7 +9,7 @@ declare global {
   }
 }
 import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { apiUrl, apiFetch } from "@/lib/api"
 import { Home, Sofa, Bed, Utensils, ChefHat, ShowerHead, Car, DoorOpen, Building2, Warehouse } from "lucide-react"
 
 interface ServentiasSectionProps {
@@ -56,12 +56,18 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
   const [serventiasItems, setServentiasItems] = useState(defaultServentias)
 
   useEffect(() => {
-    fetch(apiUrl("/serventias/"))
-      .then((res) => res.json())
+    apiFetch(apiUrl("/serventias/"))
       .then((data) => {
-        const serventiasObj = data.serventias || data[0]?.serventias || data[0] || {}
-        const ignore = ["id", "created_at", "updated_at"]
-        const keys = Object.keys(serventiasObj).filter((k) => !ignore.includes(k))
+        let serventiasObj: any = {};
+        if (data && typeof data === "object") {
+          if (Array.isArray(data)) {
+            serventiasObj = data[0]?.serventias || data[0] || {};
+          } else {
+            serventiasObj = (data as any).serventias || data;
+          }
+        }
+        const ignore = ["id", "created_at", "updated_at"];
+        const keys = Object.keys(serventiasObj).filter((k) => !ignore.includes(k));
         if (keys.length > 0) {
           setServentiasItems(
             keys.map((key, idx) => {
@@ -75,10 +81,10 @@ export function ServentiasSection({ formData, handleNestedInputChange }: Servent
             })
           );
         } else {
-          setServentiasItems(defaultServentias)
+          setServentiasItems(defaultServentias);
         }
       })
-      .catch(() => setServentiasItems(defaultServentias))
+      .catch(() => setServentiasItems(defaultServentias));
   }, [])
 
   const inputClassName = `

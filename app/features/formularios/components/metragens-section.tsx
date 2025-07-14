@@ -11,7 +11,7 @@ declare global {
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { apiUrl, apiFetch } from "@/lib/api"
 import { Ruler, Home, Mountain } from "lucide-react"
 
 interface MetragensSectionProps {
@@ -45,9 +45,11 @@ export function MetragensSection({ formData, handleNestedInputChange }: Metragen
   const [metragensApi, setMetragensApi] = useState<any[]>([])
 
   useEffect(() => {
-    fetch(apiUrl("/metragem/"))
-      .then((res) => res.json())
-      .then(setMetragensApi)
+    apiFetch(apiUrl("/metragem/"))
+      .then((data) => {
+        if (Array.isArray(data)) setMetragensApi(data);
+        else setMetragensApi([]);
+      })
       .catch(() => setMetragensApi([]))
   }, [])
 

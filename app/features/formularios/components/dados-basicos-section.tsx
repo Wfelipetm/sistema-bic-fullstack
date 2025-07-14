@@ -190,23 +190,13 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
     handleInputChange("fotoPreview", "");
   };
 
-  const [lancamentoNovo, setLancamentoNovo] = useState(getPrimeiroDiaMes())
-  const [revisao, setRevisao] = useState(getHoje())
+  // Valor padrão: "00/00/0000"
+  const [lancamentoNovo, setLancamentoNovo] = useState(formData.lancamentoNovo || "00/00/0000")
+  const [revisao, setRevisao] = useState(formData.revisao || "00/00/0000")
 
   // Removido: busca de técnicos
 
-  useEffect(() => {
-    if (formData.cpf && formData.cpf.length === 11) {
-      fetch(apiUrl(`/proprietario?cpf=${formData.cpf}`))
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.nome) {
-            handleInputChange("proprietario", data.nome)
-          }
-        })
-        .catch(() => {})
-    }
-  }, [formData.cpf])
+  // Busca automática do proprietário pelo CPF removida
 //tamanho dos inputs
 
   const inputClassName = `
@@ -283,13 +273,19 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             inputMode="numeric"
             maxLength={10}
             placeholder="00/00/0000"
-            value={formData.lancamentoNovo || ""}
+            value={formData.lancamentoNovo || lancamentoNovo}
             onChange={(e) => {
               const masked = maskDate(e.target.value);
               setLancamentoNovo(masked);
               handleInputChange("lancamentoNovo", masked);
             }}
-            className={inputClassName + (!isValidDateFormat(formData.lancamentoNovo || "") ? " border-red-400" : "")}
+            onBlur={(e) => {
+              if (!e.target.value || e.target.value.trim() === "") {
+                setLancamentoNovo("00/00/0000");
+                handleInputChange("lancamentoNovo", "00/00/0000");
+              }
+            }}
+            className={inputClassName + (!isValidDateFormat(formData.lancamentoNovo || lancamentoNovo) ? " border-red-400" : "")}
             title="Digite 00/00/0000 para deixar vazio"
           />
         </div>
@@ -301,13 +297,19 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
             inputMode="numeric"
             maxLength={10}
             placeholder="00/00/0000"
-            value={formData.revisao || ""}
+            value={formData.revisao || revisao}
             onChange={(e) => {
               const masked = maskDate(e.target.value);
               setRevisao(masked);
               handleInputChange("revisao", masked);
             }}
-            className={inputClassName + (!isValidDateFormat(formData.revisao || "") ? " border-red-400" : "")}
+            onBlur={(e) => {
+              if (!e.target.value || e.target.value.trim() === "") {
+                setRevisao("00/00/0000");
+                handleInputChange("revisao", "00/00/0000");
+              }
+            }}
+            className={inputClassName + (!isValidDateFormat(formData.revisao || revisao) ? " border-red-400" : "")}
             title="Digite 00/00/0000 para deixar vazio"
           />
         </div>
@@ -317,8 +319,13 @@ export function DadosBasicosSection({ formData, handleInputChange, handleFileCha
           <Input
             id="cep"
             placeholder="00000000"
+            maxLength={8}
             value={formData.cep}
-            onChange={(e) => handleInputChange("cep", e.target.value.replace(/\D/g, ""))}
+            onChange={(e) => {
+              // Aceita só números e máximo 8 caracteres
+              const val = e.target.value.replace(/\D/g, "").slice(0, 8);
+              handleInputChange("cep", val);
+            }}
             className={inputClassName + (formData.cep && !isValidCEP(formData.cep) ? " border-red-400" : "")}
           />
         </div>

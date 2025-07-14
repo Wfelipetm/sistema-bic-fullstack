@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CheckboxField } from "./checkbox-field"
 import type { FormularioData } from "@/app/types/formulario"
-import { apiUrl } from "@/lib/api"
+import { apiUrl, apiFetch } from "@/lib/api"
 import { toast } from "sonner"
 
 interface AvaliacaoUrbanisticaSectionProps {
@@ -61,18 +61,8 @@ export function AvaliacaoUrbanisticaSection({
     { value: "alta", label: "Alta", icon: <Signal className="w-6 h-6 text-sky-400" /> },
   ])
 
-  // Garante que o campo não inicia preenchido
   useEffect(() => {
-    if (formData.avaliacaoUrbanistica) {
-      handleInputChange("avaliacaoUrbanistica", "");
-    }
-    // Só executa na montagem
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetch(apiUrl("/avali-urba-logradouro/"))
-      .then((res) => res.json())
+    apiFetch(apiUrl("/avali-urba-logradouro/"))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const keys = Object.keys(data[0]).filter(
