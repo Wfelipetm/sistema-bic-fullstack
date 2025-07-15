@@ -91,13 +91,13 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text("Lote:", 10, (y += 6));
   doc.text("Quadra:", 30, y);
   doc.text("Loteamento:", 55, y);
-  doc.text("Distrito:", 120, y);
+  doc.text("Distrito:", 155, y);
 
   doc.setFont("helvetica", "normal");
   doc.text(String(data.lote ?? ""), 20, y);
   doc.text(String(data.quadra ?? ""), 45, y);
   doc.text(String(data.loteamento ?? ""), 80, y);
-  doc.text(String(data.distrito ?? ""), 135, y);
+  doc.text(String(data.distrito ?? ""), 170, y);
   doc.line(5, 42, 190, 42);
   y += 4;
 
@@ -108,9 +108,9 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text(String(data.endereco ?? ""), 30, y);
 
   doc.setFont("helvetica", "bold");
-  doc.text("CEP:", 120, y);
+  doc.text("CEP:", 155, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.cep ?? ""), 130, y);
+  doc.text(String(data.cep ?? ""), 165, y);
 
   doc.line(5, 49, 190, 49);
   // PROPRIETÁRIO
@@ -120,9 +120,9 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text(String(data.proprietario ?? ""), 65, y);
 
   doc.setFont("helvetica", "bold");
-  doc.text("CPF:", 120, y);
+  doc.text("CPF:", 155, y);
   doc.setFont("helvetica", "normal");
-  doc.text(String(data.cpf ?? ""), 130, y);
+  doc.text(String(data.cpf ?? ""), 165, y);
   doc.line(5, 57, 190, 57);
 
   y += 4;
@@ -133,19 +133,19 @@ export async function gerarRelatorioPDF(id: number) {
   doc.text(String(data.responsavel_tributario ?? ""), 40, y + 4); // Posição ajustada
 
   // Telefone e CPF do responsável tributário (em sequência, se existirem)
-  let xTel = 110 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
+  let xTel = 40 + (String(data.responsavel_tributario ?? "").length * 2.5) + 8;
   
   if (data.responsavel_tributario_cpf) {
     doc.setFont("helvetica", "bold");
-    doc.text("CPF:", xTel + 10, y + 4);
+    doc.text("CPF:", xTel + 52, y + 4);
     doc.setFont("helvetica", "normal");
-    doc.text(String(data.responsavel_tributario_cpf), xTel + 19, y + 4);
+    doc.text(String(data.responsavel_tributario_cpf), xTel + 62, y + 4);
   }
   if (data.responsavel_tributario_telefone) {
     doc.setFont("helvetica", "bold");
-    doc.text("Tel.:", xTel, y + 4);
+    doc.text("Tel.:", xTel + 18, y + 4);
     doc.setFont("helvetica", "normal");
-    doc.text(String(data.responsavel_tributario_telefone), xTel + 9, y + 4);
+    doc.text(String(data.responsavel_tributario_telefone), xTel + 27, y + 4);
     xTel += 13 + (String(data.responsavel_tributario_telefone).length * 2.5) + 6;
   }
 
