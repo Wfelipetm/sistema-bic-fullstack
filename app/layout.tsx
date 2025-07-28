@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     generator: 'Prefeitura Municipal de Itaguaí',
     icons: {
     icon: [			
-      { url: "/favicon/building.png" },
+      { url: "/favicon/house.png" },
     ],
   }
 }
