@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Building2, LogOut, User } from "lucide-react"
+import { Building2, LogOut, User, CircleDollarSign, House } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import type { ViewType } from "@/app/types/navigation"
 
@@ -31,13 +31,20 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
   if (!user) return null
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-blue-100 bg-white/95 backdrop-blur-sm shadow-sm">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm shadow-lg">
       <div className="flex h-24 items-center px-6">
         {/* Logo e Título */}
         <div className="flex items-center gap-3">
-          <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-blue-900 text-white">
-            <Building2 className="size-5" />
-          </div>
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-900 rounded-lg  shadow-itaguai relative">
+                <House className="w-10 h-10 text-white drop-shadow-sm" />
+                <div className="absolute top-8 right-0.5 w-4 h-4 bg-success-500 rounded-full flex items-center justify-center">
+                  <CircleDollarSign className="w-3.5 h-3.5 text-white" />
+                </div>
+                
+                {/* <div className="absolute -top-1 -right-1 w-6 h-6 bg-success-500 rounded-full flex items-center justify-center">
+                  <Shield className="w-3 h-3 text-white" />
+                </div> */}
+              </div>
           <div>
             <h1 className="text-xl font-bold text-blue-900">BIC Sistema</h1>
             <p className="text-xs text-blue-400">Boletim de Informações Cadastrais</p>

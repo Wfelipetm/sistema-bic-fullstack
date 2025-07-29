@@ -31,7 +31,7 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
     <Sidebar
       collapsible="icon"
       onClick={toggleSidebar}
-      style={{ fontFamily: 'InterVariable, Inter, system-ui, sans-serif', background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)', borderRight: '1.5px solid #dbeafe', boxShadow: '0 2px 24px 0 rgba(80,150,255,0.07)' }}
+      
       {...props}
     >
       <SidebarHeader className="pt-24 -mt-1.5">
@@ -86,7 +86,7 @@ export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarPr
       </SidebarContent>
       {/* Só mostra o rodapé se o sidebar NÃO estiver colapsado */}
       {state !== "collapsed" && (
-        <div className="mt-auto p-5 border-t border-blue-100 bg-gradient-to-t from-blue-50/80 to-transparent">
+        <div className="mt-auto p-5 to-transparent">
           <div className="flex flex-col items-end">
             <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>© 2025 Sistema BIC.</span>
             <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>Desenvolvido por SMCTIC.</span>

@@ -29,7 +29,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
       <div className="flex h-16 items-center px-6">
         {/* Logo e Título */}
         <div className="flex items-center gap-3">
@@ -45,7 +45,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
         {/* Página Atual */}
         <div className="hidden md:flex items-center gap-2 ml-8">
           <span className="text-gray-400">/</span>
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700">
             {getPageTitle()}
           </Badge>
         </div>
