@@ -3,8 +3,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Building2, LogOut, User, CircleDollarSign, House } from "lucide-react"
+import { FileText, LogOut, CircleDollarSign, House } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useState } from "react"
 import type { ViewType } from "@/app/types/navigation"
 
 interface AppHeaderProps {
@@ -14,6 +15,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
   const { user, logout } = useAuth()
+  const [showUserMenu, setShowUserMenu] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -31,80 +33,70 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
   if (!user) return null
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm shadow-lg">
-      <div className="flex h-24 items-center px-6">
-        {/* Logo e Título */}
-        <div className="flex items-center gap-3">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-900 rounded-lg  shadow-itaguai relative">
-                <House className="w-10 h-10 text-white drop-shadow-sm" />
-                <div className="absolute top-8 right-0.5 w-4 h-4 bg-success-500 rounded-full flex items-center justify-center">
-                  <CircleDollarSign className="w-3.5 h-3.5 text-white" />
-                </div>
-                
-                {/* <div className="absolute -top-1 -right-1 w-6 h-6 bg-success-500 rounded-full flex items-center justify-center">
-                  <Shield className="w-3 h-3 text-white" />
-                </div> */}
-              </div>
-          <div>
-            <h1 className="text-xl font-bold text-blue-900">BIC Sistema</h1>
-            <p className="text-xs text-blue-400">Boletim de Informações Cadastrais</p>
+    <header className="bg-white shadow-lg px-6 py-4 w-full">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center">
+              <FileText className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-blue-800 font-bold text-lg">Sistema BIC</h1>
+              <p className="text-sm text-blue-600">Boletim de Informações Cadastrais</p>
+            </div>
           </div>
         </div>
 
-        {/* Imagem centralizada */}
+        {/* Logo central */}
         <div className="flex-1 flex justify-center">
           <img
             src="/images/SMCTIC - azul-marinho.png"
-            alt="Logo Prefeitura"
-            className="h-20 object-contain"
-            style={{
-              height: 120,
-              width: 600,
-              }}
+            alt="Secretaria de Ciência, Tecnologia, Inovação e Comunicação"
+            className="h-16 max-w-[400px] object-contain"
           />
         </div>
 
-        {/* Perfil do usuário */}
-        <div className="flex items-center gap-3">
-          {/* <div className="hidden md:flex flex-col text-right">
-            <span className="text-sm font-semibold text-blue-900">{user.name}</span>
-            <span className="text-xs text-blue-400">{user.role}</span>
-          </div> */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-blue-50">
-                <Avatar className="h-10 w-10 text-white">
-                  <AvatarFallback className="bg-blue-900 text-white font-semibold">
-                    {getUserInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 border-blue-100" align="end" forceMount>
-              <div className="flex items-center justify-start gap-3 p-3 border-b border-blue-100">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage alt={user.name} />
-                  <AvatarFallback className="text-white bg-blue-900 font-semibold">
-                    {getUserInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col space-y-1">
-                  <p className="font-semibold text-sm text-blue-900">{user.name}</p>
-                  <p className="text-xs text-blue-400">{user.email}</p>
-                  {user.crea && <p className="text-xs text-blue-400">CREA: {user.crea}</p>}
+        <div className="flex items-center space-x-6">
+          <div className="relative">
+            <button
+              className="flex items-center space-x-2 focus:outline-none group"
+              type="button"
+              id="user-menu-button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              onClick={() => setShowUserMenu((v) => !v)}
+            >
+              <div className="w-12 h-12 bg-blue-800 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-lg">{getUserInitials(user?.name || "Usuario")}</span>
+              </div>
+            </button>
+            {showUserMenu && (
+              <div
+                className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu-button"
+              >
+                <div className="px-4 py-3 border-b">
+                  <p className="text-sm font-semibold text-blue-900">{user?.name}</p>
+                  <p className="text-xs text-blue-700">{user?.email}</p>
+                  {user?.crea && <p className="text-xs text-blue-700">CREA: {user.crea}</p>}
+                </div>
+                <div className="py-2">
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full flex items-center justify-start text-blue-700 hover:text-red-600 hover:bg-blue-100"
+                    title="Sair do sistema"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </Button>
                 </div>
               </div>
-              <div className="p-1">
-                <DropdownMenuItem 
-                  className="cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span className="font-medium">Sair do Sistema</span>
-                </DropdownMenuItem>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            )}
+          </div>
         </div>
       </div>
     </header>

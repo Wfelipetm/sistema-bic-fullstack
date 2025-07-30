@@ -2,98 +2,103 @@
 
 import type * as React from "react"
 import "@fontsource-variable/inter";
-import { Building2 } from "lucide-react"
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
+import { useState, useEffect } from "react"
 import { navigationItems } from "@/app/constants/navigation"
 import type { ViewType } from "@/app/types/navigation"
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+interface AppSidebarProps {
   activeView: ViewType
   setActiveView: (view: ViewType) => void
 }
 
-export function AppSidebar({ activeView, setActiveView, ...props }: AppSidebarProps) {
-  const { state, toggleSidebar } = useSidebar(); // adicione toggleSidebar
+export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  // Efeito para hidratação e carregamento do estado do localStorage
+  useEffect(() => {
+    setIsClient(true)
+    const savedState = localStorage.getItem("sidebar-collapsed")
+    if (savedState !== null) {
+      setSidebarCollapsed(JSON.parse(savedState))
+    }
+  }, [])
+
+  const toggleSidebar = () => {
+    const newState = !sidebarCollapsed
+    setSidebarCollapsed(newState)
+    // Salva o estado no localStorage
+    localStorage.setItem("sidebar-collapsed", JSON.stringify(newState))
+  }
+
+  // Previne hidratação mismatch
+  if (!isClient) {
+    return null
+  }
 
   return (
-    <Sidebar
-      collapsible="icon"
+    <aside
+      className={`bg-white shadow-lg transition-all duration-500 flex flex-col relative group cursor-pointer ${
+        sidebarCollapsed ? "w-16" : "w-64"
+      }`}
       onClick={toggleSidebar}
-      
-      {...props}
+      title={sidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"}
     >
-      <SidebarHeader className="pt-24 -mt-1.5">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              {/* Removido o logo azul e o texto abaixo */}
-              {/* <div className="flex items-center gap-2">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white">
-                  <Building2 className="size-4 mt-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">BIC Sistema</span>
-                  <span className="truncate text-xs text-muted-foreground">Técnico Edificações</span>
-                </div>
-              </div> */}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="mt-4">
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={activeView === item.id}
-                    tooltip={item.description}
-                    onClick={() => setActiveView(item.id)}
-                  >
-                    <button
-                      className={
-                        `flex items-center gap-3 w-full px-3 py-3 rounded-2xl transition-all duration-300
-                        text-blue-800 font-semibold group tracking-tight
-                        hover:bg-blue-100/70 hover:shadow-[0_2px_12px_0_rgba(80,150,255,0.10)] hover:scale-[1.018]
-                        focus:bg-blue-100 focus:outline-none
-                        ` + (activeView === item.id ? ' bg-blue-200/80 shadow-[0_2px_16px_0_rgba(80,150,255,0.15)] scale-[1.018] ring-2 ring-blue-200' : '')
-                      }
-                      style={{ fontFamily: 'inherit', fontVariationSettings: '"wght" 600, "slnt" 0', letterSpacing: '-0.01em', fontSize: '1.08rem', paddingTop: '0.85rem', paddingBottom: '0.85rem' }}
-                    >
-                      <item.icon className="size-5 text-blue-700 stroke-2 group-hover:text-blue-900 transition-colors duration-200 drop-shadow-sm" />
-                      <span className="text-blue-800 font-semibold group-hover:text-blue-900 transition-colors duration-200" style={{fontFamily: 'inherit'}}>{item.title}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      {/* Só mostra o rodapé se o sidebar NÃO estiver colapsado */}
-      {state !== "collapsed" && (
-        <div className="mt-auto p-5 to-transparent">
-          <div className="flex flex-col items-end">
-            <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>© 2025 Sistema BIC.</span>
-            <span className="text-xs text-end text-blue-700 dark:text-blue-600 font-medium tracking-tight" style={{fontFamily: 'inherit'}}>Desenvolvido por SMCTIC.</span>
-            <span className="text-[10px] text-blue-400 mt-1 font-mono">Versão 1.0.0.</span>
+      {/* Sidebar Content */}
+      <nav className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'p-2 pt-2' : 'p-4 pt-5'}`}>
+        <ul className={`transition-all duration-300 ${sidebarCollapsed ? 'space-y-0.5' : 'space-y-1'}`}>
+          {navigationItems.map((item) => (
+            <li key={item.title}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setActiveView(item.id)
+                }}
+                className={`flex items-center text-blue-700 hover:bg-blue-50 hover:text-blue-800 rounded-lg transition-all duration-300 group w-full ${
+                  sidebarCollapsed
+                    ? 'space-x-0 px-2 py-3 justify-center h-16'
+                    : 'space-x-3 px-3 py-3'
+                } ${activeView === item.id ? 'bg-blue-100 text-blue-800' : ''}`}
+                title={sidebarCollapsed ? item.title : undefined}
+              >
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                <span
+                  className={`text-sm font-medium transition-all duration-300 ${
+                    sidebarCollapsed
+                      ? 'opacity-0 scale-95 w-0 overflow-hidden'
+                      : 'opacity-100 scale-100 w-auto'
+                  }`}
+                  style={{
+                    transitionDelay: sidebarCollapsed ? '0ms' : '150ms'
+                  }}
+                >
+                  {item.title}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Sidebar Footer */}
+      <div className="p-4">
+        <div
+          className={`transition-all duration-300 ${
+            sidebarCollapsed
+              ? 'opacity-0 scale-95 overflow-hidden'
+              : 'opacity-100 scale-100'
+          }`}
+          style={{
+            transitionDelay: sidebarCollapsed ? '0ms' : '150ms'
+          }}
+        >
+          <div className="text-xs text-end text-blue-700 space-y-1">
+            <p>© {new Date().getFullYear()} Sistema BIC</p>
+            <p>Desenvolvido por SMCTIC</p>
+            <p>Versão 1.0.0</p>
           </div>
         </div>
-      )}
-    </Sidebar>
+      </div>
+    </aside>
   )
 }
