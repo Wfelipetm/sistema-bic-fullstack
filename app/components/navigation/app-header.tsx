@@ -37,9 +37,9 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-800 rounded-lg shadow-itaguai relative">
-                <House className="w-10 h-10 text-white drop-shadow-sm" />
-                <div className="absolute top-8 right-1 w-[13px] h-[13px] bg-success-500 rounded-full flex items-center justify-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-800 rounded-lg shadow-itaguai relative">
+                <House className="w-10 h-12 text-white drop-shadow-sm" />
+                <div className="absolute top-9 right-1.5 w-[13px] h-[13px] bg-success-500 rounded-full flex items-center justify-center">
                   <CircleDollarSign className="w-30 h-4 text-white" />
                 </div>
               </div>
@@ -55,7 +55,7 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
           <img
             src="/images/SMCTIC - azul-marinho.png"
             alt="Secretaria de Ciência, Tecnologia, Inovação e Comunicação"
-            className="h-16 max-w-[400px] object-contain"
+            className="h-20 max-w-[600px]"
           />
         </div>
 
