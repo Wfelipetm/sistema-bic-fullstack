@@ -38,8 +38,8 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
 
   return (
     <aside
-      className={`bg-white shadow-lg transition-all duration-500 flex flex-col relative group cursor-pointer ${
-        sidebarCollapsed ? "w-16" : "w-64"
+      className={`bg-gradient-to-t from-blue-50 via-white to-white shadow-lg transition-all duration-500 flex flex-col relative group cursor-pointer ${
+        sidebarCollapsed ? "w-16" : "w-52"
       }`}
       onClick={toggleSidebar}
       title={sidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"}
@@ -54,11 +54,11 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
                   e.stopPropagation()
                   setActiveView(item.id)
                 }}
-                className={`flex items-center text-blue-700 hover:bg-blue-50 hover:text-blue-800 rounded-lg transition-all duration-300 group w-full ${
+                className={`flex items-center text-blue-700 hover:bg-blue-100 hover:text-blue-900 rounded-lg transition-all duration-300 group w-full ${
                   sidebarCollapsed
                     ? 'space-x-0 px-2 py-3 justify-center h-16'
                     : 'space-x-3 px-3 py-3'
-                } ${activeView === item.id ? 'bg-blue-100 text-blue-800' : ''}`}
+                } ${activeView === item.id ? 'bg-blue-100 text-blue-900' : ''}`}
                 title={sidebarCollapsed ? item.title : undefined}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -81,7 +81,7 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="p-4">
+      <div className="p-4 mb-7  border-blue-100">
         <div
           className={`transition-all duration-300 ${
             sidebarCollapsed
@@ -95,7 +95,7 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
           <div className="text-xs text-end text-blue-700 space-y-1">
             <p>© {new Date().getFullYear()} Sistema BIC</p>
             <p>Desenvolvido por SMCTIC</p>
-            <p>Versão 1.0.0</p>
+            <p className="text-blue-400">Versão 1.0.0</p>
           </div>
         </div>
       </div>

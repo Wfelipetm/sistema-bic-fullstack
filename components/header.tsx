@@ -29,7 +29,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+    <header className="sticky top-0 z-10 w-full bg-gradient-to-l from-blue-50 via-white to-white shadow-sm">
       <div className="flex h-16 items-center px-6">
         {/* Logo e Título */}
         <div className="flex items-center gap-3">
@@ -45,7 +45,7 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
         {/* Página Atual */}
         <div className="hidden md:flex items-center gap-2 ml-8">
           <span className="text-gray-400">/</span>
-          <Badge variant="outline" className="bg-blue-50 text-blue-700">
+          <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
             {getPageTitle()}
           </Badge>
         </div>
@@ -59,15 +59,15 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Buscar formulários, relatórios..."
-              className="pl-10 w-80 bg-gray-50 border-gray-200 focus:bg-white"
+              className="pl-10 w-80 bg-blue-50 border-blue-200 focus:bg-white focus:border-blue-300"
             />
           </div>
         </div>
 
         {/* Notificações */}
         <div className="flex items-center gap-3 mr-4">
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5 text-gray-600" />
+          <Button variant="ghost" size="sm" className="relative hover:bg-blue-100">
+            <Bell className="h-5 w-5 text-blue-700" />
             <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
               3
             </span>
@@ -77,13 +77,13 @@ export default function Header({ activeView, setActiveView }: HeaderProps) {
         {/* Perfil do usuário */}
         <div className="flex items-center gap-3">
           <div className="hidden md:flex flex-col text-right">
-            <span className="text-sm font-medium text-gray-900">João Silva</span>
-            <span className="text-xs text-gray-500">Técnico em Edificações</span>
+            <span className="text-sm font-medium text-blue-900">João Silva</span>
+            <span className="text-xs text-blue-700">Técnico em Edificações</span>
           </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-blue-100">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src="/placeholder.svg?height=40&width=40" alt="João Silva" />
                   <AvatarFallback className="bg-blue-600 text-white">JS</AvatarFallback>

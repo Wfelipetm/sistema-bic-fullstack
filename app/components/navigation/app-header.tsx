@@ -33,13 +33,16 @@ export function AppHeader({ activeView, setActiveView }: AppHeaderProps) {
   if (!user) return null
 
   return (
-    <header className="bg-white shadow-lg px-6 py-4 w-full">
+    <header className="items-center gap-4 px-4 md:px-6 bg-gradient-to-l from-blue-50 via-white to-white shadow-lg py-4 w-full">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center">
-              <FileText className="w-6 h-6 text-white" />
-            </div>
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-800 rounded-lg shadow-itaguai relative">
+                <House className="w-10 h-10 text-white drop-shadow-sm" />
+                <div className="absolute top-8 right-1 w-[13px] h-[13px] bg-success-500 rounded-full flex items-center justify-center">
+                  <CircleDollarSign className="w-30 h-4 text-white" />
+                </div>
+              </div>
             <div>
               <h1 className="text-blue-800 font-bold text-lg">Sistema BIC</h1>
               <p className="text-sm text-blue-600">Boletim de Informações Cadastrais</p>
