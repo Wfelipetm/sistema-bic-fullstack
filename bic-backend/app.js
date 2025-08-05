@@ -5,6 +5,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require("dotenv");
+const LdapStrategy = require('passport-ldapauth');
+const passport = require('passport');
+
+
+
 
 dotenv.config();
 
@@ -37,6 +42,29 @@ const jwt = require('./src/middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+
+// Configuração do Passport com LDAP
+passport.use(
+  new LdapStrategy({
+    server: {
+      url: process.env.LDAP_URL,
+      bindDN: process.env.LDAP_BIND_DN,
+      bindCredentials: process.env.LDAP_BIND_CREDENTIALS,
+      searchBase: process.env.LDAP_SEARCH_BASE,
+      searchFilter: process.env.LDAP_SEARCH_FILTER,
+      searchAttributes: [
+        'sAMAccountName', 'cn', 'mail', 'memberOf', 'description', 'department', 'dn'
+      ],
+      tlsOptions: { rejectUnauthorized: false }
+    },
+    usernameField: 'username',
+    passwordField: 'password'
+  })
+);
+
+
+
 
 // Middlewares
 app.use(cors());
@@ -78,14 +106,18 @@ app.use('/relatorios', jwt.validarToken, relatoriosRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'upload', 'upBoletim')));
 
 // Certificados SSL
-const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/bic.itaguai.rj.gov.br/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/bic.itaguai.rj.gov.br/fullchain.pem')
-};
+// const sslOptions = {
+//   key: fs.readFileSync('/etc/letsencrypt/live/bic.itaguai.rj.gov.br/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/bic.itaguai.rj.gov.br/fullchain.pem')
+// };
 
 // Servidor HTTPS
-https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`HTTPS rodando em https://bic.itaguai.rj.gov.br:${PORT}`);
+// https.createServer(sslOptions, app).listen(PORT, () => {
+//   console.log(`HTTPS rodando em https://bic.itaguai.rj.gov.br:${PORT}`);
+// });
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
 module.exports = app;

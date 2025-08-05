@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -39,11 +39,11 @@ export default function LoginPage() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const isEmailValid =
-    email.includes("@itaguai.rj.gov.br") && email.includes(".");
+  const usuarioRef = useRef<HTMLInputElement>(null);
+  // Aceita email institucional ou usuário AD (ex: wallace.moreira)
+  const isUsuarioValid = usuario.trim().length > 0 && (usuario.includes("@") || /^[a-zA-Z0-9_.-]+$/.test(usuario));
   const isPasswordValid = password.length >= 6;
-  const isFormValid = isEmailValid && isPasswordValid;
+  const isFormValid = isUsuarioValid && isPasswordValid;
 
   // Redirecionar se já estiver autenticado
   useRedirectIfAuthenticated();
@@ -52,12 +52,12 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    if (!email || !password) {
+    if (!usuario || !password) {
       setError("Por favor, preencha todos os campos");
       return;
     }
 
-    const result = await login(email, password);
+    const result = await login(usuario, password);
     if (!result.success) {
       setError(result.message || "Erro ao fazer login");
     }
@@ -103,25 +103,24 @@ export default function LoginPage() {
 
                 <div className="space-y-3">
                   <Label
-                    htmlFor="email"
+                    htmlFor="usuario"
                     className="text-sm font-semibold text-itaguai-900"
                   >
-                    E-mail institucional
+                    Usuário
                   </Label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <User className="h-5 w-5 text-itaguai-400" />
                     </div>
                     <Input
-                      id="email"
-                      type="email"
-                      placeholder="seu.nome@itaguai.rj.gov.br"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      id="usuario"
+                      type="text"
+                      placeholder="Digite seu usuário"
+                      value={usuario}
+                      onChange={(e) => setUsuario(e.target.value)}
                       onFocus={() => setEmailFocused(true)}
                       onBlur={() => setEmailFocused(false)}
                       className="pl-12 h-14 text-base border-itaguai-200 rounded-xl focus:ring-2 focus:ring-itaguai-500 focus:border-itaguai-500 bg-white/50 backdrop-blur-sm transition-all duration-200"
-                      
                     />
                   </div>
                 </div>
