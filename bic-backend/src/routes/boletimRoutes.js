@@ -9,5 +9,6 @@ router.get('/:id', boletimController.getById);
 router.get('/:id/completo', boletimController.getBoletimCompleto);
 // Rota de criação de boletim com upload de foto
 router.post('/', upload.single('foto'), boletimController.create);
+router.get('/csv/:id', boletimController.exportBoletimCompletoCSV);
 
 module.exports = router;
